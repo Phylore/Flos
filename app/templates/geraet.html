@@ -1,0 +1,30 @@
+<!-- app/templates/geraet.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerät anzeigen</title>
+</head>
+<body>
+    <h1>Gerät {{ geraet.seriennummer }}</h1>
+    <h2>Modell: {{ geraet.modell.modellname }}</h2>
+    <h3>Zustand: {{ geraet.zustand.value }}</h3>
+
+    <h3>Module:</h3>
+    <ul>
+        {% for modul in geraet.modell.module %}
+            <li><strong>{{ modul.name }}</strong>
+                <ul>
+                    {% for teil in modul.teile %}
+                        <li>{{ teil.name }} – Zustand: {{ teil.zustand.value }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Historie:</h3>
+    <pre>{{ geraet.zeige_historie() }}</pre>
+</body>
+</html>
+

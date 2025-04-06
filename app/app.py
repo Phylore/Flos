@@ -1,9 +1,8 @@
 # app/app.py
-from flask import Flask, render_template
+
+from flask import Flask
+from app.routes.geraete_routes import geraete_bp
 
 app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Hallo Welt! Das Flask-Projekt läuft. 🎉"
+app.register_blueprint(geraete_bp)
 
