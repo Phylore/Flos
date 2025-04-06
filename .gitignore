@@ -1,9 +1,37 @@
+# Virtuelle Umgebungen
+venv/
+.env/
+
+# Byte-compiled / optimierte / verstopfte Dateien
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.env
+*.py[cod]
+*$py.class
+
+# Distribution / Paketierung
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Editor-spezifische Dateien
 .vscode/
 .idea/
-*.db
-instance/
+*.swp
+*~
+.project
+.pydevproject
+
