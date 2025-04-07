@@ -9,3 +9,8 @@ class Modell(Base):
     name = Column(String, unique=True, index=True)
     kategorie = Column(String)
 
+# Am Ende von modell_db.py
+from sqlalchemy.orm import relationship
+
+Modell.geraete = relationship("Geraet", back_populates="modell")
+

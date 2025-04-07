@@ -1,0 +1,36 @@
+<!-- app/templates/auspacken.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auspacken – Gerät {{ geraet.seriennummer }}</title>
+</head>
+<body>
+    <h1>📦 Auspacken: {{ geraet.modell.modellname }} ({{ geraet.seriennummer }})</h1>
+
+    <form method="post">
+        {% for modul in geraet.modell.module %}
+            <h2>{{ modul.name }}</h2>
+            <ul>
+                {% for teil in modul.teile %}
+                    <li>
+                        {{ teil.name }}:
+                        <select name="teil_{{ teil.id }}">
+                            {% for z in zustaende %}
+                                <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
+                                    {{ z.value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+        <button type="submit">💾 Änderungen speichern</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('geraete.zeige_geraet', id=geraet.id) }}">🔙 Zurück zum Gerät</a>
+</body>
+</html>
+

@@ -10,6 +10,12 @@
     <h2>Modell: {{ geraet.modell.modellname }}</h2>
     <h3>Zustand: {{ geraet.zustand.value }}</h3>
 
+    <!-- Neue Aktionslinks -->
+    <p>
+        <a href="{{ url_for('geraete.zustand_aendern', geraet_id=geraet.id) }}">🔁 Zustand ändern</a> |
+        <a href="{{ url_for('geraete.auspacken', geraet_id=geraet.id) }}">📦 Auspacken</a>
+    </p>
+
     <h3>Module:</h3>
     <ul>
         {% for modul in geraet.modell.module %}
