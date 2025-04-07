@@ -1,14 +1,9 @@
 # database.py
+from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+# Initialisiere SQLAlchemy
+db = SQLAlchemy()
 
-DATABASE_URL = "sqlite:///./geraete.db"
-
-engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
-)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+# Definiere Base, das die Grundlage für alle Modelle bildet
+Base = db.Model
 

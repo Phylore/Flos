@@ -1,0 +1,20 @@
+<!-- templates/geraet_neu.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neues Gerät hinzufügen</title>
+</head>
+<body>
+    <h1>Gerät nicht gefunden. Wählen Sie ein Modell:</h1>
+    <form action="/geraet" method="POST">
+        <label for="modell">Modell:</label>
+        <select id="modell" name="modell" required>
+            {% for modell in modelle %}
+                <option value="{{ modell.id }}">{{ modell.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Gerät anlegen</button>
+    </form>
+</body>
+</html>
+
