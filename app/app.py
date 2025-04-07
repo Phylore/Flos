@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from app.routes.geraete_routes import geraete_bp  # Importiere die richtigen Routen
 from database import db  # Importiere db aus database.py
 
@@ -11,6 +11,12 @@ db.init_app(app)
 
 # Registriere Blueprints
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
+app.register_blueprint(geraete_bp)
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
