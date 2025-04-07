@@ -1,4 +1,6 @@
 # models/geraet_db.py
+from models.zustand_db import Zustand
+from models.modell_db import Modell
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship

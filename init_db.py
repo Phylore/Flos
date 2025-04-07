@@ -1,10 +1,8 @@
 # init_db.py
-
-from database import Base, engine
+from app.app import app
+from database import db
 from models.modell_db import Modell
 
-# Hier später auch andere Tabellen importieren (z. B. Geraet)
-
-Base.metadata.create_all(bind=engine)
-print("Tabellen wurden erstellt.")
+with app.app_context():
+    db.create_all()
 
