@@ -16,7 +16,7 @@ def login():
             session["benutzer_id"] = benutzer.id
             session["benutzer_name"] = benutzer.name
             flash("Login erfolgreich.")
-            return redirect(url_for("geraete.scannen"))
+            return redirect(url_for("benutzer.dashboard"))
         else:
             flash("Login fehlgeschlagen.")
     return render_template("login.html")

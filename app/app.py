@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from app.routes.geraete_routes import geraete_bp  # Importiere die richtigen Routen
 from app.routes.login_routes import login_bp
+from app.routes.benutzer_routes import benutzer_bp
 from database import db  # Importiere db aus database.py
 import os
 
@@ -20,6 +21,7 @@ db.init_app(app)
 # Registriere Blueprints
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
+app.register_blueprint(benutzer_hp)
 
 
 @app.route("/")

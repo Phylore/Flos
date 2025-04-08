@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Willkommen im Dashboard</h1>
+
+    <h2>Deine Geräte</h2>
+    <ul>
+        {% for geraet in geraete %}
+            <li>{{ geraet.seriennummer }} – {{ geraet.modell.name }}</li>
+        {% else %}
+            <li>Du hast noch keine Geräte.</li>
+        {% endfor %}
+    </ul>
+
+    <form action="{{ url_for('geraete.scannen') }}">
+        <button type="submit">Scannen</button>
+    </form>
+</body>
+</html>
+
