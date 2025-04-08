@@ -1,20 +1,50 @@
-<!-- templates/geraet_neu.html -->
+<!-- /app/templates/geraet_neu.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Neues Gerät hinzufügen</title>
 </head>
 <body>
-    <h1>Gerät nicht gefunden. Wählen Sie ein Modell:</h1>
+    <h1>Gerät nicht gefunden. Bitte wählen Sie eine Kategorie und ein Modell:</h1>
+
     <form action="/geraet" method="POST">
-        <label for="modell">Modell:</label>
-        <select id="modell" name="modell" required>
-            {% for modell in modelle %}
-                <option value="{{ modell.id }}">{{ modell.name }}</option>
+        <!-- QR-Code (seriennummer) als verstecktes Feld -->
+        <input type="qrcode" name="qr_code" value="{{ qr_code }}">
+
+        <!-- Kategorie-Auswahl -->
+        <label for="kategorie">Kategorie:</label>
+        <select id="kategorie" name="kategorie" required>
+            <option value="">Kategorie wählen</option>
+            {% for k in kategorien %}
+                <option value="{{ k.id }}">{{ k.name }}</option>
             {% endfor %}
         </select>
+
+        <!-- Modell-Auswahl (dynamisch via JS) -->
+        <label for="modell">Modell:</label>
+        <select id="modell" name="modell" required>
+            <option value="">Bitte zuerst Kategorie wählen</option>
+        </select>
+
         <button type="submit">Gerät anlegen</button>
     </form>
+
+    <script>
+        document.getElementById("kategorie").addEventListener("change", function () {
+            const kategorieId = this.value;
+            fetch(`/modelle/${kategorieId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const modellSelect = document.getElementById("modell");
+                    modellSelect.innerHTML = '<option value="">Modell wählen</option>';
+                    data.forEach(modell => {
+                        const option = document.createElement("option");
+                        option.value = modell.id;
+                        option.textContent = modell.name;
+                        modellSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
 </body>
 </html>
-

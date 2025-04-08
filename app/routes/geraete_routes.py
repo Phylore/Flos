@@ -1,23 +1,44 @@
+# /app/routes/geraete_routes.py
+
 from flask import Blueprint, render_template, request, redirect, url_for
-from models.modell_db import Modell  # Achte darauf, dass du das Modell importierst
+from models.kategorie_db import Kategorie
+from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
+from models.zustand_db import Zustand
+from models.historie_db import Historie
 from database import db
 
 geraete_bp = Blueprint("geraete", __name__)
 
+
 @geraete_bp.route("/scannen", methods=["GET", "POST"])
 def scannen():
     if request.method == "POST":
-        seriennummer = request.form["seriennummer"]
-        geraet_db = db.session.query(GeraetDB).filter(GeraetDB.seriennummer == seriennummer).first()
+        qrcode = request.form["code"]
+        geraet_db = db.session.query(GeraetDB).filter_by(qrcode=qrcode).first()
 
         if geraet_db:
             return redirect(url_for('geraete.zeige_geraet', id=geraet_db.id))
         else:
-            modelle = db.session.query(Modell).all()
-            return render_template("geraet_neu.html", modelle=modelle)
-    
+            kategorien = Kategorie.query.all()
+            return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qrcode)
+
     return render_template("scannen.html")
+
+
+@geraete_bp.route("/geraet", methods=["POST"])
+def geraet_anlegen():
+    qrcode = request.form["qrcode"]
+    modell_id = request.form["modell"]
+    neues_geraet = GeraetDB(
+        qrcode=qrcode,
+        modell_id=modell_id,
+        zustand_id=1  # Standardzustand vorerst
+    )
+    db.session.add(neues_geraet)
+    db.session.commit()
+    return redirect(url_for("geraete.zeige_geraet", id=neues_geraet.id))
+
 
 @geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET", "POST"])
 def auspacken(geraet_id):

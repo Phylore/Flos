@@ -7,6 +7,7 @@ from models.benutzer_db import Benutzer
 from models.historie_db import Historie
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
     # Beispielnutzer anlegen (nur wenn er noch nicht existiert)

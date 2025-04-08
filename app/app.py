@@ -21,7 +21,7 @@ db.init_app(app)
 # Registriere Blueprints
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
-app.register_blueprint(benutzer_hp)
+app.register_blueprint(benutzer_bp)
 
 
 @app.route("/")

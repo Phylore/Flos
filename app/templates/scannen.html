@@ -1,15 +1,18 @@
-<!-- templates/scannen.html -->
+<!-- /app/templates/scannen.html -->
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-    <title>Gerät scannen</title>
+    <meta charset="UTF-8">
+    <title>QR-Code scannen</title>
 </head>
 <body>
     <h1>Gerät scannen</h1>
+
     <form method="POST">
-        <label for="seriennummer">Seriennummer:</label>
-        <input type="text" id="seriennummer" name="seriennummer" required>
-        <button type="submit">Suchen</button>
+        <label for="code">QR-Code:</label>
+        <input type="text" id="code" name="code" placeholder="QR-Code eingeben oder scannen" required>
+
+        <button type="submit">Scannen</button>
     </form>
 </body>
 </html>

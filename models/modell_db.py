@@ -1,16 +1,17 @@
-# models/modell_db.py
-from database import Base  # Jetzt korrekt importieren
-from sqlalchemy import Column, Integer, String
+# /app/models/modell_db.py
 
-class Modell(Base):
-    __tablename__ = "modelle"
+from database import db
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
-    kategorie = Column(String)
+class Modell(db.Model):
+    __tablename__ = "modell"
 
-# Am Ende von modell_db.py
-from sqlalchemy.orm import relationship
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    name = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    kategorie_id = db.Column(db.Integer, db.ForeignKey("kategorie.id"), nullable=False)
 
-Modell.geraete = relationship("Geraet", back_populates="modell")
+    kategorie = db.relationship("Kategorie", back_populates="modelle")
+    geraete = db.relationship("Geraet", back_populates="modell")
+
+    def __repr__(self):
+        return f"<Modell {self.name}>"
 
