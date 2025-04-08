@@ -11,6 +11,7 @@ class Modell(db.Model):
 
     kategorie = db.relationship("Kategorie", back_populates="modelle")
     geraete = db.relationship("Geraet", back_populates="modell")
+    module = db.relationship("Modul", back_populates="modell", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Modell {self.name}>"
