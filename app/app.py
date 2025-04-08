@@ -2,6 +2,8 @@ from flask import Flask, render_template
 from app.routes.geraete_routes import geraete_bp  # Importiere die richtigen Routen
 from database import db  # Importiere db aus database.py
 import os
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "devkey")
+
 
 app = Flask(__name__)
 
