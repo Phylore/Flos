@@ -1,7 +1,10 @@
-# /app/models/teil_db.py
-
-from database import db
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+
+from .zustand_db import Zustand
+from .modul_db import Modul
+
+db = SQLAlchemy()
 
 class Teil(db.Model):
     __tablename__ = "teile"
@@ -13,4 +16,27 @@ class Teil(db.Model):
 
     modul = relationship("Modul", back_populates="teile")
     zustand = relationship("Zustand")
+
+# === Teilekonstanten, gruppiert nach Modultyp ===
+
+# Modul: Station
+STROMKABEL = "Stromkabel"
+WASSERTANK = "Wassertank"
+ABWASSERTANK = "Abwassertank"
+STAUBBEUTEL = "Staubbeutel"
+BASIS = "Basis"
+RAMPE = "Rampe"
+WASCHMODUL = "Waschmodul"
+HEISSWASSERTANK = "HEISSWASSERTANK"
+
+
+# Modul: Roboter
+HAUPTBÜRSTE = "Hauptbürste"
+NEBENBÜRSTE = "Nebenbürste"
+WISCHPADHALTER = "Wischpadhalter"
+WISCHPADS = "Wischpads"
+STAUBBEHÄLTER = "Staubbehälter"
+STAUBFILTER = "Staubfilter"
+
+# Optional: Weitere Kategorien wie Ersatzteile oder Anleitung können separat behandelt werden
 
