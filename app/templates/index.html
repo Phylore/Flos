@@ -1,12 +1,21 @@
-<!-- app/templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-    <title>QRC Start</title>
+  <meta charset="UTF-8">
+  <title>Willkommen im QRC-System</title>
 </head>
 <body>
+  {% if session.get('benutzer_id') %}
+    <h1>Willkommen, {{ session.get('benutzer_name', 'Benutzer') }}!</h1>
+    <p><a href="{{ url_for('geraete.scannen') }}">Gerät scannen</a></p>
+    <p><a href="{{ url_for('login.logout') }}">Logout</a></p>
+  {% else %}
     <h1>Willkommen im QRC-System</h1>
-    <p><a href="{{ url_for('geraete.scannen') }}">🔍 Gerät scannen</a></p>
+    <p>Bitte <a href="{{ url_for('login.login') }}">einloggen</a>, um deine individuellen Gerätelisten zu sehen.</p>
+  {% endif %}
+<a href="{{ url_for('login.login') }}">einloggen</a>
+
+
 </body>
 </html>
 

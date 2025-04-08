@@ -4,6 +4,7 @@ from database import db
 from models.geraet_db import Geraet
 from models.modell_db import Modell
 from models.benutzer_db import Benutzer
+from models.historie_db import Historie
 
 with app.app_context():
     db.create_all()

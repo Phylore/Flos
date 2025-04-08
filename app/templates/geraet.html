@@ -1,36 +1,41 @@
-<!-- app/templates/geraet.html -->
-
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-    <title>Gerät anzeigen</title>
+    <meta charset="UTF-8">
+    <title>Gerätedetails</title>
 </head>
 <body>
-    <h1>Gerät {{ geraet.seriennummer }}</h1>
-    <h2>Modell: {{ geraet.modell.modellname }}</h2>
-    <h3>Zustand: {{ geraet.zustand.value }}</h3>
+    <h1>Gerät: {{ geraet.seriennummer }}</h1>
 
-    <!-- Neue Aktionslinks -->
-    <p>
-        <a href="{{ url_for('geraete.zustand_aendern', geraet_id=geraet.id) }}">🔁 Zustand ändern</a> |
-        <a href="{{ url_for('geraete.auspacken', geraet_id=geraet.id) }}">📦 Auspacken</a>
-    </p>
+    <p><strong>Modell:</strong> {{ geraet.modell.name }}</p>
+    <p><strong>Kategorie:</strong> {{ geraet.modell.kategorie.name }}</p>
+    <p><strong>Zustand:</strong> {{ geraet.zustand.name }}</p>
 
-    <h3>Module:</h3>
+    <h2>Zustand ändern:</h2>
+    <form method="post" action="{{ url_for('geraete.zustand_aendern', geraet_id=geraet.id) }}">
+        <select name="zustand_id">
+            {% for zustand in zustaende %}
+                <option value="{{ zustand.id }}" {% if zustand.id == geraet.zustand.id %}selected{% endif %}>
+                    {{ zustand.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Zustand speichern</button>
+    </form>
+
+    <h2>Historie:</h2>
     <ul>
-        {% for modul in geraet.modell.module %}
-            <li><strong>{{ modul.name }}</strong>
-                <ul>
-                    {% for teil in modul.teile %}
-                        <li>{{ teil.name }} – Zustand: {{ teil.zustand.value }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
+      {% for eintrag in geraet.historie %}
+        <li>
+          {{ eintrag.zeitpunkt.strftime("%d.%m.%Y %H:%M:%S") }} –
+          {{ eintrag.benutzer.name }}: {{ eintrag.aktion }}
+        </li>
+      {% else %}
+        <li>Keine Historie vorhanden.</li>
+      {% endfor %}
     </ul>
 
-    <h3>Historie:</h3>
-    <pre>{{ geraet.zeige_historie() }}</pre>
+    <p><a href="{{ url_for('index') }}">Zurück zur Übersicht</a></p>
 </body>
 </html>
 
