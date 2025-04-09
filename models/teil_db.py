@@ -1,8 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from .zustand_db import Zustand
 
-db = SQLAlchemy()
+from database import db
 
 class Teil(db.Model):
     __tablename__ = "teile"
