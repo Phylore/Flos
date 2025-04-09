@@ -20,7 +20,8 @@ def scannen():
         geraet_db = db.session.query(GeraetDB).filter_by(qrcode=qrcode).first()
 
         if geraet_db:
-            return redirect(url_for('geraete.zeige_geraet', id=geraet_db.id))
+            return redirect(url_for('geraete.geraet_seite', qrcode=geraet_db.qrcode))
+
         else:
             kategorien = Kategorie.query.all()
             return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qrcode)

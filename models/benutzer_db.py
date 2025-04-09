@@ -2,8 +2,9 @@
 from database import Base
 from sqlalchemy import Column, Integer, String
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin  # ✅ Wichtig für Flask-Login
 
-class Benutzer(Base):
+class Benutzer(Base, UserMixin):  # ✅ UserMixin eingebunden
     __tablename__ = "benutzer"
 
     id = Column(Integer, primary_key=True)
