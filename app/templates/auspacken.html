@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Auspacken – Gerät {{ geraet.seriennummer }}</title>
+    <title>Auspacken – Gerät {{ geraet.qrcode }}</title>
 </head>
 <body>
-    <h1>📦 Auspacken: {{ geraet.modell.modellname }} ({{ geraet.seriennummer }})</h1>
+    <h1>📦 Auspacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
     <form method="post">
         {% for modul in geraet.modell.module %}
@@ -25,12 +25,11 @@
                 {% endfor %}
             </ul>
         {% endfor %}
-
         <button type="submit">💾 Änderungen speichern</button>
     </form>
 
     <br>
-    <a href="{{ url_for('geraete.zeige_geraet', id=geraet.id) }}">🔙 Zurück zum Gerät</a>
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
 </body>
 </html>
 

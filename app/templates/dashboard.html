@@ -3,21 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 1em;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 0.5em;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
 </head>
 <body>
     <h1>Willkommen im Dashboard</h1>
 
     <h2>Deine Geräte</h2>
-    <ul>
-        {% for geraet in geraete %}
-            <li>{{ geraet.seriennummer }} – {{ geraet.modell.name }}</li>
-        {% else %}
-            <li>Du hast noch keine Geräte.</li>
-        {% endfor %}
-    </ul>
+
+    {% if geraete %}
+    <form method="post" action="{{ url_for('geraete.geraet_anzeigen') }}">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>QR-Code</th>
+                    <th>Modell</th>
+                    <th>Zustand</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for geraet in geraete %}
+                <tr>
+                    <td>
+                        <input type="radio" name="qrcode" value="{{ geraet.qrcode }}" required>
+                    </td>
+                    <td>{{ geraet.qrcode }}</td>
+                    <td>{{ geraet.modell.name }}</td>
+                    <td>{{ geraet.zustand.value if geraet.zustand else "Unbekannt" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Ausgewähltes Gerät anzeigen</button>
+    </form>
+    {% else %}
+        <p>Du hast noch keine Geräte angelegt.</p>
+    {% endif %}
 
     <a href="{{ url_for('geraete.scannen') }}">
-        <button type="button">Scannen</button>
+        <button type="button">Neues Gerät scannen</button>
     </a>
 </body>
 </html>

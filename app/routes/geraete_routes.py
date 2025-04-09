@@ -60,30 +60,28 @@ def modelle_fuer_kategorie(kategorie_id):
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
 
-@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET", "POST"])
+@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["POST"])
 @login_required
 def auspacken(geraet_id):
     geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
     zustaende = db.session.query(Zustand).all()
 
-    if request.method == "POST":
-        for modul in geraet.modell.module:
-            for teil in modul.teile:
-                form_key = f"teil_{teil.id}"
-                if form_key in request.form:
-                    neuer_zustand_id = int(request.form[form_key])
-                    if teil.zustand_id != neuer_zustand_id:
-                        teil.zustand_id = neuer_zustand_id
-                        eintrag = Historie(
-                            geraet_id=geraet.id,
-                            text=f"Teil '{teil.name}' in Modul '{modul.name}' geändert zu '{Zustand.query.get(neuer_zustand_id).value}'"
-                        )
-                        db.session.add(eintrag)
+    for modul in geraet.modell.module:
+        for teil in modul.teile:
+            form_key = f"teil_{teil.id}"
+            if form_key in request.form:
+                neuer_zustand_id = int(request.form[form_key])
+                if teil.zustand_id != neuer_zustand_id:
+                    teil.zustand_id = neuer_zustand_id
+                    eintrag = Historie(
+                        geraet_id=geraet.id,
+                        aktion=f"Teil '{teil.name}' in Modul '{modul.name}' geändert zu '{Zustand.query.get(neuer_zustand_id).name}'",
+                        benutzer_id=current_user.id
+                    )
+                    db.session.add(eintrag)
 
-        db.session.commit()
-        return redirect(url_for("geraete.zeige_geraet", id=geraet.id))
-
-    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende)
+    db.session.commit()
+    return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
 
 
 @geraete_bp.route("/geraet/<string:qrcode>")
@@ -107,4 +105,13 @@ def zustand_aendern(geraet_id):
             benutzer_id=current_user.id  # ✅ dynamisch gesetzt
         )
         db.session.add(eintrag)
+
+@geraete_bp.route("/anzeigen", methods=["POST"])
+@login_required
+def geraet_anzeigen():
+    qrcode = request.form.get("qrcode")
+    if not qrcode:
+        flash("Kein Gerät ausgewählt.")
+        return redirect(url_for("benutzer.dashboard"))
+    return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
 
