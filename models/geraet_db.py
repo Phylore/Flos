@@ -10,14 +10,14 @@ class Geraet(db.Model):
     __tablename__ = "geraete"
 
     id = db.Column(db.Integer, primary_key=True)
-    qrcode = db.Column(db.String, unique=True, nullable=False)  # früher: seriennummer
+    qrcode = db.Column(db.String, unique=True, nullable=False)
     modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
     zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
+    benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=False)
 
     modell = db.relationship("Modell", back_populates="geraete")
     zustand = db.relationship("Zustand")
+    benutzer = db.relationship("Benutzer", backref="geraete")
     historie = db.relationship("Historie", backref="geraet", lazy=True)
 
-    def __repr__(self):
-        return f"<Geraet {self.qrcode}>"
 

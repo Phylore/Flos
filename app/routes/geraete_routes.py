@@ -1,6 +1,7 @@
 # /app/routes/geraete_routes.py
 
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask_login import current_user
 from models.kategorie_db import Kategorie
 from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
@@ -42,6 +43,7 @@ def geraet_anlegen():
         modell_id=modell_id,
         zustand_id=1
     )
+    neues_geraet.benutzer_id = current_user.id
     db.session.add(neues_geraet)
     db.session.commit()
 
