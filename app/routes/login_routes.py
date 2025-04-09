@@ -1,4 +1,6 @@
-from flask import Blueprint, request, render_template, redirect, url_for, session, flash
+# /app/routes/login_routes.py
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required
 from models.benutzer_db import Benutzer
 from database import db
 
@@ -13,8 +15,7 @@ def login():
         benutzer = db.session.query(Benutzer).filter_by(name=name).first()
 
         if benutzer and benutzer.check_passwort(passwort):
-            session["benutzer_id"] = benutzer.id
-            session["benutzer_name"] = benutzer.name
+            login_user(benutzer)  # ✅ Login via Flask-Login
             flash("Login erfolgreich.")
             return redirect(url_for("benutzer.dashboard"))
         else:
@@ -23,8 +24,9 @@ def login():
 
 
 @login_bp.route("/logout")
+@login_required
 def logout():
-    session.clear()
+    logout_user()  # ✅ Logout via Flask-Login
     flash("Erfolgreich ausgeloggt.")
     return redirect(url_for("login.login"))
 
