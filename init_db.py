@@ -7,7 +7,7 @@ from models.modul_db import Modul
 from models.modell_db import Modell
 from models.benutzer_db import Benutzer
 from models.historie_db import Historie
-from setup.setup_modelle_import import import_modelle_wenn_notwendig
+from app.setup.setup_modelle_import import import_modelle_wenn_notwendig
 
 with app.app_context():
     import_modelle_wenn_notwendig()
