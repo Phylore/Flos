@@ -3,6 +3,7 @@ from app.app import app
 from database import db
 from models.geraet_db import Geraet
 from models.kategorie_db import Kategorie
+from models.modul_db import Modul
 from models.modell_db import Modell
 from models.benutzer_db import Benutzer
 from models.historie_db import Historie
