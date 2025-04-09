@@ -18,6 +18,27 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "devkey")
 # Initialisiere db
 db.init_app(app)
 
+# Initialisiere db
+db.init_app(app)
+
+# Initialisiere LoginManager
+from flask_login import LoginManager
+from models.benutzer_db import Benutzer
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login.login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Benutzer.query.get(int(user_id))
+
+# Registriere Blueprints
+app.register_blueprint(geraete_bp, url_prefix='/geraete')
+app.register_blueprint(login_bp)
+app.register_blueprint(benutzer_bp)
+
+
 # Registriere Blueprints
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
