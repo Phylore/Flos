@@ -1,17 +1,13 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from database import db  # <--- WICHTIG: deine echte Instanz
+from app.app import app
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db = SQLAlchemy(app)
-
-# Alle Modelle importieren
+# Imports aus dem Projekt
 from models.teil_db import Teil
 from models.modul_db import Modul
 
-# Einmal das Mapping erzwingen
-print("🧪 Mapped models:")
-print(db.Model.metadata.tables.keys())
+with app.app_context():
+    db.create_all()
+    print("🧪 Mapped models:")
+    print(db.Model.metadata.tables.keys())
 
