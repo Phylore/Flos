@@ -1,8 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
-
 from .zustand_db import Zustand
-from .modul_db import Modul
 
 db = SQLAlchemy()
 
