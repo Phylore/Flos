@@ -8,7 +8,7 @@ from models.zustand_db import Zustand
 
 def zustand_vorbefuellen():
     if not Zustand.query.first():
-        standard_zustaende = ["sehr gut", "gut", "okay", "defekt"]
+        standard_zustaende = ["unbekannt", "sehr gut", "gut", "okay", "miese", "defekt"]
         for name in standard_zustaende:
             db.session.add(Zustand(value=name))
         db.session.commit()

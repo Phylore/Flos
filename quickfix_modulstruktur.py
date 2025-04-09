@@ -16,7 +16,7 @@ with app.app_context():
         if modell.module:
             print(f"ℹ️ Modell hat bereits {len(modell.module)} Modul(e). Kein Fix nötig.")
         else:
-            zustand_standard = Zustand.query.first()
+            zustand_standard = Zustand.query.filter_by(value="unbekannt").first()
             if not zustand_standard:
                 print("❌ Kein Zustand gefunden – bitte zuerst Zustaende importieren.")
             else:
