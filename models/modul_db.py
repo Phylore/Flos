@@ -1,3 +1,4 @@
+from models.teil_db import Teil
 from database import db
 from sqlalchemy.orm import relationship
 
@@ -10,5 +11,6 @@ class Modul(db.Model):
     reihenfolge = db.Column(db.Integer, default=0)
 
     modell = relationship("Modell", back_populates="module")
-    teile = relationship("models.teil_db.Teil", back_populates="modul", cascade="all, delete-orphan")
+    teile = relationship(Teil, back_populates="modul", cascade="all, delete-orphan")
+
 

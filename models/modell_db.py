@@ -1,4 +1,5 @@
 # /app/models/modell_db.py
+from models.modul_db import Modul
 from sqlalchemy.orm import relationship
 from database import db
 
@@ -11,7 +12,8 @@ class Modell(db.Model):
 
     kategorie = db.relationship("Kategorie", back_populates="modelle")
     geraete = db.relationship("Geraet", back_populates="modell")
-    module = relationship("Modul", back_populates="modell", cascade="all, delete-orphan")
+    module = db.relationship(Modul, back_populates="modell", cascade="all, delete-orphan")
+
 
 
 
