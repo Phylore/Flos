@@ -8,28 +8,27 @@
     <h1>📦 Auspacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
     <form method="post">
-        {% for modul in geraet.modell.module %}
-            <h2>{{ modul.name }}</h2>
-            <ul>
-                {% for teil in modul.teile %}
-                    <li>
-                        {{ teil.name }}:
-                        <select name="teil_{{ teil.id }}">
-                            {% for z in zustaende %}
-                                <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
-                                    {{ z.value }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-        <button type="submit">💾 Änderungen speichern</button>
+        <table>
+            <tr><th>Teil</th><th>Zustand</th></tr>
+            {% for teil in teile %}
+            <tr>
+                <td>{{ teil.vorlage.name }}</td>
+                <td>
+                    <select name="teil_{{ teil.id }}">
+                        {% for z in zustaende %}
+                            <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
+                                {{ z.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">💾 Speichern</button>
     </form>
 
     <br>
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
 </body>
 </html>
-

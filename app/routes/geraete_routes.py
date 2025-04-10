@@ -8,8 +8,10 @@ from models.geraet_db import Geraet as GeraetDB
 from models.zustand_db import Zustand
 from models.historie_db import Historie
 from models.teil_db import TeilVorlage  # notwendig für GET /auspacken
-from helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
+from app.helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
 from database import db
+
+
 
 geraete_bp = Blueprint("geraete", __name__)
 
@@ -112,3 +114,14 @@ def geraet_anzeigen():
         flash("Kein Gerät ausgewählt.")
         return redirect(url_for("benutzer.dashboard"))
     return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
+
+# Hier fangen die interessanten Routes an
+
+@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET"])
+@login_required
+def auspacken_popup(geraet_id):
+    geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
+    zustaende = Zustand.query.all()
+    teile = db.session.query(Teil).filter_by(geraet_id=geraet.id).all()
+
+    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=teile)
