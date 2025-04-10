@@ -11,6 +11,7 @@ class Modul(db.Model):
     reihenfolge = db.Column(db.Integer, default=0)
 
     modell = relationship("Modell", back_populates="module")
-    teile = relationship(Teil, back_populates="modul", cascade="all, delete-orphan")
+    teile = relationship("Teil", back_populates="modul", cascade="all, delete-orphan")
+
 
 

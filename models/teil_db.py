@@ -8,11 +8,9 @@ class Teil(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     modul_id = Column(Integer, ForeignKey("modul.id"))
-    zustand_id = Column(Integer, ForeignKey("zustand.id"))
-
+    zustand_id = Column(Integer, ForeignKey("zustaende.id"))
+    modul = relationship("Modul", back_populates="teile")
     zustand = relationship("Zustand")
-    def __repr__(self):
-        return f"<Teil {self.name}>"
 
 # ========================
 # Vorlagen für Modulimport
