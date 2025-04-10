@@ -1,10 +1,10 @@
 from flask import Flask, render_template
-from app.routes.geraete_routes import geraete_bp  # Importiere die richtigen Routen
+from app.routes.geraete_routes import geraete_bp
 from app.routes.login_routes import login_bp
 from app.routes.benutzer_routes import benutzer_bp
-from database import db  # Importiere db aus database.py
+from app.routes.debug_test import debug_bp
+from database import db
 import os
-
 
 app = Flask(__name__)
 
@@ -34,7 +34,7 @@ def load_user(user_id):
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
 app.register_blueprint(benutzer_bp)
-
+app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
 
 @app.route("/")
 def index():

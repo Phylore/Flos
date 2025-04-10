@@ -72,13 +72,9 @@ def modelle_fuer_kategorie(kategorie_id):
 def auspacken_popup(geraet_id):
     geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
     zustaende = Zustand.query.all()
+    teile = db.session.query(Teil).filter_by(geraet_id=geraet.id).all()
 
-    kategorie_name = geraet.modell.kategorie.name
-    teilvorlagen = db.session.query(TeilVorlage).all()
-    relevante_teile = [tv for tv in teilvorlagen if kategorie_name in tv.kategorien]
-
-    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=relevante_teile)
-
+    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=teile)
 
 @geraete_bp.route("/geraet/<string:qrcode>")
 @login_required
@@ -114,14 +110,3 @@ def geraet_anzeigen():
         flash("Kein Gerät ausgewählt.")
         return redirect(url_for("benutzer.dashboard"))
     return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
-
-# Hier fangen die interessanten Routes an
-
-@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET"])
-@login_required
-def auspacken_popup(geraet_id):
-    geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
-    zustaende = Zustand.query.all()
-    teile = db.session.query(Teil).filter_by(geraet_id=geraet.id).all()
-
-    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=teile)
