@@ -1,15 +1,17 @@
 import os
 from models.modell_db import Modell
 from models.kategorie_db import Kategorie
-from database import db
+from models.modul_db import Modul
+from models.teil_db import Teil
+from models.zustand_db import Zustand
 
-# Importiere gezielt alle Modell-Definitionen (z. B. aus modelle/)
+# Modelldefinitionen
 from models.modelle.saugroboter_modelle import saugroboter_modelle
+from models.modul_defaults_db import module_standards
 
-# Liste aller Modellquellen
 ALLE_MODELLSAMMLUNGEN = [
     saugroboter_modelle
-    # Weitere Modellquellen wie staubsauger_modelle usw. hier ergänzen
+    # weitere Modellquellen hier eintragen
 ]
 
 def import_modelle_wenn_notwendig():
@@ -22,6 +24,8 @@ def import_modelle_wenn_notwendig():
 
     print("[SETUP] Keine Modelle in DB gefunden – beginne Import...")
 
+    zustand_default = Zustand.query.filter_by(value="unbekannt").first()
+
     for modellquelle in ALLE_MODELLSAMMLUNGEN:
         for modellname, eintrag in modellquelle.items():
             kategoriename = eintrag["kategorie"]
@@ -31,14 +35,33 @@ def import_modelle_wenn_notwendig():
             if not kategorie:
                 kategorie = Kategorie(name=kategoriename)
                 db.session.add(kategorie)
-                db.session.flush()  # um kategorie.id direkt zu bekommen
+                db.session.flush()
 
-            # Modell prüfen oder anlegen
-            modell = Modell.query.filter_by(name=modellname).first()
-            if not modell:
-                modell = Modell(name=modellname, kategorie_id=kategorie.id)
-                db.session.add(modell)
-                print(f"[SETUP] Modell '{modellname}' zur Kategorie '{kategoriename}' hinzugefügt.")
+            # Modell anlegen
+            modell = Modell(name=modellname, kategorie_id=kategorie.id)
+            db.session.add(modell)
+            print(f"[SETUP] Modell '{modellname}' zur Kategorie '{kategoriename}' hinzugefügt.")
+
+            # Module anlegen
+            for modulname, modultyp in eintrag["module"].items():
+                modul = Modul(name=modulname, modell=modell)
+                
+                # Modultyp (z. B. "Saugroboter-Station-Standard1") auflösen
+                if isinstance(modultyp, str):
+                    teile_def = module_standards.get(modultyp, [])
+                    for teil_vorlage in teile_def:
+                        name = teil_vorlage.name if hasattr(teil_vorlage, "name") else str(teil_vorlage)
+                        teil = Teil(name=name, zustand=zustand_default)
+                        modul.teile.append(teil)
+                elif isinstance(modultyp, list):
+                    for typ in modultyp:
+                        teile_def = module_standards.get(typ, [])
+                        for teil_vorlage in teile_def:
+                            name = teil_vorlage.name if hasattr(teil_vorlage, "name") else str(teil_vorlage)
+                            teil = Teil(name=name, zustand=zustand_default)
+                            modul.teile.append(teil)
+
+                db.session.add(modul)
 
     db.session.commit()
     print("[SETUP] Modellimport abgeschlossen.")

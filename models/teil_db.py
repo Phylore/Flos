@@ -1,39 +1,54 @@
+
+from database import Base
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from .zustand_db import Zustand
 
-from database import db
+class Teil(Base):
+    __tablename__ = "teil"
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    modul_id = Column(Integer, ForeignKey("modul.id"))
+    zustand_id = Column(Integer, ForeignKey("zustand.id"))
 
-class Teil(db.Model):
-    __tablename__ = "teile"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    modul_id = db.Column(db.Integer, db.ForeignKey("modul.id"), nullable=False)
-    zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
-
-    modul = relationship("Modul", back_populates="teile")
     zustand = relationship("Zustand")
+    def __repr__(self):
+        return f"<Teil {self.name}>"
 
-# === Teilekonstanten, gruppiert nach Modultyp ===
+# ========================
+# Vorlagen für Modulimport
+# ========================
 
-# Modul: Station
-STROMKABEL = "Stromkabel"
-WASSERTANK = "Wassertank"
-ABWASSERTANK = "Abwassertank"
-STAUBBEUTEL = "Staubbeutel"
-BASIS = "Basis"
-RAMPE = "Rampe"
-WASCHMODUL = "Waschmodul"
-HEISSWASSERTANK = "HEISSWASSERTANK"
+class TeilVorlage:
+    def __init__(self, name, kategorien=None):
+        self.name = name
+        self.kategorien = kategorien or []
 
+# Stationsteile
+STROMKABEL = TeilVorlage("Stromkabel", ["Saugroboter"])
+WASSERTANK = TeilVorlage("Wassertank", ["Saugroboter"])
+ABWASSERTANK = TeilVorlage("Abwassertank", ["Saugroboter"])
+STAUBBEUTEL = TeilVorlage("Staubbeutel", ["Saugroboter"])
+BASIS = TeilVorlage("Basis", ["Saugroboter"])
+RAMPE = TeilVorlage("Rampe", ["Saugroboter"])
+WASCHMODUL = TeilVorlage("Waschmodul", ["Saugroboter"])
 
-# Modul: Roboter
-HAUPTBÜRSTE = "Hauptbürste"
-NEBENBÜRSTE = "Nebenbürste"
-WISCHPADHALTER = "Wischpadhalter"
-WISCHPADS = "Wischpads"
-STAUBBEHÄLTER = "Staubbehälter"
-STAUBFILTER = "Staubfilter"
+# Robotermodulteile
+HAUPTBÜRSTE = TeilVorlage("Hauptbürste", ["Saugroboter"])
+SEITENBÜRSTE = TeilVorlage("Seitenbürste", ["Saugroboter"])
+WISCHMODUL = TeilVorlage("Wischmodul", ["Saugroboter"])
+WISCHPADHALTER = TeilVorlage("Wischpadhalter", ["Saugroboter"])
+WISCHPADS = TeilVorlage("Wischpads", ["Saugroboter"])
+STOFF = TeilVorlage("Wischstoff", ["Saugroboter"])
+LASER = TeilVorlage("Lasereinheit", ["Saugroboter"])
+RAD = TeilVorlage("Radmodul", ["Saugroboter"])
+STAUBFILTER = TeilVorlage("Staubfilter", ["Saugroboter"])
+STAUBBEHÄLTER = TeilVorlage("Staubbehälter", ["Saugroboter"])
+NEBENBÜRSTE = TeilVorlage("Nebenbürste", ["Saugroboter"])
 
-# Optional: Weitere Kategorien wie Ersatzteile oder Anleitung können separat behandelt werden
+alle_teilvorlagen = [
+    STROMKABEL, WASSERTANK, ABWASSERTANK, STAUBBEUTEL,
+    BASIS, RAMPE, WASCHMODUL,
+    HAUPTBÜRSTE, SEITENBÜRSTE, WISCHMODUL, WISCHPADHALTER,
+    WISCHPADS, STOFF, LASER, RAD, STAUBFILTER, STAUBBEHÄLTER, NEBENBÜRSTE
+]
 
