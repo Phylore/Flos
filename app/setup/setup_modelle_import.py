@@ -4,6 +4,7 @@ from models.kategorie_db import Kategorie
 from models.modul_db import Modul
 from models.teil_db import Teil
 from models.zustand_db import Zustand
+from database import db
 
 # Modelldefinitionen
 from models.modelle.saugroboter_modelle import saugroboter_modelle
