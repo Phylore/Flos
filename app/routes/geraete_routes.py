@@ -1,12 +1,14 @@
 # /app/routes/geraete_routes.py
 
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
 from flask_login import current_user, login_required
 from models.kategorie_db import Kategorie
 from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
 from models.zustand_db import Zustand
 from models.historie_db import Historie
+from models.teil_db import TeilVorlage  # notwendig für GET /auspacken
+from helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
 from database import db
 
 geraete_bp = Blueprint("geraete", __name__)
@@ -50,6 +52,9 @@ def geraet_anlegen():
     db.session.add(neues_geraet)
     db.session.commit()
 
+    # 🧩 Teile initialisieren
+    initialisiere_teile_fuer_geraet(neues_geraet)
+
     return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
 
 
@@ -60,28 +65,17 @@ def modelle_fuer_kategorie(kategorie_id):
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
 
-@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["POST"])
+@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET"])
 @login_required
-def auspacken(geraet_id):
+def auspacken_popup(geraet_id):
     geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
-    zustaende = db.session.query(Zustand).all()
+    zustaende = Zustand.query.all()
 
-    for modul in geraet.modell.module:
-        for teil in modul.teile:
-            form_key = f"teil_{teil.id}"
-            if form_key in request.form:
-                neuer_zustand_id = int(request.form[form_key])
-                if teil.zustand_id != neuer_zustand_id:
-                    teil.zustand_id = neuer_zustand_id
-                    eintrag = Historie(
-                        geraet_id=geraet.id,
-                        aktion=f"Teil '{teil.name}' in Modul '{modul.name}' geändert zu '{Zustand.query.get(neuer_zustand_id).name}'",
-                        benutzer_id=current_user.id
-                    )
-                    db.session.add(eintrag)
+    kategorie_name = geraet.modell.kategorie.name
+    teilvorlagen = db.session.query(TeilVorlage).all()
+    relevante_teile = [tv for tv in teilvorlagen if kategorie_name in tv.kategorien]
 
-    db.session.commit()
-    return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
+    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=relevante_teile)
 
 
 @geraete_bp.route("/geraet/<string:qrcode>")
@@ -102,9 +96,13 @@ def zustand_aendern(geraet_id):
         eintrag = Historie(
             geraet_id=geraet.id,
             aktion=f"Zustand geändert zu '{Zustand.query.get(neuer_zustand_id).name}'",
-            benutzer_id=current_user.id  # ✅ dynamisch gesetzt
+            benutzer_id=current_user.id
         )
         db.session.add(eintrag)
+        db.session.commit()
+
+    return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
+
 
 @geraete_bp.route("/anzeigen", methods=["POST"])
 @login_required
@@ -114,4 +112,3 @@ def geraet_anzeigen():
         flash("Kein Gerät ausgewählt.")
         return redirect(url_for("benutzer.dashboard"))
     return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
-

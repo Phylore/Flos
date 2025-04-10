@@ -55,7 +55,7 @@
         <div class="modal-content">
             <span class="close" onclick="document.getElementById('auspackenModal').style.display='none'">&times;</span>
             <h3>Modul: Auspacken</h3>
-            <form method="post" action="{{ url_for('geraete.auspacken', geraet_id=geraet.id) }}">
+            <form method="get" action="{{ url_for('geraete.auspacken_popup', geraet_id=geraet.id) }}">
                 {% for modul in geraet.modell.module %}
                     <h4>{{ modul.name }}</h4>
                     <table>
