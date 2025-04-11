@@ -1,32 +1,32 @@
-# /app/helpers/initialisiere_teile.py
-
-from models.teil_db import Teil, TeilVorlage
+from models.teil_db import alle_teilvorlagen  # korrekt importieren
+from models.modul_db import Modul
+from models.teil_db import Teil
 from models.zustand_db import Zustand
 from database import db
 
 def initialisiere_teile_fuer_geraet(geraet):
     """
-    Erstellt zu einem Gerät alle passenden Teile (basierend auf Kategorie) mit Standardzustand.
+    Erstellt Module und Teile für ein neues Gerät – inklusive Zubehörmodul.
     """
-    if not geraet.modell or not geraet.modell.kategorie:
-        raise ValueError("Modell oder Kategorie fehlen beim Gerät.")
-
-    kategorie_name = geraet.modell.kategorie.name
-    teilvorlagen = TeilVorlage.query.all()
     zustaende = Zustand.query.all()
+    standard_zustand = next((z for z in zustaende if z.name.lower() == "okay"), zustaende[0])
 
-    standard_zustand = next((z for z in zustaende if z.name.lower() == "okay"), None)
-    if not standard_zustand:
-        raise ValueError("Standardzustand 'okay' nicht in der Datenbank gefunden.")
-
-    for vorlage in teilvorlagen:
-        if kategorie_name in vorlage.kategorien:
-            teil = Teil(
-                geraet_id=geraet.id,
-                teil_vorlage_id=vorlage.id,
-                zustand_id=standard_zustand.id
+    # Beispielmodul hinzufügen
+    roboter_modul = Modul(name="Roboter", geraet=geraet)
+    for vorlage in alle_teilvorlagen:
+        if "Saugroboter" in vorlage.kategorien:
+            roboter_modul.teile.append(
+                Teil(name=vorlage.name, zustand=standard_zustand, geraet=geraet)
             )
-            db.session.add(teil)
+    db.session.add(roboter_modul)
+
+    # Zubehörmodul
+    zubehoer_modul = Modul(name="Zubehör", geraet=geraet)
+    for name in ["Karton", "Ersatzfilter", "Anleitung"]:
+        zubehoer_modul.teile.append(
+            Teil(name=name, zustand=standard_zustand, geraet=geraet)
+        )
+    db.session.add(zubehoer_modul)
 
     db.session.commit()
 
