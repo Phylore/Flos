@@ -7,7 +7,7 @@ from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
 from models.zustand_db import Zustand
 from models.historie_db import Historie
-from models.teil_db import TeilVorlage  # notwendig für GET /auspacken
+from models.teil_db import Teil, TeilVorlage  # notwendig für GET /auspacken
 from app.helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
 from database import db
 

@@ -2,6 +2,7 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from models.geraet_db import Geraet  # ganz oben ergänzen
 
 class Teil(Base):
     __tablename__ = "teil"
@@ -9,8 +10,11 @@ class Teil(Base):
     name = Column(String, nullable=False)
     modul_id = Column(Integer, ForeignKey("modul.id"))
     zustand_id = Column(Integer, ForeignKey("zustaende.id"))
+    geraet_id = Column(Integer, ForeignKey("geraete.id"))  # 🆕
+    
     modul = relationship("Modul", back_populates="teile")
     zustand = relationship("Zustand")
+    geraet = relationship("Geraet", back_populates="teile")  # optional
 
 # ========================
 # Vorlagen für Modulimport
