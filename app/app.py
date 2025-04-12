@@ -3,7 +3,7 @@ from app.routes.geraete_routes import geraete_bp
 from app.routes.login_routes import login_bp
 from app.routes.benutzer_routes import benutzer_bp
 from app.routes.debug_test import debug_bp
-from app.routes.checklisten import auspacken
+from app.routes.checklisten.auspacken import auspacken_bp
 from database import db
 import os
 
