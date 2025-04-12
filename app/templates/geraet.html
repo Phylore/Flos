@@ -13,29 +13,6 @@
             border: 1px solid #aaa;
             padding: 0.5em;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 1em;
-            width: 80%;
-            max-width: 800px;
-        }
-        .close {
-            float: right;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -46,48 +23,9 @@
     <p><strong>Zustand:</strong> {{ geraet.zustand.name }}</p>
 
     <h2>Bearbeiten:</h2>
-    <button onclick="document.getElementById('auspackenModal').style.display='block'">
-        Auspacken
-    </button>
-
-    <!-- MODAL -->
-    <div id="auspackenModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="document.getElementById('auspackenModal').style.display='none'">&times;</span>
-            <h3>Modul: Auspacken</h3>
-            <form method="get" action="{{ url_for('geraete.auspacken_popup', geraet_id=geraet.id) }}">
-                {% for modul in geraet.modell.module %}
-                    <h4>{{ modul.name }}</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Teil</th>
-                                <th>Zustand</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for teil in modul.teile %}
-                            <tr>
-                                <td>{{ teil.name }}</td>
-                                <td>
-                                    <select name="teil_{{ teil.id }}">
-                                        {% for zustand in zustaende %}
-                                            <option value="{{ zustand.id }}"
-                                                {% if zustand.id == teil.zustand_id %}selected{% endif %}>
-                                                {{ zustand.name }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endfor %}
-                <button type="submit">Speichern</button>
-            </form>
-        </div>
-    </div>
+    <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}">
+        <button>📦 Auspacken starten</button>
+    </a>
 
     <h2>Historie:</h2>
     <ul>
@@ -102,15 +40,5 @@
     </ul>
 
     <p><a href="{{ url_for('benutzer.dashboard') }}">Zurück zur Übersicht</a></p>
-
-    <script>
-        window.onclick = function(event) {
-            let modal = document.getElementById('auspackenModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 </body>
 </html>
-

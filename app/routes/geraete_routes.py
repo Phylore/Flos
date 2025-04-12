@@ -67,15 +67,6 @@ def modelle_fuer_kategorie(kategorie_id):
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
 
-@geraete_bp.route("/geraet/<int:geraet_id>/auspacken", methods=["GET"])
-@login_required
-def auspacken_popup(geraet_id):
-    geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
-    zustaende = Zustand.query.all()
-    teile = db.session.query(Teil).filter_by(geraet_id=geraet.id).all()
-
-    return render_template("auspacken.html", geraet=geraet, zustaende=zustaende, teile=teile)
-
 @geraete_bp.route("/geraet/<string:qrcode>")
 @login_required
 def geraet_seite(qrcode):
