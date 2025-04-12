@@ -10,11 +10,13 @@ def zustand_vorbefuellen():
     if not Zustand.query.first():
         zustaende = [
             # Anwesenheit
+            ("Nicht geprüft", "Anwesenheit"),
             ("Ja", "Anwesenheit"),
             ("Ersetzt", "Anwesenheit"),
             ("Nein", "Anwesenheit"),
 
             # Sauberkeit (1–5, 5 = sehr sauber)
+            ("Nicht bewertet", "Sauberkeit"),
             ("5 – sehr sauber", "Sauberkeit"),
             ("4 – sauber", "Sauberkeit"),
             ("3 – mittel", "Sauberkeit"),
@@ -22,9 +24,9 @@ def zustand_vorbefuellen():
             ("1 – sehr schmutzig", "Sauberkeit"),
 
             # Funktionalität
+            ("Unklar", "Funktioniert"),
             ("Ja", "Funktioniert"),
             ("Nein", "Funktioniert"),
-            ("Unklar", "Funktioniert"),
         ]
         for value, kategorie in zustaende:
             db.session.add(Zustand(value=value, kategorie=kategorie))

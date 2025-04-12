@@ -13,16 +13,16 @@
             <table>
                 <tr>
                     <th>Teil</th>
-                    <th>Zustand</th>
+                    <th>Anwesenheit</th>
                 </tr>
                 {% for teil in modul.teile %}
                 <tr>
                     <td>{{ teil.name }}</td>
                     <td>
                         {% if zustaende %}
-                        <select name="teil_{{ teil.id }}">
+                        <select name="anwesenheit_{{ teil.id }}">
                             {% for z in zustaende %}
-                                <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
+                                <option value="{{ z.id }}" {% if teil.anwesenheit_id == z.id %}selected{% endif %}>
                                     {{ z.value }}
                                 </option>
                             {% endfor %}
@@ -36,7 +36,7 @@
             </table>
         {% endfor %}
         <br>
-        <button type="submit">💾 Änderungen speichern</button>
+        <button type="submit">💾 Anwesenheiten speichern</button>
     </form>
 
     <br>
