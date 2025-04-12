@@ -15,6 +15,9 @@ ALLE_MODELLSAMMLUNGEN = [
     # weitere Modellquellen hier eintragen
 ]
 
+def zustand_by_kategorie(value, kategorie):
+    return Zustand.query.filter_by(value=value, kategorie=kategorie).first()
+
 def import_modelle_wenn_notwendig():
     print("[SETUP] Prüfe, ob Modelle importiert werden müssen...")
 
@@ -24,8 +27,6 @@ def import_modelle_wenn_notwendig():
         return
 
     print("[SETUP] Keine Modelle in DB gefunden – beginne Import...")
-
-    zustand_default = Zustand.query.filter_by(value="unbekannt").first()
 
     for modellquelle in ALLE_MODELLSAMMLUNGEN:
         for modellname, eintrag in modellquelle.items():
@@ -46,24 +47,33 @@ def import_modelle_wenn_notwendig():
             # Module anlegen
             for modulname, modultyp in eintrag["module"].items():
                 modul = Modul(name=modulname, modell=modell)
-                
+
                 # Modultyp (z. B. "Saugroboter-Station-Standard1") auflösen
                 if isinstance(modultyp, str):
                     teile_def = module_standards.get(modultyp, [])
                     for teil_vorlage in teile_def:
                         name = teil_vorlage.name if hasattr(teil_vorlage, "name") else str(teil_vorlage)
-                        teil = Teil(name=name, zustand=zustand_default)
+                        teil = Teil(
+                            name=name,
+                            anwesenheit=zustand_by_kategorie("vorhanden", "Anwesenheit"),
+                            sauberkeit=zustand_by_kategorie("sauber", "Sauberkeit"),
+                            beschaedigung=zustand_by_kategorie("intakt", "Beschädigung")
+                        )
                         modul.teile.append(teil)
                 elif isinstance(modultyp, list):
                     for typ in modultyp:
                         teile_def = module_standards.get(typ, [])
                         for teil_vorlage in teile_def:
                             name = teil_vorlage.name if hasattr(teil_vorlage, "name") else str(teil_vorlage)
-                            teil = Teil(name=name, zustand=zustand_default)
+                            teil = Teil(
+                                name=name,
+                                anwesenheit=zustand_by_kategorie("vorhanden", "Anwesenheit"),
+                                sauberkeit=zustand_by_kategorie("sauber", "Sauberkeit"),
+                                beschaedigung=zustand_by_kategorie("intakt", "Beschädigung")
+                            )
                             modul.teile.append(teil)
 
                 db.session.add(modul)
 
     db.session.commit()
     print("[SETUP] Modellimport abgeschlossen.")
-

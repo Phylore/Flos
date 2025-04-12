@@ -8,11 +8,28 @@ from models.zustand_db import Zustand
 
 def zustand_vorbefuellen():
     if not Zustand.query.first():
-        standard_zustaende = ["unbekannt", "sehr gut", "gut", "okay", "miese", "defekt"]
-        for name in standard_zustaende:
-            db.session.add(Zustand(value=name))
+        zustaende = [
+            # Anwesenheit
+            ("Ja", "Anwesenheit"),
+            ("Ersetzt", "Anwesenheit"),
+            ("Nein", "Anwesenheit"),
+
+            # Sauberkeit (1–5, 5 = sehr sauber)
+            ("5 – sehr sauber", "Sauberkeit"),
+            ("4 – sauber", "Sauberkeit"),
+            ("3 – mittel", "Sauberkeit"),
+            ("2 – schmutzig", "Sauberkeit"),
+            ("1 – sehr schmutzig", "Sauberkeit"),
+
+            # Funktionalität
+            ("Ja", "Funktioniert"),
+            ("Nein", "Funktioniert"),
+            ("Unklar", "Funktioniert"),
+        ]
+        for value, kategorie in zustaende:
+            db.session.add(Zustand(value=value, kategorie=kategorie))
         db.session.commit()
-        print(f"✅ {len(standard_zustaende)} Zustände importiert.")
+        print(f"✅ {len(zustaende)} neue differenzierte Zustände importiert.")
     else:
         print("ℹ️ Zustände bereits vorhanden.")
 
@@ -32,7 +49,7 @@ def benutzer_check_und_erstellen():
     safe_create("max", "max")
     db.session.commit()
 
-    print("👥 Benutzerprüfung abgeschlossen.\n")
+    print("👥 Benutzerprüfung abgeschlossen.")
     benutzer_liste = Benutzer.query.all()
     print(f"📋 Aktuell registrierte Benutzer ({len(benutzer_liste)}):")
     for benutzer in benutzer_liste:
@@ -43,4 +60,3 @@ with app.app_context():
     zustand_vorbefuellen()
     benutzer_check_und_erstellen()
     import_modelle_wenn_notwendig()
-

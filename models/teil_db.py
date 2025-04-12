@@ -1,4 +1,3 @@
-
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
@@ -9,12 +8,17 @@ class Teil(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     modul_id = Column(Integer, ForeignKey("modul.id"))
-    zustand_id = Column(Integer, ForeignKey("zustaende.id"))
-    geraet_id = Column(Integer, ForeignKey("geraete.id"))  # 🆕
-    
+    geraet_id = Column(Integer, ForeignKey("geraete.id"))
+
+    anwesenheit_id = Column(Integer, ForeignKey("zustaende.id"))
+    sauberkeit_id = Column(Integer, ForeignKey("zustaende.id"))
+    beschaedigung_id = Column(Integer, ForeignKey("zustaende.id"))
+
     modul = relationship("Modul", back_populates="teile")
-    zustand = relationship("Zustand")
-    geraet = relationship("Geraet", back_populates="teile")  # optional
+    anwesenheit = relationship("Zustand", foreign_keys=[anwesenheit_id])
+    sauberkeit = relationship("Zustand", foreign_keys=[sauberkeit_id])
+    beschaedigung = relationship("Zustand", foreign_keys=[beschaedigung_id])
+    geraet = relationship("Geraet", back_populates="teile")
 
 # ========================
 # Vorlagen für Modulimport
@@ -53,4 +57,3 @@ alle_teilvorlagen = [
     HAUPTBÜRSTE, SEITENBÜRSTE, WISCHMODUL, WISCHPADHALTER,
     WISCHPADS, STOFF, LASER, RAD, STAUBFILTER, STAUBBEHÄLTER, NEBENBÜRSTE
 ]
-

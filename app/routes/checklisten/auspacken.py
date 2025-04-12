@@ -9,5 +9,6 @@ auspacken_bp = Blueprint("auspacken", __name__, url_prefix="/checkliste/auspacke
 @login_required
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
-    zustaende = Zustand.query.all()
-    return render_template("checklisten/auspacken.html", geraet=geraet, zustaende=zustaende)
+    anwesenheits_zustaende = Zustand.query.filter_by(kategorie="Anwesenheit").all()
+    return render_template("checklisten/auspacken.html", geraet=geraet, zustaende=anwesenheits_zustaende)
+
