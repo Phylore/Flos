@@ -4,6 +4,8 @@ from app.routes.login_routes import login_bp
 from app.routes.benutzer_routes import benutzer_bp
 from app.routes.debug_test import debug_bp
 from app.routes.checklisten.auspacken import auspacken_bp
+from app.routes.checklisten.zustand_aendern import zustand_aendern_bp
+
 from database import db
 import os
 
@@ -27,6 +29,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login.login"
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return Benutzer.query.get(int(user_id))
@@ -37,6 +40,9 @@ app.register_blueprint(login_bp)
 app.register_blueprint(benutzer_bp)
 app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
 app.register_blueprint(auspacken_bp)
+app.register_blueprint(zustand_aendern_bp)
+
+
 @app.route("/")
 def index():
     return render_template("index.html")

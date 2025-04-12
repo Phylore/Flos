@@ -26,6 +26,9 @@
     <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}">
         <button>📦 Auspacken starten</button>
     </a>
+    <a href="{{ url_for('zustand_aendern.anzeigen', geraet_id=geraet.id) }}">
+        <button>🛠️ Zustand ändern</button>
+    </a>
 
     <h2>Historie:</h2>
     <ul>
@@ -42,3 +45,4 @@
     <p><a href="{{ url_for('benutzer.dashboard') }}">Zurück zur Übersicht</a></p>
 </body>
 </html>
+
