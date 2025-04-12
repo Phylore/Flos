@@ -7,36 +7,36 @@
 <body>
     <h1>📦 Auspacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
-    <p><strong>Debug:</strong> {{ teile|length }} Teile geladen</p>
-    <ul>
-    {% for teil in teile %}
-        <li>
-            ID: {{ teil.id }} |
-            Vorlage: {{ teil.vorlage.name if teil.vorlage else "❌ KEINE VORLAGE" }} |
-            Zustand: {{ teil.zustand_id }}
-        </li>
-    {% endfor %}
-    </ul>
-
     <form method="post">
-        <table>
-            <tr><th>Teil</th><th>Zustand</th></tr>
-            {% for teil in teile %}
-            <tr>
-                <td>{{ teil.vorlage.name if teil.vorlage else "❌ KEINE VORLAGE" }}</td>
-                <td>
-                    <select name="teil_{{ teil.id }}">
-                        {% for z in zustaende %}
-                            <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
-                                {{ z.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <button type="submit">💾 Speichern</button>
+        {% for modul in geraet.module %}
+            <h2>{{ modul.name }}</h2>
+            <table>
+                <tr>
+                    <th>Teil</th>
+                    <th>Zustand</th>
+                </tr>
+                {% for teil in modul.teile %}
+                <tr>
+                    <td>{{ teil.name }}</td>
+                    <td>
+                        {% if zustaende %}
+                        <select name="teil_{{ teil.id }}">
+                            {% for z in zustaende %}
+                                <option value="{{ z.id }}" {% if teil.zustand_id == z.id %}selected{% endif %}>
+                                    {{ z.value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <em>Keine Zustände verfügbar</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+        <br>
+        <button type="submit">💾 Änderungen speichern</button>
     </form>
 
     <br>

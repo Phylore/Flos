@@ -3,6 +3,7 @@ from app.routes.geraete_routes import geraete_bp
 from app.routes.login_routes import login_bp
 from app.routes.benutzer_routes import benutzer_bp
 from app.routes.debug_test import debug_bp
+from app.routes.checklisten import auspacken
 from database import db
 import os
 
@@ -35,7 +36,7 @@ app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
 app.register_blueprint(benutzer_bp)
 app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
-
+app.register_blueprint(auspacken_bp)
 @app.route("/")
 def index():
     return render_template("index.html")
