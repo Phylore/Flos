@@ -7,7 +7,7 @@ class Modul(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
+    modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=True)
     reihenfolge = db.Column(db.Integer, default=0)
     geraet_id = db.Column(db.Integer, db.ForeignKey("geraete.id"))
 

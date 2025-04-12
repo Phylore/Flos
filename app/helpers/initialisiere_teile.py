@@ -9,7 +9,7 @@ def initialisiere_teile_fuer_geraet(geraet):
     Erstellt Module und Teile für ein neues Gerät – inklusive Zubehörmodul.
     """
     zustaende = Zustand.query.all()
-    standard_zustand = next((z for z in zustaende if z.name.lower() == "okay"), zustaende[0])
+    standard_zustand = next((z for z in zustaende if z.value.lower() == "okay"), zustaende[0])
 
     # Beispielmodul hinzufügen
     roboter_modul = Modul(name="Roboter", geraet=geraet)
