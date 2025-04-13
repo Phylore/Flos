@@ -16,7 +16,7 @@ depends_on = None
 
 def upgrade():
     with op.batch_alter_table('geraete', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('benutzer_id', sa.Integer(), nullable=False))
+        batch_op.add_column(sa.Column('benutzer_id', sa.Integer(), nullable=True))  # ✅ fix
         batch_op.create_foreign_key(
             constraint_name='fk_geraete_benutzer',
             referent_table='benutzer',
