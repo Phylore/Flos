@@ -1,43 +1,71 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>👋 Willkommen, {{ current_user.name }}</h1>
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Geräte-Dashboard</h1>
 
-    <h2>🧾 Deine Geräte</h2>
-    {% if deine_geraete %}
-        <ul>
-        {% for geraet in deine_geraete %}
-            <li>
-                <strong>{{ geraet.qrcode }}</strong> – {{ geraet.modell.name }}
-                <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">Details</a>
-            </li>
+  {% if geraete %}
+  <form id="geraeteForm">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th></th>
+          <th>QR-Code</th>
+          <th>Modell</th>
+          <th>Kategorie</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for geraet in geraete %}
+        <tr>
+          <td>
+            <input type="radio" name="geraet_id" value="{{ geraet.id }}" data-qrcode="{{ geraet.qrcode }}">
+          </td>
+          <td>{{ geraet.qrcode }}</td>
+          <td>{{ geraet.modell.name }}</td>
+          <td>{{ geraet.modell.kategorie.name }}</td>
+        </tr>
         {% endfor %}
-        </ul>
-    {% else %}
-        <p>Du hast noch keine Geräte.</p>
-    {% endif %}
+      </tbody>
+    </table>
 
-    {% if current_user.rolle == 'admin' %}
-        <h2>📋 Alle Geräte im System</h2>
-        {% if alle_geraete %}
-            <ul>
-            {% for geraet in alle_geraete %}
-                <li>
-                    <strong>{{ geraet.qrcode }}</strong> – {{ geraet.modell.name }} ({{ geraet.benutzer.name }})
-                    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">Details</a>
+    <div class="d-flex gap-2 mt-4">
+      <a id="btn-auspacken" href="#" class="btn btn-outline-primary disabled">📦 Auspacken</a>
+      <a id="btn-zustand" href="#" class="btn btn-outline-warning disabled">🛠 Zustand ändern</a>
+      <a id="btn-details" href="#" class="btn btn-outline-secondary disabled">🔍 Details</a>
+    </div>
+  </form>
+  {% else %}
+    <div class="alert alert-info">
+      Noch keine Geräte vorhanden.
+    </div>
+  {% endif %}
 
-                    <form method="POST" action="{{ url_for('geraete.geraet_archivieren', geraet_id=geraet.id) }}" style="display:inline;" onsubmit="return confirm('Wirklich löschen?');">
-                        <button type="submit">🗑️ Gerät löschen</button>
-                    </form>
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>Keine Geräte vorhanden.</p>
-        {% endif %}
-    {% endif %}
-</body>
-</html>
+  <div class="mt-4">
+    <a href="{{ url_for('geraete.geraet_anlegen') }}" class="btn btn-success">➕ Neues Gerät hinzufügen</a>
+    <a href="{{ url_for('login.logout') }}" class="btn btn-danger float-end">🚪 Logout</a>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('geraeteForm');
+  const auspackenBtn = document.getElementById('btn-auspacken');
+  const zustandBtn = document.getElementById('btn-zustand');
+  const detailsBtn = document.getElementById('btn-details');
+
+  form?.addEventListener('change', function () {
+    const checked = form.querySelector('input[name="geraet_id"]:checked');
+    if (checked) {
+      const geraetId = checked.value;
+      const qrcode = checked.dataset.qrcode;
+      auspackenBtn.href = "/checkliste/auspacken/" + geraetId;
+      zustandBtn.href = "/checkliste/zustand_aendern/" + geraetId;
+      detailsBtn.href = "/geraet/" + qrcode;
+
+      auspackenBtn.classList.remove("disabled");
+      zustandBtn.classList.remove("disabled");
+      detailsBtn.classList.remove("disabled");
+    }
+  });
+</script>
+{% endblock %}
+

@@ -32,12 +32,19 @@ def init_zustaende():
     print("✅ Zustände initialisiert.")
 
 def init_benutzer():
-    admin = Benutzer(name="admin", passwort_hash="admin", rolle="admin")
-    eric = Benutzer(name="eric", passwort_hash="eric", rolle="user")
-    max = Benutzer(name="max", passwort_hash="max", rolle="user")
+    admin = Benutzer(name="admin", rolle="admin")
+    admin.set_passwort("admin")
+
+    eric = Benutzer(name="eric", rolle="user")
+    eric.set_passwort("eric")
+
+    max = Benutzer(name="max", rolle="user")
+    max.set_passwort("max")
+
     db.session.add_all([admin, eric, max])
     db.session.commit()
     print("✅ Benutzer 'admin', 'eric', 'max' wurden angelegt.")
+
 
 def beispielgeraete_anlegen():
     admin = Benutzer.query.filter_by(name="admin").first()
