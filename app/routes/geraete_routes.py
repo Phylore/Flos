@@ -101,3 +101,15 @@ def geraet_anzeigen():
         flash("Kein Gerät ausgewählt.")
         return redirect(url_for("benutzer.dashboard"))
     return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
+
+@geraete_bp.route("/geraet/archivieren/<int:geraet_id>", methods=["POST"])
+@login_required
+def geraet_archivieren(geraet_id):
+    if current_user.rolle != "admin":
+        abort(403)
+
+    geraet = GeraetDB.query.get_or_404(geraet_id)
+    geraet.archiviert = True
+    db.session.commit()
+    return redirect(url_for("benutzer.dashboard"))
+

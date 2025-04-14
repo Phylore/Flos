@@ -1,62 +1,43 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Dashboard</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 1em;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 0.5em;
-            text-align: left;
-        }
-        th {
-            background-color: #eee;
-        }
-    </style>
 </head>
 <body>
-    <h1>Willkommen im Dashboard</h1>
+    <h1>👋 Willkommen, {{ current_user.name }}</h1>
 
-    <h2>Deine Geräte</h2>
-
-    {% if geraete %}
-    <form method="post" action="{{ url_for('geraete.geraet_anzeigen') }}">
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>QR-Code</th>
-                    <th>Modell</th>
-                    <th>Zustand</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for geraet in geraete %}
-                <tr>
-                    <td>
-                        <input type="radio" name="qrcode" value="{{ geraet.qrcode }}" required>
-                    </td>
-                    <td>{{ geraet.qrcode }}</td>
-                    <td>{{ geraet.modell.name }}</td>
-                    <td>{{ geraet.zustand.value if geraet.zustand else "Unbekannt" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit">Ausgewähltes Gerät anzeigen</button>
-    </form>
+    <h2>🧾 Deine Geräte</h2>
+    {% if deine_geraete %}
+        <ul>
+        {% for geraet in deine_geraete %}
+            <li>
+                <strong>{{ geraet.qrcode }}</strong> – {{ geraet.modell.name }}
+                <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">Details</a>
+            </li>
+        {% endfor %}
+        </ul>
     {% else %}
-        <p>Du hast noch keine Geräte angelegt.</p>
+        <p>Du hast noch keine Geräte.</p>
     {% endif %}
 
-    <a href="{{ url_for('geraete.scannen') }}">
-        <button type="button">Neues Gerät scannen</button>
-    </a>
+    {% if current_user.rolle == 'admin' %}
+        <h2>📋 Alle Geräte im System</h2>
+        {% if alle_geraete %}
+            <ul>
+            {% for geraet in alle_geraete %}
+                <li>
+                    <strong>{{ geraet.qrcode }}</strong> – {{ geraet.modell.name }} ({{ geraet.benutzer.name }})
+                    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">Details</a>
+
+                    <form method="POST" action="{{ url_for('geraete.geraet_archivieren', geraet_id=geraet.id) }}" style="display:inline;" onsubmit="return confirm('Wirklich löschen?');">
+                        <button type="submit">🗑️ Gerät löschen</button>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Keine Geräte vorhanden.</p>
+        {% endif %}
+    {% endif %}
 </body>
 </html>
-
