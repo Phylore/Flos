@@ -39,7 +39,7 @@ def geraet_anlegen():
     qrcode = request.form["qrcode"]
     modell_id = request.form["modell"]
 
-    # ✅ Gerät existiert schon → weiterleiten statt Error
+    # ✅ Gerät existiert schon → weiterleiten
     existing = GeraetDB.query.filter_by(qrcode=qrcode).first()
     if existing:
         return redirect(url_for("geraete.geraet_seite", qrcode=existing.qrcode))
@@ -57,7 +57,17 @@ def geraet_anlegen():
     # 🧩 Teile initialisieren
     initialisiere_teile_fuer_geraet(neues_geraet)
 
+    # 📜 Historie-Eintrag speichern
+    eintrag = Historie(
+        geraet_id=neues_geraet.id,
+        benutzer_id=current_user.id,
+        aktion="Gerät angelegt"
+    )
+    db.session.add(eintrag)
+    db.session.commit()
+
     return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
+
 
 
 @geraete_bp.route("/modelle/<int:kategorie_id>")
@@ -112,4 +122,12 @@ def geraet_archivieren(geraet_id):
     geraet.archiviert = True
     db.session.commit()
     return redirect(url_for("benutzer.dashboard"))
+
+@geraete_bp.route("/geraet/<string:qrcode>/historie")
+@login_required
+def geraet_historie(qrcode):
+    geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
+    eintraege = Historie.query.filter_by(geraet_id=geraet.id).order_by(Historie.zeitpunkt.desc()).all()
+    return render_template("geraet_historie.html", geraet=geraet, eintraege=eintraege)
+
 
