@@ -2,6 +2,7 @@ from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.geraet_db import Geraet  # ganz oben ergänzen
+from models.teilvorlage_db import TeilVorlage  # Import für die Beziehung
 
 class Teil(Base):
     __tablename__ = "teil"
@@ -20,7 +21,7 @@ class Teil(Base):
     sauberkeit = relationship("Zustand", foreign_keys=[sauberkeit_id])
     beschaedigung = relationship("Zustand", foreign_keys=[beschaedigung_id])
     geraet = relationship("Geraet", back_populates="teile")
-    teilvorlage = relationship("TeilVorlage", backref="teile", lazy="dynamic")
+    teilvorlage = relationship("TeilVorlage", backref="teile")
 
 # ========================
 # Vorlagen für Modulimport

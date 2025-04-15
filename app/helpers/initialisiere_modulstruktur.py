@@ -3,6 +3,7 @@ from models.teil_db import Teil
 from database import db
 from models.modelle.saugroboter_modelle import saugroboter_modelle
 from models.modul_defaults_db import module_standards
+from models.teilvorlage_db import TeilVorlage  # Import der TeilVorlage
 
 def initialisiere_module_und_teile(geraet):
     modell_name = geraet.modell.name
@@ -23,16 +24,20 @@ def initialisiere_module_und_teile(geraet):
                 print(f"⚠️ Kein Modul-Standard definiert für: {key}")
                 continue
 
-            # Erstelle das Modul in der Datenbank
+            # Modul in der Datenbank erstellen
             modul = Modul(name=modul_bezeichnung, geraet_id=geraet.id)
             db.session.add(modul)
             db.session.flush()  # damit modul.id existiert
 
+            # Teile aus den Standardwerten anlegen
             for teilvorlage in module_standards[key]:
+                # Stelle sicher, dass `TeilVorlage` korrekt zugewiesen wird
+                teilvorlage_obj = TeilVorlage.query.filter_by(name=teilvorlage).first()
+
                 teil = Teil(
-                    name=teilvorlage.name,
+                    name=teilvorlage,
                     modul_id=modul.id,
-                    teilvorlage_id=teilvorlage.id if hasattr(teilvorlage, 'id') else None
+                    teilvorlage_id=teilvorlage_obj.id if teilvorlage_obj else None
                 )
                 db.session.add(teil)
 
