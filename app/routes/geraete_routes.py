@@ -80,4 +80,11 @@ def modelle_fuer_kategorie(kategorie_id):
     modelle = Modell.query.filter_by(kategorie_id=kategorie_id).all()
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
+@geraete_bp.route("/geraet/<string:qrcode>/historie")
+@login_required
+def geraet_historie(qrcode):
+    geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
+    historie_eintraege = Historie.query.filter_by(geraet_id=geraet.id).order_by(Historie.zeitpunkt.desc()).all()
+    return render_template("historie.html", geraet=geraet, historie=historie_eintraege)
+
 
