@@ -6,7 +6,7 @@ from models.geraet_db import Geraet as GeraetDB
 from models.zustand_db import Zustand
 from models.historie_db import Historie
 from models.teil_db import Teil, TeilVorlage
-from app.helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
+from app.helpers.initialisiere_modulstruktur import initialisiere_module_und_teile
 from database import db
 
 geraete_bp = Blueprint("geraete", __name__, url_prefix="/geraete")
@@ -55,7 +55,7 @@ def geraet_anlegen():
     db.session.add(neues_geraet)
     db.session.commit()
 
-    initialisiere_teile_fuer_geraet(neues_geraet)
+    initialisiere_module_und_teile(neues_geraet)
 
     eintrag = Historie(
         geraet_id=neues_geraet.id,

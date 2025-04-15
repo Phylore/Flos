@@ -1,40 +1,63 @@
-<!-- app/templates/auspacken.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Auspacken – Gerät {{ geraet.qrcode }}</title>
+    <title>📦 Auspacken – {{ geraet.qrcode }}</title>
 </head>
 <body>
     <h1>📦 Auspacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
+    <!-- 🐞 DEBUG: Zustände -->
+    <h3 style="color: teal;">DEBUG: ZUSTÄNDE</h3>
+    <ul>
+        {% for z in zustaende %}
+            <li>{{ z.id }} – {{ z.value }}</li>
+        {% else %}
+            <li><strong>❌ KEINE ZUSTÄNDE GELADEN</strong></li>
+        {% endfor %}
+    </ul>
+
+    <!-- 🐞 DEBUG: Module -->
+    <h3 style="color: teal;">DEBUG: MODULE</h3>
+    <ul>
+        {% for modul in geraet.module %}
+            <li>{{ modul.name }} ({{ modul.id }}) – {{ modul.teile|length }} Teile</li>
+        {% else %}
+            <li><strong>❌ KEINE MODULE VORHANDEN</strong></li>
+        {% endfor %}
+    </ul>
+
     <form method="post">
         {% for modul in geraet.module %}
             <h2>{{ modul.name }}</h2>
+
             <table>
-                <tr>
-                    <th>Teil</th>
-                    <th>Anwesenheit</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Teil</th>
+                        <th>Anwesenheit</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for teil in modul.teile %}
-                <tr>
-                    <td>{{ teil.name }}</td>
-                    <td>
-                        {% if zustaende %}
-                        <select name="anwesenheit_{{ teil.id }}">
-                            {% for z in zustaende %}
-                                <option value="{{ z.id }}" {% if teil.anwesenheit_id == z.id %}selected{% endif %}>
-                                    {{ z.value }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        {% else %}
-                        <em>Keine Zustände verfügbar</em>
-                        {% endif %}
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{ teil.name }}</td>
+                        <td>
+                            <select name="anwesenheit_{{ teil.id }}">
+                                {% for z in zustaende %}
+                                    {% set ist_selected = (teil.anwesenheit_id == z.id)
+                                                           or (teil.anwesenheit_id is none and z.value == "Nicht geprüft") %}
+                                    <option value="{{ z.id }}" {% if ist_selected %}selected{% endif %}>
+                                        {{ z.value }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
         {% endfor %}
+
         <br>
         <button type="submit">💾 Anwesenheiten speichern</button>
     </form>
@@ -43,3 +66,4 @@
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
 </body>
 </html>
+

@@ -9,7 +9,6 @@ from models.zustand_db import Zustand, STANDARD_ZUSTAENDE
 
 from app.setup.setup_modelle_import import import_modelle_wenn_notwendig
 
-
 def init_zustaende():
     for kategorie, werte in STANDARD_ZUSTAENDE.items():
         for value in werte:
@@ -17,6 +16,7 @@ def init_zustaende():
                 db.session.add(Zustand(value=value, kategorie=kategorie))
     db.session.commit()
     print("✅ Zustände initialisiert.")
+
 
 def init_benutzer():
     admin = Benutzer(name="admin", rolle="admin")
