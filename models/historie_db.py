@@ -13,6 +13,7 @@ class Historie(Base):
     benutzer_id = Column(Integer, ForeignKey("benutzer.id"), nullable=False)
     aktion = Column(String, nullable=False)
     zeitpunkt = Column(DateTime, default=datetime.utcnow)
+    kommentar = Column(String, nullable=True)  # ✅ hinzugefügt
 
-    benutzer = relationship("Benutzer")  # für Template-Zugriff: eintrag.benutzer.name
+    benutzer = relationship("Benutzer")
 
