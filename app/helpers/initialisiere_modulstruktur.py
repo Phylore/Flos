@@ -4,12 +4,6 @@ from database import db
 from models.modelle.saugroboter_modelle import saugroboter_modelle
 from models.modul_defaults_db import module_standards
 
-from models.modul_db import Modul
-from models.teil_db import Teil
-from database import db
-from app.setup.saugroboter_modelle import saugroboter_modelle
-from app.setup.modul_defaults_db import module_standards
-
 def initialisiere_module_und_teile(geraet):
     modell_name = geraet.modell.name
     if modell_name not in saugroboter_modelle:
@@ -44,5 +38,4 @@ def initialisiere_module_und_teile(geraet):
 
     db.session.commit()
     print(f"✅ Module & Teile für {modell_name} ({geraet.qrcode}) initialisiert.")
-
 

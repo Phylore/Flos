@@ -13,12 +13,14 @@ class Teil(Base):
     anwesenheit_id = Column(Integer, ForeignKey("zustaende.id"))
     sauberkeit_id = Column(Integer, ForeignKey("zustaende.id"))
     beschaedigung_id = Column(Integer, ForeignKey("zustaende.id"))
+    teilvorlage_id = Column(Integer, ForeignKey('teilvorlage.id'))  # Optional
 
     modul = relationship("Modul", back_populates="teile")
     anwesenheit = relationship("Zustand", foreign_keys=[anwesenheit_id])
     sauberkeit = relationship("Zustand", foreign_keys=[sauberkeit_id])
     beschaedigung = relationship("Zustand", foreign_keys=[beschaedigung_id])
     geraet = relationship("Geraet", back_populates="teile")
+    teilvorlage = relationship("TeilVorlage", backref="teile", lazy="dynamic")
 
 # ========================
 # Vorlagen für Modulimport
