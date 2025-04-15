@@ -90,22 +90,27 @@ def geraet_historie(qrcode):
 @geraete_bp.route("/geraet/<string:qrcode>/loeschen", methods=["POST"])
 @login_required
 def geraet_loeschen(qrcode):
-    if not current_user.ist_admin:
+    if not current_user.rolle == "admin":
         abort(403)
 
     geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
-    geraet.geloescht = True  # falls du "soft delete" willst
-    db.session.commit()
 
-    eintrag = Historie(
-        geraet_id=geraet.id,
-        benutzer_id=current_user.id,
-        aktion="Gerät gelöscht"
-    )
-    db.session.add(eintrag)
-    db.session.commit()
+    # ALLE verknüpften Historieneinträge entfernen
+    from models.historie_db import Historie
+    Historie.query.filter_by(geraet_id=geraet.id).delete()
 
-    flash("Gerät wurde gelöscht.", "warning")
+    # Dann das Gerät selbst löschen
+    db.session.delete(geraet)
+
+    try:
+        db.session.commit()
+        flash("Gerät wurde gelöscht.", "warning")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Fehler beim Löschen: {str(e)}", "danger")
+
     return redirect(url_for("benutzer.dashboard"))
+
+
 
 

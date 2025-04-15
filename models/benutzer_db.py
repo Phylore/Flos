@@ -20,3 +20,8 @@ class Benutzer(Base, UserMixin):
 
     def __repr__(self):
         return f"<Benutzer {self.name}>"
+
+    @property
+    def ist_admin(self):
+        return self.rolle == "admin"
+
