@@ -16,7 +16,10 @@ ALLE_MODELLSAMMLUNGEN = [
 ]
 
 def zustand_by_kategorie(value, kategorie):
-    return Zustand.query.filter_by(value=value, kategorie=kategorie).first()
+    with db.session.no_autoflush:
+        return Zustand.query.filter_by(value=value, kategorie=kategorie).first()
+
+
 
 def import_modelle_wenn_notwendig():
     print("[SETUP] Prüfe, ob Modelle importiert werden müssen...")

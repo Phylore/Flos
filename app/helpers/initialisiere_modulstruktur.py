@@ -3,7 +3,6 @@ from models.teil_db import Teil
 from database import db
 from models.modelle.saugroboter_modelle import saugroboter_modelle
 from models.modul_defaults_db import module_standards
-from models.teilvorlage_db import TeilVorlage  # Import der TeilVorlage
 
 def initialisiere_module_und_teile(geraet):
     modell_name = geraet.modell.name
@@ -31,13 +30,10 @@ def initialisiere_module_und_teile(geraet):
 
             # Teile aus den Standardwerten anlegen
             for teilvorlage in module_standards[key]:
-                # Stelle sicher, dass `TeilVorlage` korrekt zugewiesen wird
-                teilvorlage_obj = TeilVorlage.query.filter_by(name=teilvorlage).first()
-
                 teil = Teil(
-                    name=teilvorlage,
+                    name=teilvorlage.name,
                     modul_id=modul.id,
-                    teilvorlage_id=teilvorlage_obj.id if teilvorlage_obj else None
+                    teilvorlage_id=getattr(teilvorlage, "id", None)
                 )
                 db.session.add(teil)
 

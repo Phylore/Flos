@@ -21,7 +21,8 @@ class Teil(Base):
     sauberkeit = relationship("Zustand", foreign_keys=[sauberkeit_id])
     beschaedigung = relationship("Zustand", foreign_keys=[beschaedigung_id])
     geraet = relationship("Geraet", back_populates="teile")
-    teilvorlage = relationship("TeilVorlage", backref="teile")
+    teilvorlage = relationship("TeilVorlage", back_populates="vorlage_teile", overlaps="vorlage_teile")
+
 
 # ========================
 # Vorlagen für Modulimport
