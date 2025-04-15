@@ -2,6 +2,13 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 
+# Standardwerte für Initialisierung
+STANDARD_ZUSTAENDE = {
+    "Anwesenheit": ["Ja", "Ersetzt", "Nein", "Nicht geprüft"],
+    "Sauberkeit": ["1", "2", "3", "4", "5", "Nicht bewertet"],
+    "Funktioniert": ["Ja", "Nein", "Unklar"]
+}
+
 class Zustand(Base):
     __tablename__ = "zustaende"
 

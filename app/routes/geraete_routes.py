@@ -1,19 +1,15 @@
-# /app/routes/geraete_routes.py
-
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, abort
 from flask_login import current_user, login_required
 from models.kategorie_db import Kategorie
 from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
 from models.zustand_db import Zustand
 from models.historie_db import Historie
-from models.teil_db import Teil, TeilVorlage  # notwendig für GET /auspacken
+from models.teil_db import Teil, TeilVorlage
 from app.helpers.initialisiere_teile import initialisiere_teile_fuer_geraet
 from database import db
 
-
-
-geraete_bp = Blueprint("geraete", __name__)
+geraete_bp = Blueprint("geraete", __name__, url_prefix="/geraete")
 
 
 @geraete_bp.route("/scannen", methods=["GET", "POST"])
@@ -21,16 +17,21 @@ geraete_bp = Blueprint("geraete", __name__)
 def scannen():
     if request.method == "POST":
         qrcode = request.form["code"]
-        geraet_db = db.session.query(GeraetDB).filter_by(qrcode=qrcode).first()
-
+        geraet_db = GeraetDB.query.filter_by(qrcode=qrcode).first()
         if geraet_db:
             return redirect(url_for('geraete.geraet_seite', qrcode=geraet_db.qrcode))
-
         else:
             kategorien = Kategorie.query.all()
             return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qrcode)
-
     return render_template("scannen.html")
+
+
+@geraete_bp.route("/geraet/neu", methods=["GET"])
+@login_required
+def geraet_neu():
+    qr_code = request.args.get("qr_code")  # FIX: QR aus URL holen
+    kategorien = Kategorie.query.all()
+    return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qr_code)
 
 
 @geraete_bp.route("/geraet", methods=["POST"])
@@ -39,25 +40,23 @@ def geraet_anlegen():
     qrcode = request.form["qrcode"]
     modell_id = request.form["modell"]
 
-    # ✅ Gerät existiert schon → weiterleiten
     existing = GeraetDB.query.filter_by(qrcode=qrcode).first()
     if existing:
         return redirect(url_for("geraete.geraet_seite", qrcode=existing.qrcode))
 
-    # ❗ Neues Gerät anlegen
+    zustand = Zustand.query.filter_by(value="Ja", kategorie="Funktioniert").first()
+
     neues_geraet = GeraetDB(
         qrcode=qrcode,
         modell_id=modell_id,
-        zustand_id=1,
+        zustand_id=zustand.id,
         benutzer_id=current_user.id
     )
     db.session.add(neues_geraet)
     db.session.commit()
 
-    # 🧩 Teile initialisieren
     initialisiere_teile_fuer_geraet(neues_geraet)
 
-    # 📜 Historie-Eintrag speichern
     eintrag = Historie(
         geraet_id=neues_geraet.id,
         benutzer_id=current_user.id,
@@ -68,6 +67,11 @@ def geraet_anlegen():
 
     return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
 
+@geraete_bp.route("/geraet/<qrcode>", endpoint="geraet_seite")
+@login_required
+def geraet_seite(qrcode):
+    geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
+    return render_template("geraet.html", geraet=geraet)
 
 
 @geraete_bp.route("/modelle/<int:kategorie_id>")
@@ -75,59 +79,5 @@ def geraet_anlegen():
 def modelle_fuer_kategorie(kategorie_id):
     modelle = Modell.query.filter_by(kategorie_id=kategorie_id).all()
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
-
-
-@geraete_bp.route("/geraet/<string:qrcode>")
-@login_required
-def geraet_seite(qrcode):
-    geraet = db.session.query(GeraetDB).filter_by(qrcode=qrcode).first_or_404()
-    return render_template("geraet.html", geraet=geraet)
-
-
-@geraete_bp.route("/geraet/<int:geraet_id>/zustand", methods=["POST"])
-@login_required
-def zustand_aendern(geraet_id):
-    geraet = db.session.query(GeraetDB).get_or_404(geraet_id)
-    neuer_zustand_id = int(request.form["zustand_id"])
-
-    if geraet.zustand_id != neuer_zustand_id:
-        geraet.zustand_id = neuer_zustand_id
-        eintrag = Historie(
-            geraet_id=geraet.id,
-            aktion=f"Zustand geändert zu '{Zustand.query.get(neuer_zustand_id).name}'",
-            benutzer_id=current_user.id
-        )
-        db.session.add(eintrag)
-        db.session.commit()
-
-    return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
-
-
-@geraete_bp.route("/anzeigen", methods=["POST"])
-@login_required
-def geraet_anzeigen():
-    qrcode = request.form.get("qrcode")
-    if not qrcode:
-        flash("Kein Gerät ausgewählt.")
-        return redirect(url_for("benutzer.dashboard"))
-    return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
-
-@geraete_bp.route("/geraet/archivieren/<int:geraet_id>", methods=["POST"])
-@login_required
-def geraet_archivieren(geraet_id):
-    if current_user.rolle != "admin":
-        abort(403)
-
-    geraet = GeraetDB.query.get_or_404(geraet_id)
-    geraet.archiviert = True
-    db.session.commit()
-    return redirect(url_for("benutzer.dashboard"))
-
-@geraete_bp.route("/geraet/<string:qrcode>/historie")
-@login_required
-def geraet_historie(qrcode):
-    geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
-    eintraege = Historie.query.filter_by(geraet_id=geraet.id).order_by(Historie.zeitpunkt.desc()).all()
-    return render_template("geraet_historie.html", geraet=geraet, eintraege=eintraege)
 
 

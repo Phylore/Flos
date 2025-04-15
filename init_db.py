@@ -5,29 +5,16 @@ from models.zustand_db import Zustand
 from models.modell_db import Modell
 from models.kategorie_db import Kategorie
 from models.geraet_db import Geraet
+from models.zustand_db import Zustand, STANDARD_ZUSTAENDE
 
 from app.setup.setup_modelle_import import import_modelle_wenn_notwendig
 
-def init_zustaende():
-    standardwerte = [
-        ("Ja", "Anwesenheit"),
-        ("Ersetzt", "Anwesenheit"),
-        ("Nein", "Anwesenheit"),
-        ("Nicht geprüft", "Anwesenheit"),
-        ("1", "Sauberkeit"),
-        ("2", "Sauberkeit"),
-        ("3", "Sauberkeit"),
-        ("4", "Sauberkeit"),
-        ("5", "Sauberkeit"),
-        ("Nicht bewertet", "Sauberkeit"),
-        ("Ja", "Funktioniert"),
-        ("Nein", "Funktioniert"),
-        ("Unklar", "Funktioniert")
-    ]
 
-    for value, kategorie in standardwerte:
-        if not Zustand.query.filter_by(value=value, kategorie=kategorie).first():
-            db.session.add(Zustand(value=value, kategorie=kategorie))
+def init_zustaende():
+    for kategorie, werte in STANDARD_ZUSTAENDE.items():
+        for value in werte:
+            if not Zustand.query.filter_by(value=value, kategorie=kategorie).first():
+                db.session.add(Zustand(value=value, kategorie=kategorie))
     db.session.commit()
     print("✅ Zustände initialisiert.")
 

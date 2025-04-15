@@ -1,48 +1,18 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Gerätedetails</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 1em;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 0.5em;
-        }
-    </style>
-</head>
-<body>
-    <h1>Gerät: {{ geraet.qrcode }}</h1>
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Gerät: {{ geraet.qrcode }}</h2>
 
-    <p><strong>Modell:</strong> {{ geraet.modell.name }}</p>
-    <p><strong>Kategorie:</strong> {{ geraet.modell.kategorie.name }}</p>
-    <p><strong>Zustand:</strong> {{ geraet.zustand.name }}</p>
+  <p><strong>Modell:</strong> {{ geraet.modell.name }}</p>
+  <p><strong>Kategorie:</strong> {{ geraet.modell.kategorie.name }}</p>
+  <p><strong>Zustand:</strong> {{ geraet.zustand.value }}</p>
 
-    <h2>Bearbeiten:</h2>
-    <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}">
-        <button>📦 Auspacken starten</button>
-    </a>
-    <a href="{{ url_for('zustand_aendern.anzeigen', geraet_id=geraet.id) }}">
-        <button>🛠️ Zustand ändern</button>
-    </a>
-
-    <h2>Historie:</h2>
-    <ul>
-        {% for eintrag in geraet.historie %}
-        <li>
-            {{ eintrag.zeitpunkt.strftime("%d.%m.%Y %H:%M:%S") }} –
-            {{ eintrag.benutzer.name }}: {{ eintrag.aktion }}
-        </li>
-        {% else %}
-        <li>Keine Historie vorhanden.</li>
-        {% endfor %}
-    </ul>
-
-    <p><a href="{{ url_for('benutzer.dashboard') }}">Zurück zur Übersicht</a></p>
-</body>
-</html>
+  <div class="mt-4 d-flex flex-wrap gap-2">
+    <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-primary">📦 Auspacken</a>
+    <a href="{{ url_for('zustand_aendern.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning">🛠 Zustand ändern</a>
+    <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark">📜 Historie</a>
+    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary">🔙 Zurück zum Dashboard</a>
+  </div>
+</div>
+{% endblock %}
 

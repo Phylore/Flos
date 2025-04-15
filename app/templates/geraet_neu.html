@@ -1,61 +1,50 @@
-<!-- /app/templates/geraet_neu.html -->
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Neues Gerät anlegen</title>
-</head>
-<body>
-    <h1>Gerät nicht gefunden – bitte anlegen:</h1>
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>🔍 Gerät erfassen</h2>
+
+  <!-- QR-Code-Scanformular -->
+  <form method="GET" action="{{ url_for('geraete.geraet_neu') }}" id="scanform">
+    <div class="mb-3">
+      <label for="qrcode">QR-Code:</label>
+      <input type="text" class="form-control" id="qrcode" name="qr_code" placeholder="QR-Code eingeben oder scannen" required autofocus>
+    </div>
+    <button type="submit" class="btn btn-primary">📷 Scannen</button>
+  </form>
+
+  {% if qr_code %}
+    <hr>
+    <h3>Gerät nicht gefunden – bitte anlegen:</h3>
 
     <form action="{{ url_for('geraete.geraet_anlegen') }}" method="POST">
-        <!-- QR-Code anzeigen, aber unänderbar + übertragen -->
-        <label for="qrcode">QR-Code:</label>
-        <input type="text" id="qrcode_display" value="{{ qr_code }}" disabled>
-        <input type="hidden" name="qrcode" value="{{ qr_code }}">
+      <!-- QR-Code anzeigen & übertragen -->
+      <input type="hidden" name="qrcode" value="{{ qr_code }}">
+      <p><strong>QR-Code:</strong> {{ qr_code }}</p>
 
-        <!-- Kategorie-Auswahl -->
+      <!-- Kategorie -->
+      <div class="mb-3">
         <label for="kategorie">Kategorie:</label>
-        <select id="kategorie" name="kategorie" required>
-            <option value="">Kategorie wählen</option>
-            {% for k in kategorien %}
-                <option value="{{ k.id }}">{{ k.name }}</option>
-            {% endfor %}
+        <select id="kategorie" name="kategorie" class="form-select" required>
+          <option value="">Kategorie wählen</option>
+          {% for k in kategorien %}
+            <option value="{{ k.id }}">{{ k.name }}</option>
+          {% endfor %}
         </select>
+      </div>
 
-        <!-- Modell-Auswahl -->
+      <!-- Modell (fest: Saugroboter) -->
+      <div class="mb-3">
         <label for="modell">Modell:</label>
-        <select id="modell" name="modell" required>
-            <option value="">Bitte zuerst Kategorie wählen</option>
+        <select id="modell" name="modell" class="form-select" required>
+          <option value="">Modell wählen</option>
+          <option value="1">Dreame L10</option>
+          <option value="2">Dreame X40</option>
         </select>
+      </div>
 
-        <button type="submit">Gerät speichern</button>
+      <button type="submit" class="btn btn-success">💾 Gerät speichern</button>
     </form>
-
-    <script>
-        document.getElementById("kategorie").addEventListener("change", function () {
-            const kategorieId = this.value;
-            const modellSelect = document.getElementById("modell");
-
-            modellSelect.innerHTML = '<option value="">Lade Modelle...</option>';
-
-            fetch(`/geraete/modelle/${kategorieId}`)
-                .then(response => response.json())
-                .then(data => {
-                    modellSelect.innerHTML = '<option value="">Modell wählen</option>';
-                    data.forEach(modell => {
-                        const option = document.createElement("option");
-                        option.value = modell.id;
-                        option.textContent = modell.name;
-                        modellSelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    modellSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
-                    console.error("Fehler beim Modellabruf:", error);
-                });
-        });
-    </script>
-</body>
-</html>
+  {% endif %}
+</div>
+{% endblock %}
 
