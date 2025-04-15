@@ -32,6 +32,7 @@
       <div class="d-flex gap-2 flex-wrap">
         <a id="btn-auspacken" href="#" class="btn btn-outline-primary disabled">📦 Auspacken</a>
         <a id="btn-zustand" href="#" class="btn btn-outline-warning disabled">🛠 Zustand ändern</a>
+        <a id="btn-reinigen" href="#" class="btn btn-outline-success disabled">🧽 Reinigen</a>
         <a id="btn-details" href="#" class="btn btn-outline-secondary disabled">🔍 Details</a>
         <a id="btn-historie" href="#" class="btn btn-outline-dark disabled">📜 Historie</a>
       </div>
@@ -60,6 +61,7 @@
   const form = document.getElementById('geraeteForm');
   const auspackenBtn = document.getElementById('btn-auspacken');
   const zustandBtn = document.getElementById('btn-zustand');
+  const reinigenBtn = document.getElementById('btn-reinigen');
   const detailsBtn = document.getElementById('btn-details');
   const historieBtn = document.getElementById('btn-historie');
   const loeschenBtn = document.getElementById('btn-loeschen');
@@ -73,12 +75,14 @@
 
       auspackenBtn.href = "/checkliste/auspacken/" + geraetId;
       zustandBtn.href = "/checkliste/zustand_aendern/" + geraetId;
+      reinigenBtn.href = "/checkliste/reinigen/" + geraetId;
       detailsBtn.href = "/geraete/geraet/" + qrcode;
       historieBtn.href = "/geraete/geraet/" + qrcode + "/historie";
       loeschenForm.action = "/geraete/geraet/" + qrcode + "/loeschen";
 
       auspackenBtn.classList.remove("disabled");
       zustandBtn.classList.remove("disabled");
+      reinigenBtn.classList.remove("disabled");
       detailsBtn.classList.remove("disabled");
       historieBtn.classList.remove("disabled");
       loeschenBtn.classList.remove("disabled");

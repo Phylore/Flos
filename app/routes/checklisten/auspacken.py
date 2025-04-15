@@ -15,31 +15,46 @@ def anzeigen(geraet_id):
     anwesenheits_zustaende = Zustand.query.filter_by(kategorie="Anwesenheit").all()
 
     if request.method == "POST":
+        print("📥 POST erhalten – Verarbeitung beginnt")
         anwesende_teile = []
+        veraendert = False
 
         for teil in geraet.teile:
             field_name = f"anwesenheit_{teil.id}"
             if field_name in request.form:
                 neue_zustands_id = int(request.form[field_name])
-                teil.anwesenheit_id = neue_zustands_id
+                alt_id = teil.anwesenheit_id
+                print(f"🔄 {teil.name}: alt={alt_id}, neu={neue_zustands_id}")
 
-                if teil.anwesenheit and teil.anwesenheit.value == "Ja":
+                if alt_id != neue_zustands_id:
+                    teil.anwesenheit_id = neue_zustands_id
+                    veraendert = True
+                    print(f"✅ {teil.name} geändert")
+
+                zustand = Zustand.query.get(neue_zustands_id)
+                if zustand and zustand.value == "Ja":
                     anwesende_teile.append(teil.name)
 
-        db.session.commit()
+        if veraendert:
+            print("💾 Änderungen erkannt → Speichern")
+            db.session.commit()
 
-        kommentar = f"Anwesend: {', '.join(anwesende_teile)}" if anwesende_teile else None
-
-        eintrag = Historie(
-            geraet_id=geraet.id,
-            benutzer_id=current_user.id,
-            aktion="Auspacken abgeschlossen",
-            kommentar=kommentar
-        )
-        db.session.add(eintrag)
-        db.session.commit()
+            kommentar = f"Anwesend: {', '.join(anwesende_teile)}" if anwesende_teile else None
+            eintrag = Historie(
+                geraet_id=geraet.id,
+                benutzer_id=current_user.id,
+                aktion="Auspacken abgeschlossen",
+                kommentar=kommentar
+            )
+            db.session.add(eintrag)
+            db.session.commit()
+        else:
+            print("⚠️ Keine Änderungen erkannt – kein Commit")
 
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
 
+    print("📄 GET: Lade Geräteseite")
+    for teil in geraet.teile:
+        print(f"📦 {teil.name} – anwesenheit_id={teil.anwesenheit_id}")
     return render_template("checklisten/auspacken.html", geraet=geraet, zustaende=anwesenheits_zustaende)
 

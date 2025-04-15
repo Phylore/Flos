@@ -9,7 +9,7 @@
 
   <div class="mt-4 d-flex flex-wrap gap-2">
     <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-primary">📦 Auspacken</a>
-    <a href="{{ url_for('reinigen.anzeigen', geraet_id=geraet.id) }}">🧽 Gerät reinigen</a>
+    <a href="{{ url_for('reinigen.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-success">🧽 Reinigen</a>
     <a href="{{ url_for('zustand_aendern.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning">🛠 Zustand ändern</a>
     <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark">📜 Historie</a>
     <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary">🔙 Zurück zum Dashboard</a>

@@ -33,6 +33,7 @@ def initialisiere_module_und_teile(geraet):
                 teil = Teil(
                     name=teilvorlage.name,
                     modul_id=modul.id,
+                    geraet_id=geraet.id,
                     teilvorlage_id=getattr(teilvorlage, "id", None)
                 )
                 db.session.add(teil)

@@ -6,6 +6,26 @@
 <body>
     <h1>🧹 Reinigung: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
+    <!-- 🐞 DEBUG: Zustände -->
+    <h3 style="color: teal;">DEBUG: ZUSTÄNDE</h3>
+    <ul>
+        {% for z in zustaende %}
+            <li>{{ z.id }} – {{ z.value }}</li>
+        {% else %}
+            <li><strong>❌ KEINE ZUSTÄNDE GELADEN</strong></li>
+        {% endfor %}
+    </ul>
+
+    <!-- 🐞 DEBUG: Module -->
+    <h3 style="color: teal;">DEBUG: MODULE</h3>
+    <ul>
+        {% for modul in geraet.module %}
+            <li>{{ modul.name }} ({{ modul.id }}) – {{ modul.teile|length }} Teile</li>
+        {% else %}
+            <li><strong>❌ KEINE MODULE VORHANDEN</strong></li>
+        {% endfor %}
+    </ul>
+
     <form method="post">
         {% for modul in geraet.module %}
             <h2>{{ modul.name }}</h2>

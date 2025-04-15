@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from models.geraet_db import Geraet
 from models.zustand_db import Zustand
+from models.teil_db import Teil
 from models.historie_db import Historie
 from database import db
 
@@ -15,26 +16,32 @@ def anzeigen(geraet_id):
 
     if request.method == "POST":
         saubere_teile = []
+        veraendert = False
 
         for teil in geraet.teile:
             field_name = f"sauberkeit_{teil.id}"
             if field_name in request.form:
-                neue_id = int(request.form[field_name])
-                teil.sauberkeit_id = neue_id
-                if teil.sauberkeit and teil.sauberkeit.value == "sauber":
+                neue_zustands_id = int(request.form[field_name])
+                if teil.sauberkeit_id != neue_zustands_id:
+                    teil.sauberkeit_id = neue_zustands_id
+                    veraendert = True
+
+                zustand = Zustand.query.get(neue_zustands_id)
+                if zustand and zustand.value == "sauber":
                     saubere_teile.append(teil.name)
 
-        db.session.commit()
+        if veraendert:
+            db.session.commit()
 
-        kommentar = f"Sauber: {', '.join(saubere_teile)}" if saubere_teile else None
-        eintrag = Historie(
-            geraet_id=geraet.id,
-            benutzer_id=current_user.id,
-            aktion="Reinigung durchgeführt",
-            kommentar=kommentar
-        )
-        db.session.add(eintrag)
-        db.session.commit()
+            kommentar = f"Sauber: {', '.join(saubere_teile)}" if saubere_teile else None
+            eintrag = Historie(
+                geraet_id=geraet.id,
+                benutzer_id=current_user.id,
+                aktion="Reinigung durchgeführt",
+                kommentar=kommentar
+            )
+            db.session.add(eintrag)
+            db.session.commit()
 
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
 

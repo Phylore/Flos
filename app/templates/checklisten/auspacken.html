@@ -30,11 +30,12 @@
         {% for modul in geraet.module %}
             <h2>{{ modul.name }}</h2>
 
-            <table>
+            <table border="1">
                 <thead>
                     <tr>
                         <th>Teil</th>
                         <th>Anwesenheit</th>
+                        <th>DEBUG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,16 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.9em;">
+                            ID: {{ teil.anwesenheit_id }}<br>
+                            {% for z in zustaende %}
+                                {% set ist_selected = (teil.anwesenheit_id == z.id)
+                                                       or (teil.anwesenheit_id is none and z.value == "Nicht geprüft") %}
+                                {% if ist_selected %}
+                                    → selected: {{ z.value }} (ID {{ z.id }})
+                                {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

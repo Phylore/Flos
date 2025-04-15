@@ -4,26 +4,28 @@
   <h2>📜 Historie für Gerät {{ geraet.qrcode }}</h2>
 
   {% if historie %}
-    <table class="table table-bordered mt-4">
-      <thead>
-        <tr>
-          <th>🕓 Zeitpunkt</th>
-          <th>👤 Benutzer</th>
-          <th>🔧 Aktion</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for eintrag in historie %}
-        <tr>
-          <td>{{ eintrag.zeitpunkt.strftime("%d.%m.%Y %H:%M") }}</td>
-          <td>{{ eintrag.benutzer.name }}</td>
-          <td>{{ eintrag.aktion }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Zeitpunkt</th>
+        <th>Aktion</th>
+        <th>Benutzer</th>
+        <th>Kommentar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for eintrag in historie %}
+      <tr>
+        <td>{{ eintrag.zeitpunkt.strftime('%d.%m.%Y %H:%M') }}</td>
+        <td>{{ eintrag.aktion }}</td>
+        <td>{{ eintrag.benutzer.name }}</td>
+        <td>{{ eintrag.kommentar or '–' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% else %}
-    <div class="alert alert-info">Keine Historie vorhanden.</div>
+    <p>Keine Historie vorhanden.</p>
   {% endif %}
 
   <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary mt-3">🔙 Zurück</a>
