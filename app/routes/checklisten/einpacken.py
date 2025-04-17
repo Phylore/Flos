@@ -10,19 +10,37 @@ from models.modelle.saugroboter_modelle import saugroboter_modelle
 
 einpacken_bp = Blueprint("einpacken", __name__, url_prefix="/checkliste/einpacken")
 
-def ist_abgeschlossen(geraet_id, aktion):
-    return db.session.query(Historie).filter_by(geraet_id=geraet_id, aktion=aktion).count() > 0
+def ist_auspacken_abgeschlossen(geraet):
+    return all(
+        teil.anwesenheit and teil.anwesenheit.value != "Nicht geprüft"
+        for teil in geraet.teile
+        if teil.anwesenheit_id is not None
+    )
+
+def ist_reinigung_abgeschlossen(geraet):
+    return all(
+        teil.sauberkeit and teil.sauberkeit.value != "Nicht geprüft"
+        for teil in geraet.teile
+        if teil.sauberkeit_id is not None
+    )
+
+# TODO: Funktionstest-Abgeschlossenheitsprüfung kannst du später nach gleichem Schema bauen
+def ist_funktion_abgeschlossen(geraet_id):
+    return db.session.query(Historie).filter_by(
+        geraet_id=geraet_id,
+        aktion="Funktionstest durchgeführt"
+    ).count() > 0
 
 @einpacken_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
 @login_required
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
 
-    # Checkstatus der vorherigen Listen
+    # ECHTE Checkstatus der vorherigen Listen
     status = {
-        "auspacken": ist_abgeschlossen(geraet.id, "Auspacken abgeschlossen"),
-        "reinigung": ist_abgeschlossen(geraet.id, "Reinigung durchgeführt"),
-        "funktion": ist_abgeschlossen(geraet.id, "Funktionstest durchgeführt")
+        "auspacken": ist_auspacken_abgeschlossen(geraet),
+        "reinigung": ist_reinigung_abgeschlossen(geraet),
+        "funktion": ist_funktion_abgeschlossen(geraet.id)
     }
 
     modell_info = saugroboter_modelle.get(geraet.modell.name, {})
