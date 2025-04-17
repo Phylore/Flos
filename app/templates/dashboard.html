@@ -31,8 +31,9 @@
     <div class="d-flex gap-2 mt-4 flex-wrap justify-content-between">
       <div class="d-flex gap-2 flex-wrap">
         <a id="btn-auspacken" href="#" class="btn btn-outline-primary disabled">📦 Auspacken</a>
-        <a id="btn-funktion" href="#" class="btn btn-outline-info disabled">🧪 Funktionstest</a>
         <a id="btn-reinigen" href="#" class="btn btn-outline-success disabled">🧽 Reinigen</a>
+        <a id="btn-funktionstest" href="#" class="btn btn-outline-info disabled">🧪 Funktionstest</a>
+        <a id="btn-einpacken" href="#" class="btn btn-outline-warning disabled">📦 Einpacken</a>
         <a id="btn-details" href="#" class="btn btn-outline-secondary disabled">🔍 Details</a>
         <a id="btn-historie" href="#" class="btn btn-outline-dark disabled">📜 Historie</a>
       </div>
@@ -52,7 +53,6 @@
 
   <div class="mt-4">
     <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success">➕ Neues Gerät hinzufügen</a>
-    
     <a href="{{ url_for('login.logout') }}" class="btn btn-danger float-end">🚪 Logout</a>
   </div>
 </div>
@@ -60,7 +60,8 @@
 <script>
   const form = document.getElementById('geraeteForm');
   const auspackenBtn = document.getElementById('btn-auspacken');
-  const funktionBtn = document.getElementById('btn-funktion');
+  const funktionBtn = document.getElementById('btn-funktionstest');
+  const einpackenBtn = document.getElementById('btn-einpacken');
   const reinigenBtn = document.getElementById('btn-reinigen');
   const detailsBtn = document.getElementById('btn-details');
   const historieBtn = document.getElementById('btn-historie');
@@ -74,7 +75,8 @@
       const qrcode = checked.dataset.qrcode;
 
       auspackenBtn.href = "/checkliste/auspacken/" + geraetId;
-      funktionBtn.href = "/checkliste/funktion/" + geraetId;
+      funktionBtn.href = "/checkliste/funktionstest/" + geraetId;
+      einpackenBtn.href = "/checkliste/einpacken/" + geraetId;
       reinigenBtn.href = "/checkliste/reinigen/" + geraetId;
       detailsBtn.href = "/geraete/geraet/" + qrcode;
       historieBtn.href = "/geraete/geraet/" + qrcode + "/historie";
@@ -82,6 +84,7 @@
 
       auspackenBtn.classList.remove("disabled");
       funktionBtn.classList.remove("disabled");
+      einpackenBtn.classList.remove("disabled");
       reinigenBtn.classList.remove("disabled");
       detailsBtn.classList.remove("disabled");
       historieBtn.classList.remove("disabled");

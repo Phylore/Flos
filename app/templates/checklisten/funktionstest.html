@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>⚙️ Funktionstest – {{ geraet.qrcode }}</title>
+</head>
+<body>
+    <h1>⚙️ Funktionstest: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
+
+    <!-- 🐞 DEBUG: Gruppierte Module -->
+    <h3 style="color: teal;">DEBUG: Gruppierte Testschritte</h3>
+    <ul>
+        {% for modulname, schritte in gruppiert.items() %}
+            <li><strong>{{ modulname }}</strong>: {{ schritte|length }} Schritte</li>
+        {% else %}
+            <li><strong>❌ Keine Testschritte geladen!</strong></li>
+        {% endfor %}
+    </ul>
+
+    <!-- 🐞 DEBUG: Bestandene Schritte -->
+    <h3 style="color: teal;">DEBUG: Bestandene Testschritt-IDs</h3>
+    <ul>
+        {% for id in bestandene_ids %}
+            <li>{{ id }}</li>
+        {% else %}
+            <li><strong>❌ Keine gespeichert</strong></li>
+        {% endfor %}
+    </ul>
+
+    <form method="post">
+        {% for modulname, schritte in gruppiert.items() %}
+            <h2>{{ modulname }}</h2>
+            <table border="1" cellpadding="6">
+                <thead>
+                    <tr>
+                        <th>Testschritt</th>
+                        <th>Bestanden?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schritt in schritte %}
+                    <tr>
+                        <td>{{ schritt.name }}</td>
+                        <td>
+                            <input type="checkbox" name="schritt" value="{{ schritt.id }}"
+                                   {% if schritt.id in bestandene_ids %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+
+        <br>
+        <button type="submit">💾 Test speichern</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
+</body>
+</html>
+

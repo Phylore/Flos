@@ -7,6 +7,7 @@ class GeraeteTestSchritt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     beschreibung = db.Column(db.Text, nullable=True)
+    modul_name = db.Column(db.String, nullable=True)  # NEU
 
 class GeraeteTestDurchlauf(db.Model):
     __tablename__ = "geraete_test_durchlauf"
