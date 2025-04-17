@@ -5,6 +5,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.zustand_db import Zustand
 from models.historie_db import Historie
+from models.geraetetest_db import GeraeteTestDurchlauf  # ganz oben ergänzen
+
 
 class Geraet(db.Model):
     __tablename__ = "geraete"
@@ -22,5 +24,5 @@ class Geraet(db.Model):
     historie = db.relationship("Historie", backref="geraet", lazy=True)
     module = db.relationship("Modul", back_populates="geraet", cascade="all, delete-orphan")
     teile = db.relationship("Teil", back_populates="geraet")
-
+    testdurchlaeufe = db.relationship("GeraeteTestDurchlauf", back_populates="geraet", cascade="all, delete-orphan")
 
