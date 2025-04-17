@@ -107,7 +107,6 @@ def geraet_loeschen(qrcode):
         return redirect(url_for("benutzer.dashboard"))
 
     # Historie entfernen
-    from models.historie_db import Historie
     Historie.query.filter_by(geraet_id=geraet.id).delete()
 
     # Gerät entfernen

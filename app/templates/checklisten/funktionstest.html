@@ -1,23 +1,11 @@
+<!-- Datei: templates/checklisten/funktionstest.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>⚙️ Funktionstest – {{ geraet.qrcode }}</title>
-    <script>
-        function setzeAlleCheckboxen(checked) {
-            document.querySelectorAll("input[type='checkbox'][name='schritt']").forEach(cb => {
-                cb.checked = checked;
-            });
-        }
-    </script>
 </head>
 <body>
     <h1>⚙️ Funktionstest: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
-
-    <div style="margin: 1em 0;">
-        <strong>Alle Checkboxen:</strong>
-        <button type="button" onclick="setzeAlleCheckboxen(true)">✅ Alle markieren</button>
-        <button type="button" onclick="setzeAlleCheckboxen(false)">❌ Alle abwählen</button>
-    </div>
 
     <form method="post">
         {% for modulname, schritte in gruppiert.items() %}
@@ -26,7 +14,9 @@
                 <thead>
                     <tr>
                         <th>Testschritt</th>
-                        <th>Bestanden?</th>
+                        <th>✅ Bestanden</th>
+                        <th>❌ Nicht bestanden</th>
+                        <th>❓ Nicht bewertet</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,8 +24,16 @@
                     <tr>
                         <td>{{ schritt.name }}</td>
                         <td>
-                            <input type="checkbox" name="schritt" value="{{ schritt.id }}"
+                            <input type="radio" name="schritt_{{ schritt.id }}" value="ja"
                                    {% if schritt.id in bestandene_ids %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="schritt_{{ schritt.id }}" value="nein"
+                                   {% if schritt.id in nichtbestandene_ids %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="schritt_{{ schritt.id }}" value="offen"
+                                   {% if schritt.id not in bestandene_ids and schritt.id not in nichtbestandene_ids %}checked{% endif %}>
                         </td>
                     </tr>
                     {% endfor %}
@@ -44,11 +42,10 @@
         {% endfor %}
 
         <br>
-        <button type="submit">💾 Test speichern</button>
+        <button type="submit">📅 Test speichern</button>
     </form>
 
     <br>
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
 </body>
 </html>
-

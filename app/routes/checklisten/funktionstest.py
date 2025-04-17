@@ -14,25 +14,36 @@ funktionstest_bp = Blueprint("funktionstest", __name__, url_prefix="/checkliste/
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
 
-    # Schritt-Liste nach Modul gruppieren
     gruppiert = {}
     for schritt in GeraeteTestSchritt.query.order_by(GeraeteTestSchritt.id).all():
         gruppe = schritt.modul_name or "Gerät"
         gruppiert.setdefault(gruppe, []).append(schritt)
 
-    # Letzter Durchlauf
     letzter = GeraeteTestDurchlauf.query.filter_by(geraet_id=geraet.id)\
         .order_by(GeraeteTestDurchlauf.zeitpunkt.desc()).first()
 
     bestandene_ids = set()
+    nichtbestandene_ids = set()
     if letzter:
         bestandene_ids = {
-            e.schritt_id for e in GeraeteTestErgebnis.query.filter_by(durchlauf_id=letzter.id, bestanden=True).all()
+            e.schritt_id for e in GeraeteTestErgebnis.query
+            .filter_by(durchlauf_id=letzter.id, bestanden=True).all()
+        }
+        nichtbestandene_ids = {
+            e.schritt_id for e in GeraeteTestErgebnis.query
+            .filter_by(durchlauf_id=letzter.id, bestanden=False).all()
         }
 
     if request.method == "POST":
-        neue_ids = set(int(i) for i in request.form.getlist("schritt"))
-        veraendert = neue_ids != bestandene_ids
+        neue_ergebnisse = {}
+        for key, val in request.form.items():
+            if key.startswith("schritt_"):
+                schritt_id = int(key.split("_")[1])
+                if val in ["ja", "nein"]:
+                    neue_ergebnisse[schritt_id] = (val == "ja")
+
+        bestandene_ids_neu = {sid for sid, bestanden in neue_ergebnisse.items() if bestanden}
+        veraendert = bestandene_ids_neu != bestandene_ids
 
         if veraendert:
             durchlauf = GeraeteTestDurchlauf(geraet_id=geraet.id, benutzer_id=current_user.id)
@@ -44,17 +55,18 @@ def anzeigen(geraet_id):
 
             for gruppe in gruppiert.values():
                 for schritt in gruppe:
-                    bestanden = schritt.id in neue_ids
-                    if bestanden:
-                        kommentar_liste.append(schritt.name)
+                    if schritt.id in neue_ergebnisse:
+                        bestanden = neue_ergebnisse[schritt.id]
+                        if bestanden:
+                            kommentar_liste.append(schritt.name)
 
-                    db.session.add(GeraeteTestErgebnis(
-                        durchlauf_id=durchlauf.id,
-                        schritt_id=schritt.id,
-                        bestanden=bestanden
-                    ))
+                        db.session.add(GeraeteTestErgebnis(
+                            durchlauf_id=durchlauf.id,
+                            schritt_id=schritt.id,
+                            bestanden=bestanden
+                        ))
 
-            if set(alle_ids) == neue_ids:
+            if set(alle_ids) == bestandene_ids_neu:
                 kommentar = f"Bestanden: {', '.join(kommentar_liste)}" if kommentar_liste else None
                 db.session.add(Historie(
                     geraet_id=geraet.id,
@@ -70,5 +82,5 @@ def anzeigen(geraet_id):
     return render_template("checklisten/funktionstest.html",
                            geraet=geraet,
                            gruppiert=gruppiert,
-                           bestandene_ids=bestandene_ids)
-
+                           bestandene_ids=bestandene_ids,
+                           nichtbestandene_ids=nichtbestandene_ids)
