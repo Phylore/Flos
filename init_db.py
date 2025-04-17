@@ -37,9 +37,9 @@ def init_benutzer():
     jesse = Benutzer(name="jesse", rolle="user")
     jesse.set_passwort("jesse")
 
-    db.session.add_all([admin, eric, alper, moritz])
+    db.session.add_all([admin, eric, alper, moritz, batu, jesse])
     db.session.commit()
-    print("✅ Benutzer 'admin', 'eric', 'max' wurden angelegt.")
+    print("✅ Benutzer 'admin', 'eric', 'batu', "" wurden angelegt.")
 
 
 def beispielgeraete_anlegen():
