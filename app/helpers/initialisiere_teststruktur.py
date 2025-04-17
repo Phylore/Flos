@@ -2,8 +2,8 @@
 
 from models.geraetetest_db import GeraeteTestSchritt
 from database import db
-from app.setup.saugroboter_modelle import saugroboter_modelle
-from app.setup.test_defaults_db import test_standards
+from models.modelle.saugroboter_modelle import saugroboter_modelle
+from models.test_defaults_db import test_standards
 
 def initialisiere_tests_fuer_geraet(geraet):
     modell_name = geraet.modell.name

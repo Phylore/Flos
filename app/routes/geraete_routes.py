@@ -8,7 +8,6 @@ from models.historie_db import Historie
 from models.teil_db import Teil, TeilVorlage
 from app.helpers.initialisiere_modulstruktur import initialisiere_module_und_teile
 from app.helpers.initialisiere_teststruktur import initialisiere_tests_fuer_geraet
-initialisiere_tests_fuer_geraet(neues_geraet)
 
 from database import db
 
@@ -59,6 +58,7 @@ def geraet_anlegen():
     db.session.commit()
 
     initialisiere_module_und_teile(neues_geraet)
+    initialisiere_tests_fuer_geraet(neues_geraet)
 
     eintrag = Historie(
         geraet_id=neues_geraet.id,
