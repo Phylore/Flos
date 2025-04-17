@@ -2,31 +2,35 @@
 <html>
 <head>
     <title>📦 Auspacken – {{ geraet.qrcode }}</title>
+    <script>
+        function setzeAlleAufWert() {
+            const ausgewählt = document.getElementById("alle_auf_wert").value;
+            document.querySelectorAll("select").forEach(sel => {
+                for (let option of sel.options) {
+                    if (option.text === ausgewählt) {
+                        sel.value = option.value;
+                        break;
+                    }
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>📦 Auspacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
-    <!-- 🐞 DEBUG: Zustände -->
-    <h3 style="color: teal;">DEBUG: ZUSTÄNDE</h3>
-    <ul>
-        {% for z in zustaende %}
-            <li>{{ z.id }} – {{ z.value }}</li>
-        {% else %}
-            <li><strong>❌ KEINE ZUSTÄNDE GELADEN</strong></li>
-        {% endfor %}
-    </ul>
-
-    <!-- 🐞 DEBUG: Module -->
-    <h3 style="color: teal;">DEBUG: MODULE</h3>
-    <ul>
-        {% for modul in geraet.module %}
-            <li>{{ modul.name }} ({{ modul.id }}) – {{ modul.teile|length }} Teile</li>
-        {% else %}
-            <li><strong>❌ KEINE MODULE VORHANDEN</strong></li>
-        {% endfor %}
-    </ul>
-
     <form method="post">
+        <!-- Auswahlzeile für Massenaktion -->
+        <div style="margin: 1em 0;">
+            <label for="alle_auf_wert"><strong>Alle Einträge setzen auf:</strong></label>
+            <select id="alle_auf_wert">
+                {% for z in zustaende %}
+                    <option value="{{ z.value }}">{{ z.value }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" onclick="setzeAlleAufWert()">Setzen</button>
+        </div>
+
         {% for modul in geraet.module %}
             <h2>{{ modul.name }}</h2>
 
@@ -35,7 +39,6 @@
                     <tr>
                         <th>Teil</th>
                         <th>Anwesenheit</th>
-                        <th>DEBUG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,16 +55,6 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                        </td>
-                        <td style="font-family: monospace; font-size: 0.9em;">
-                            ID: {{ teil.anwesenheit_id }}<br>
-                            {% for z in zustaende %}
-                                {% set ist_selected = (teil.anwesenheit_id == z.id)
-                                                       or (teil.anwesenheit_id is none and z.value == "Nicht geprüft") %}
-                                {% if ist_selected %}
-                                    → selected: {{ z.value }} (ID {{ z.id }})
-                                {% endif %}
-                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

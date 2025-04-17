@@ -2,29 +2,22 @@
 <html>
 <head>
     <title>⚙️ Funktionstest – {{ geraet.qrcode }}</title>
+    <script>
+        function setzeAlleCheckboxen(checked) {
+            document.querySelectorAll("input[type='checkbox'][name='schritt']").forEach(cb => {
+                cb.checked = checked;
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>⚙️ Funktionstest: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
-    <!-- 🐞 DEBUG: Gruppierte Module -->
-    <h3 style="color: teal;">DEBUG: Gruppierte Testschritte</h3>
-    <ul>
-        {% for modulname, schritte in gruppiert.items() %}
-            <li><strong>{{ modulname }}</strong>: {{ schritte|length }} Schritte</li>
-        {% else %}
-            <li><strong>❌ Keine Testschritte geladen!</strong></li>
-        {% endfor %}
-    </ul>
-
-    <!-- 🐞 DEBUG: Bestandene Schritte -->
-    <h3 style="color: teal;">DEBUG: Bestandene Testschritt-IDs</h3>
-    <ul>
-        {% for id in bestandene_ids %}
-            <li>{{ id }}</li>
-        {% else %}
-            <li><strong>❌ Keine gespeichert</strong></li>
-        {% endfor %}
-    </ul>
+    <div style="margin: 1em 0;">
+        <strong>Alle Checkboxen:</strong>
+        <button type="button" onclick="setzeAlleCheckboxen(true)">✅ Alle markieren</button>
+        <button type="button" onclick="setzeAlleCheckboxen(false)">❌ Alle abwählen</button>
+    </div>
 
     <form method="post">
         {% for modulname, schritte in gruppiert.items() %}

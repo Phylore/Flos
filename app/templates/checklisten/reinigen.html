@@ -2,31 +2,35 @@
 <html>
 <head>
     <title>🧹 Reinigung – {{ geraet.qrcode }}</title>
+    <script>
+        function setzeAlleSauberkeit() {
+            const wert = document.getElementById("alle_sauberkeit").value;
+            document.querySelectorAll("select").forEach(sel => {
+                for (let option of sel.options) {
+                    if (option.text === wert) {
+                        sel.value = option.value;
+                        break;
+                    }
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>🧹 Reinigung: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
 
-    <!-- 🐞 DEBUG: Zustände -->
-    <h3 style="color: teal;">DEBUG: ZUSTÄNDE</h3>
-    <ul>
-        {% for z in zustaende %}
-            <li>{{ z.id }} – {{ z.value }}</li>
-        {% else %}
-            <li><strong>❌ KEINE ZUSTÄNDE GELADEN</strong></li>
-        {% endfor %}
-    </ul>
-
-    <!-- 🐞 DEBUG: Module -->
-    <h3 style="color: teal;">DEBUG: MODULE</h3>
-    <ul>
-        {% for modul in geraet.module %}
-            <li>{{ modul.name }} ({{ modul.id }}) – {{ modul.teile|length }} Teile</li>
-        {% else %}
-            <li><strong>❌ KEINE MODULE VORHANDEN</strong></li>
-        {% endfor %}
-    </ul>
-
     <form method="post">
+        <!-- Massenaktion -->
+        <div style="margin: 1em 0;">
+            <label for="alle_sauberkeit"><strong>Alle Einträge setzen auf:</strong></label>
+            <select id="alle_sauberkeit">
+                {% for z in zustaende %}
+                    <option value="{{ z.value }}">{{ z.value }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" onclick="setzeAlleSauberkeit()">Setzen</button>
+        </div>
+
         {% for modul in geraet.module %}
             <h2>{{ modul.name }}</h2>
 
@@ -45,7 +49,7 @@
                             <select name="sauberkeit_{{ teil.id }}">
                                 {% for z in zustaende %}
                                     {% set ist_selected = (teil.sauberkeit_id == z.id)
-                                                           or (teil.sauberkeit_id is none and z.value == "Nicht geprüft") %}
+                                                           or (teil.sauberkeit_id is none and z.value == "Nicht bewertet") %}
                                     <option value="{{ z.id }}" {% if ist_selected %}selected{% endif %}>
                                         {{ z.value }}
                                     </option>
