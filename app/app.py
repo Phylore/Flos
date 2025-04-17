@@ -6,6 +6,7 @@ from app.routes.debug_test import debug_bp
 from app.routes.checklisten.auspacken import auspacken_bp
 from app.routes.checklisten.zustand_aendern import zustand_aendern_bp
 from app.routes.checklisten.reinigen import reinigen_bp
+from app.routes.checklisten.funktion import funktion_bp
 
 from database import db
 import os
@@ -43,7 +44,7 @@ app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
 app.register_blueprint(auspacken_bp)
 app.register_blueprint(zustand_aendern_bp)
 app.register_blueprint(reinigen_bp)
-
+app.register_blueprint(funktion_bp)
 
 @app.route("/")
 def index():

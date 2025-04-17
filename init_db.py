@@ -22,13 +22,22 @@ def init_benutzer():
     admin = Benutzer(name="admin", rolle="admin")
     admin.set_passwort("admin")
 
+    alper = Benutzer(name="alper", rolle="user")
+    alper.set_passwort("alper1")
+
+    moritz = Benutzer(name="moritz", rolle="user")
+    moritz.set_passwort("moritz1")
+
     eric = Benutzer(name="eric", rolle="user")
     eric.set_passwort("eric")
 
-    max = Benutzer(name="max", rolle="user")
-    max.set_passwort("max")
+    batu = Benutzer(name="batu", rolle="user")
+    batu.set_passwort("batu")
 
-    db.session.add_all([admin, eric, max])
+    jesse = Benutzer(name="jesse", rolle="user")
+    jesse.set_passwort("jesse")
+
+    db.session.add_all([admin, eric, alper, moritz])
     db.session.commit()
     print("✅ Benutzer 'admin', 'eric', 'max' wurden angelegt.")
 
