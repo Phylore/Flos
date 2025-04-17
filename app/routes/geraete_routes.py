@@ -33,7 +33,8 @@ def scannen():
 def geraet_neu():
     qr_code = request.args.get("qr_code")  # FIX: QR aus URL holen
     kategorien = Kategorie.query.all()
-    return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qr_code)
+    modelle = Modell.query.all()  # <-- hier neu!
+    return render_template("geraet_neu.html", kategorien=kategorien, modelle=modelle, qr_code=qr_code)
 
 
 @geraete_bp.route("/geraet", methods=["POST"])
@@ -93,16 +94,23 @@ def geraet_historie(qrcode):
 @geraete_bp.route("/geraet/<string:qrcode>/loeschen", methods=["POST"])
 @login_required
 def geraet_loeschen(qrcode):
-    if not current_user.rolle == "admin":
-        abort(403)
-
     geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
 
-    # ALLE verknüpften Historieneinträge entfernen
+    # Prüfe: Hat der aktuelle User jemals an dem Gerät gearbeitet?
+    von_user = db.session.query(Historie).filter_by(
+        geraet_id=geraet.id,
+        benutzer_id=current_user.id
+    ).first()
+
+    if not von_user:
+        flash("Du darfst dieses Gerät nicht löschen.", "danger")
+        return redirect(url_for("benutzer.dashboard"))
+
+    # Historie entfernen
     from models.historie_db import Historie
     Historie.query.filter_by(geraet_id=geraet.id).delete()
 
-    # Dann das Gerät selbst löschen
+    # Gerät entfernen
     db.session.delete(geraet)
 
     try:
@@ -113,6 +121,7 @@ def geraet_loeschen(qrcode):
         flash(f"Fehler beim Löschen: {str(e)}", "danger")
 
     return redirect(url_for("benutzer.dashboard"))
+
 
 
 

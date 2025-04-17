@@ -38,11 +38,9 @@
         <a id="btn-historie" href="#" class="btn btn-outline-dark disabled">📜 Historie</a>
       </div>
 
-      {% if current_user.ist_admin %}
       <form id="loeschenForm" method="POST" action="#" class="d-inline">
         <button id="btn-loeschen" type="submit" class="btn btn-danger disabled" onclick="return confirm('Gerät wirklich löschen?');">❌ Gerät löschen</button>
       </form>
-      {% endif %}
     </div>
   </div>
   {% else %}

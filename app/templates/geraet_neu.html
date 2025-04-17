@@ -32,13 +32,14 @@
         </select>
       </div>
 
-      <!-- Modell (fest: Saugroboter) -->
+      <!-- Modell (dynamisch aus DB) -->
       <div class="mb-3">
         <label for="modell">Modell:</label>
         <select id="modell" name="modell" class="form-select" required>
           <option value="">Modell wählen</option>
-          <option value="1">Dreame L10</option>
-          <option value="2">Dreame X40</option>
+          {% for m in modelle %}
+            <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
         </select>
       </div>
 

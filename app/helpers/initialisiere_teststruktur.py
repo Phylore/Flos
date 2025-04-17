@@ -16,11 +16,17 @@ def initialisiere_tests_fuer_geraet(geraet):
             print(f"❌ Kein Test-Standard gefunden für: {key}")
             continue
 
-        for vorlage in test_standards[key]:
-            # Schritt nur einfügen, wenn er noch nicht existiert (nach Name)
-            vorhandener = GeraeteTestSchritt.query.filter_by(name=vorlage.name).first()
+        for eintrag in test_standards[key]:
+            name = eintrag.get("name")
+            modul = eintrag.get("modul_name")
+            if not name:
+                print(f"⚠️ Fehlerhafte Testschritt-Vorlage – ohne Namen")
+                continue
+
+            vorhandener = GeraeteTestSchritt.query.filter_by(name=name).first()
             if not vorhandener:
-                db.session.add(vorlage)
+                schritt = GeraeteTestSchritt(name=name, modul_name=modul)
+                db.session.add(schritt)
                 hinzugefuegt += 1
 
     if hinzugefuegt > 0:
