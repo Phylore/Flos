@@ -40,6 +40,7 @@ def anzeigen(geraet_id):
             db.session.flush()
 
             kommentar_liste = []
+            alle_ids = [s.id for gruppe in gruppiert.values() for s in gruppe]
 
             for gruppe in gruppiert.values():
                 for schritt in gruppe:
@@ -53,13 +54,14 @@ def anzeigen(geraet_id):
                         bestanden=bestanden
                     ))
 
-            kommentar = f"Bestanden: {', '.join(kommentar_liste)}" if kommentar_liste else None
-            db.session.add(Historie(
-                geraet_id=geraet.id,
-                benutzer_id=current_user.id,
-                aktion="Funktionstest durchgeführt",
-                kommentar=kommentar
-            ))
+            if set(alle_ids) == neue_ids:
+                kommentar = f"Bestanden: {', '.join(kommentar_liste)}" if kommentar_liste else None
+                db.session.add(Historie(
+                    geraet_id=geraet.id,
+                    benutzer_id=current_user.id,
+                    aktion="Funktionstest durchgeführt",
+                    kommentar=kommentar
+                ))
 
             db.session.commit()
 

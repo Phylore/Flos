@@ -8,6 +8,12 @@ from database import db
 
 reinigen_bp = Blueprint("reinigen", __name__, url_prefix="/checkliste/reinigen")
 
+def ist_reinigung_vollständig(geraet):
+    return all(
+        teil.sauberkeit and teil.sauberkeit.value != "Nicht bewertet"
+        for teil in geraet.teile
+    )
+
 @reinigen_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
 @login_required
 def anzeigen(geraet_id):
@@ -33,15 +39,16 @@ def anzeigen(geraet_id):
         if veraendert:
             db.session.commit()
 
-            kommentar = f"Sauber: {', '.join(saubere_teile)}" if saubere_teile else None
-            eintrag = Historie(
-                geraet_id=geraet.id,
-                benutzer_id=current_user.id,
-                aktion="Reinigung durchgeführt",
-                kommentar=kommentar
-            )
-            db.session.add(eintrag)
-            db.session.commit()
+            if ist_reinigung_vollständig(geraet):
+                kommentar = f"Sauber: {', '.join(saubere_teile)}" if saubere_teile else None
+                eintrag = Historie(
+                    geraet_id=geraet.id,
+                    benutzer_id=current_user.id,
+                    aktion="Reinigung durchgeführt",
+                    kommentar=kommentar
+                )
+                db.session.add(eintrag)
+                db.session.commit()
 
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
 

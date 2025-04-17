@@ -4,6 +4,7 @@ from models.geraet_db import Geraet
 from models.historie_db import Historie
 from models.teil_db import Teil
 from models.modul_db import Modul
+from models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
 from database import db
 from models.ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
 from models.modelle.saugroboter_modelle import saugroboter_modelle
@@ -12,31 +13,31 @@ einpacken_bp = Blueprint("einpacken", __name__, url_prefix="/checkliste/einpacke
 
 def ist_auspacken_abgeschlossen(geraet):
     return all(
-        teil.anwesenheit and teil.anwesenheit.value != "Nicht geprüft"
+        teil.anwesenheit and teil.anwesenheit.value in ["Ja", "Ersetzt"]
         for teil in geraet.teile
-        if teil.anwesenheit_id is not None
     )
 
 def ist_reinigung_abgeschlossen(geraet):
     return all(
-        teil.sauberkeit and teil.sauberkeit.value != "Nicht geprüft"
+        teil.sauberkeit and teil.sauberkeit.value != "Nicht bewertet"
         for teil in geraet.teile
-        if teil.sauberkeit_id is not None
     )
 
-# TODO: Funktionstest-Abgeschlossenheitsprüfung kannst du später nach gleichem Schema bauen
 def ist_funktion_abgeschlossen(geraet_id):
-    return db.session.query(Historie).filter_by(
-        geraet_id=geraet_id,
-        aktion="Funktionstest durchgeführt"
-    ).count() > 0
+    letzter = GeraeteTestDurchlauf.query.filter_by(geraet_id=geraet_id)\
+        .order_by(GeraeteTestDurchlauf.zeitpunkt.desc()).first()
+    if not letzter:
+        return False
+
+    alle_schritte = GeraeteTestSchritt.query.count()
+    bestandene = GeraeteTestErgebnis.query.filter_by(durchlauf_id=letzter.id, bestanden=True).count()
+    return bestandene >= alle_schritte
 
 @einpacken_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
 @login_required
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
 
-    # ECHTE Checkstatus der vorherigen Listen
     status = {
         "auspacken": ist_auspacken_abgeschlossen(geraet),
         "reinigung": ist_reinigung_abgeschlossen(geraet),
@@ -47,6 +48,10 @@ def anzeigen(geraet_id):
     ersatz_options = modell_info.get("ersatzpakete", [])
 
     if request.method == "POST":
+        if not all(status.values()):
+            flash("Nicht alle Prüfungen abgeschlossen – Einpacken nicht möglich.", "danger")
+            return redirect(request.url)
+
         ausgewaehlt = request.form.get("ersatzpaket")
         if not ausgewaehlt:
             flash("Bitte ein Ersatzteilpaket auswählen.", "warning")
@@ -71,7 +76,6 @@ def anzeigen(geraet_id):
                 db.session.add(teil)
 
         kommentar = f"Ersatzteilpaket '{ausgewaehlt}' verpackt"
-
         eintrag = Historie(
             geraet_id=geraet.id,
             benutzer_id=current_user.id,

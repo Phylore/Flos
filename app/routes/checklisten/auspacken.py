@@ -8,6 +8,12 @@ from database import db
 
 auspacken_bp = Blueprint("auspacken", __name__, url_prefix="/checkliste/auspacken")
 
+def alle_teile_abgehakt(geraet):
+    return all(
+        teil.anwesenheit and teil.anwesenheit.value in ["Ja", "Ersetzt"]
+        for teil in geraet.teile
+    )
+
 @auspacken_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
 @login_required
 def anzeigen(geraet_id):
@@ -39,15 +45,19 @@ def anzeigen(geraet_id):
             print("💾 Änderungen erkannt → Speichern")
             db.session.commit()
 
-            kommentar = f"Anwesend: {', '.join(anwesende_teile)}" if anwesende_teile else None
-            eintrag = Historie(
-                geraet_id=geraet.id,
-                benutzer_id=current_user.id,
-                aktion="Auspacken abgeschlossen",
-                kommentar=kommentar
-            )
-            db.session.add(eintrag)
-            db.session.commit()
+            if alle_teile_abgehakt(geraet):
+                kommentar = f"Anwesend: {', '.join(anwesende_teile)}" if anwesende_teile else None
+                eintrag = Historie(
+                    geraet_id=geraet.id,
+                    benutzer_id=current_user.id,
+                    aktion="Auspacken abgeschlossen",
+                    kommentar=kommentar
+                )
+                db.session.add(eintrag)
+                db.session.commit()
+                print("🟢 Auspacken abgeschlossen gespeichert")
+            else:
+                print("🟡 Noch nicht alle Teile korrekt markiert – kein Historieneintrag")
         else:
             print("⚠️ Keine Änderungen erkannt – kein Commit")
 
