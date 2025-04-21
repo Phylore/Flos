@@ -1,8 +1,8 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.geraet_db import Geraet  # ganz oben ergänzen
-from models.teilvorlage_db import TeilVorlage  # Import für die Beziehung
+from models.geraet_db import Geraet
+from models.teilvorlage_db import TeilVorlage
 
 class Teil(Base):
     __tablename__ = "teil"
@@ -14,7 +14,7 @@ class Teil(Base):
     anwesenheit_id = Column(Integer, ForeignKey("zustaende.id"))
     sauberkeit_id = Column(Integer, ForeignKey("zustaende.id"))
     beschaedigung_id = Column(Integer, ForeignKey("zustaende.id"))
-    teilvorlage_id = Column(Integer, ForeignKey('teilvorlage.id'))  # Optional
+    teilvorlage_id = Column(Integer, ForeignKey('teilvorlage.id'))
 
     modul = relationship("Modul", back_populates="teile")
     anwesenheit = relationship("Zustand", foreign_keys=[anwesenheit_id])
@@ -45,19 +45,17 @@ WASCHMODUL = TeilVorlage("Waschmodul", ["Saugroboter"])
 # Robotermodulteile
 HAUPTBÜRSTE = TeilVorlage("Hauptbürste", ["Saugroboter"])
 SEITENBÜRSTE = TeilVorlage("Seitenbürste", ["Saugroboter"])
-WISCHMODUL = TeilVorlage("Wischmodul", ["Saugroboter"])
-WISCHPADHALTER = TeilVorlage("Wischpadhalter", ["Saugroboter"])
-WISCHPADS = TeilVorlage("Wischpads", ["Saugroboter"])
-STOFF = TeilVorlage("Wischstoff", ["Saugroboter"])
-LASER = TeilVorlage("Lasereinheit", ["Saugroboter"])
-RAD = TeilVorlage("Radmodul", ["Saugroboter"])
-STAUBFILTER = TeilVorlage("Staubfilter", ["Saugroboter"])
-STAUBBEHÄLTER = TeilVorlage("Staubbehälter", ["Saugroboter"])
 NEBENBÜRSTE = TeilVorlage("Nebenbürste", ["Saugroboter"])
+STAUBBEHÄLTER = TeilVorlage("Staubbehälter", ["Saugroboter"])
+STAUBFILTER = TeilVorlage("Staubfilter", ["Saugroboter"])
+WISCHPADHALTER = TeilVorlage("Wischpadhalter", ["Saugroboter"])
+STOFF = TeilVorlage("Wischstoff", ["Saugroboter"])
+WASSERTANK_ROBOTER = TeilVorlage("Wassertank (Roboter)", ["Saugroboter"])
 
 alle_teilvorlagen = [
     STROMKABEL, WASSERTANK, ABWASSERTANK, STAUBBEUTEL,
     BASIS, RAMPE, WASCHMODUL,
-    HAUPTBÜRSTE, SEITENBÜRSTE, WISCHMODUL, WISCHPADHALTER,
-    WISCHPADS, STOFF, LASER, RAD, STAUBFILTER, STAUBBEHÄLTER, NEBENBÜRSTE
+    HAUPTBÜRSTE, SEITENBÜRSTE, NEBENBÜRSTE, STAUBBEHÄLTER,
+    STAUBFILTER, WISCHPADHALTER, STOFF, WASSERTANK_ROBOTER
 ]
+

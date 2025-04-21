@@ -21,25 +21,30 @@
       <input type="hidden" name="qrcode" value="{{ qr_code }}">
       <p><strong>QR-Code:</strong> {{ qr_code }}</p>
 
-      <!-- Kategorie -->
+      <!-- Hersteller -->
       <div class="mb-3">
-        <label for="kategorie">Kategorie:</label>
-        <select id="kategorie" name="kategorie" class="form-select" required>
-          <option value="">Kategorie wählen</option>
-          {% for k in kategorien %}
-            <option value="{{ k.id }}">{{ k.name }}</option>
+        <label for="hersteller">Hersteller:</label>
+        <select id="hersteller" name="hersteller" class="form-select" required>
+          <option value="">Hersteller wählen</option>
+          {% for h in hersteller %}
+            <option value="{{ h.id }}">{{ h.name }}</option>
           {% endfor %}
         </select>
       </div>
 
-      <!-- Modell (dynamisch aus DB) -->
+      <!-- Kategorie -->
+      <div class="mb-3">
+        <label for="kategorie">Kategorie:</label>
+        <select id="kategorie" name="kategorie" class="form-select" required disabled>
+          <option value="">Kategorie wählen</option>
+        </select>
+      </div>
+
+      <!-- Modell -->
       <div class="mb-3">
         <label for="modell">Modell:</label>
-        <select id="modell" name="modell" class="form-select" required>
+        <select id="modell" name="modell" class="form-select" required disabled>
           <option value="">Modell wählen</option>
-          {% for m in modelle %}
-            <option value="{{ m.id }}">{{ m.name }}</option>
-          {% endfor %}
         </select>
       </div>
 
@@ -47,5 +52,39 @@
     </form>
   {% endif %}
 </div>
+
+<!-- Dynamisches Dropdown-Skript -->
+<script>
+document.getElementById("hersteller").addEventListener("change", function () {
+  const herstellerId = this.value;
+  fetch(`/geraete/api/kategorien?hersteller_id=${herstellerId}`)
+    .then(res => res.json())
+    .then(data => {
+      const kategorieSelect = document.getElementById("kategorie");
+      kategorieSelect.innerHTML = '<option value="">Kategorie wählen</option>';
+      data.forEach(k => {
+        kategorieSelect.innerHTML += `<option value="${k.id}">${k.name}</option>`;
+      });
+      kategorieSelect.disabled = false;
+      document.getElementById("modell").innerHTML = '<option value="">Modell wählen</option>';
+      document.getElementById("modell").disabled = true;
+    });
+});
+
+document.getElementById("kategorie").addEventListener("change", function () {
+  const katId = this.value;
+  const herstellerId = document.getElementById("hersteller").value;
+  fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${katId}`)
+    .then(res => res.json())
+    .then(data => {
+      const modellSelect = document.getElementById("modell");
+      modellSelect.innerHTML = '<option value="">Modell wählen</option>';
+      data.forEach(m => {
+        modellSelect.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+      });
+      modellSelect.disabled = false;
+    });
+});
+</script>
 {% endblock %}
 

@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from models.kategorie_db import Kategorie
 from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
+from models.hersteller_db import Hersteller
 from models.zustand_db import Zustand
 from models.historie_db import Historie
 from models.teil_db import Teil, TeilVorlage
@@ -24,17 +25,19 @@ def scannen():
             return redirect(url_for('geraete.geraet_seite', qrcode=geraet_db.qrcode))
         else:
             kategorien = Kategorie.query.all()
-            return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], qr_code=qrcode)
+            hersteller = Hersteller.query.all()
+            return render_template("geraet_neu.html", kategorien=kategorien, modelle=[], hersteller=hersteller, qr_code=qrcode)
     return render_template("scannen.html")
 
 
 @geraete_bp.route("/geraet/neu", methods=["GET"])
 @login_required
 def geraet_neu():
-    qr_code = request.args.get("qr_code")  # FIX: QR aus URL holen
+    qr_code = request.args.get("qr_code")
     kategorien = Kategorie.query.all()
-    modelle = Modell.query.all()  # <-- hier neu!
-    return render_template("geraet_neu.html", kategorien=kategorien, modelle=modelle, qr_code=qr_code)
+    modelle = Modell.query.all()
+    hersteller = Hersteller.query.all()
+    return render_template("geraet_neu.html", kategorien=kategorien, modelle=modelle, hersteller=hersteller, qr_code=qr_code)
 
 
 @geraete_bp.route("/geraet", methods=["POST"])
@@ -71,6 +74,7 @@ def geraet_anlegen():
 
     return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
 
+
 @geraete_bp.route("/geraet/<qrcode>", endpoint="geraet_seite")
 @login_required
 def geraet_seite(qrcode):
@@ -84,6 +88,7 @@ def modelle_fuer_kategorie(kategorie_id):
     modelle = Modell.query.filter_by(kategorie_id=kategorie_id).all()
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
+
 @geraete_bp.route("/geraet/<string:qrcode>/historie")
 @login_required
 def geraet_historie(qrcode):
@@ -91,12 +96,12 @@ def geraet_historie(qrcode):
     historie_eintraege = Historie.query.filter_by(geraet_id=geraet.id).order_by(Historie.zeitpunkt.desc()).all()
     return render_template("historie.html", geraet=geraet, historie=historie_eintraege)
 
+
 @geraete_bp.route("/geraet/<string:qrcode>/loeschen", methods=["POST"])
 @login_required
 def geraet_loeschen(qrcode):
     geraet = GeraetDB.query.filter_by(qrcode=qrcode).first_or_404()
 
-    # Prüfe: Hat der aktuelle User jemals an dem Gerät gearbeitet?
     von_user = db.session.query(Historie).filter_by(
         geraet_id=geraet.id,
         benutzer_id=current_user.id
@@ -106,10 +111,7 @@ def geraet_loeschen(qrcode):
         flash("Du darfst dieses Gerät nicht löschen.", "danger")
         return redirect(url_for("benutzer.dashboard"))
 
-    # Historie entfernen
     Historie.query.filter_by(geraet_id=geraet.id).delete()
-
-    # Gerät entfernen
     db.session.delete(geraet)
 
     try:
@@ -122,6 +124,21 @@ def geraet_loeschen(qrcode):
     return redirect(url_for("benutzer.dashboard"))
 
 
+# 🔄 Neue API-Endpunkte für dynamische Dropdowns
+
+@geraete_bp.route("/api/kategorien")
+@login_required
+def api_kategorien():
+    hersteller_id = request.args.get("hersteller_id", type=int)
+    kategorien = Kategorie.query.join(Modell).filter(Modell.hersteller_id == hersteller_id).distinct()
+    return jsonify([{"id": k.id, "name": k.name} for k in kategorien])
 
 
+@geraete_bp.route("/api/modelle")
+@login_required
+def api_modelle():
+    hersteller_id = request.args.get("hersteller_id", type=int)
+    kategorie_id = request.args.get("kategorie_id", type=int)
+    modelle = Modell.query.filter_by(hersteller_id=hersteller_id, kategorie_id=kategorie_id).all()
+    return jsonify([{"id": m.id, "name": m.name} for m in modelle])
 
