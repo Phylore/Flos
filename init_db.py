@@ -4,8 +4,8 @@ from models.benutzer_db import Benutzer
 from models.zustand_db import Zustand, STANDARD_ZUSTAENDE
 from models.modell_db import Modell
 from models.kategorie_db import Kategorie
-
 from app.setup.setup_modelle_import import import_modelle_wenn_notwendig
+from app.setup.init_hersteller import init_hersteller
 
 def init_zustaende():
     for kategorie, werte in STANDARD_ZUSTAENDE.items():
@@ -46,6 +46,7 @@ with app.app_context():
     init_zustaende()
     init_benutzer()
 
+    init_hersteller()
     print("[SETUP] Prüfe, ob Modelle importiert werden müssen...")
     import_modelle_wenn_notwendig()
 
