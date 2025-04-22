@@ -24,7 +24,7 @@ class GeraeteTestErgebnis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     durchlauf_id = db.Column(db.Integer, db.ForeignKey("geraete_test_durchlauf.id"), nullable=False)
     schritt_id = db.Column(db.Integer, db.ForeignKey("geraete_test_schritt.id"), nullable=False)
-    bestanden = db.Column(db.Boolean, default=False)
+    bestanden = db.Column(db.Boolean, nullable=True)
     kommentar = db.Column(db.Text)
 
     durchlauf = db.relationship("GeraeteTestDurchlauf", back_populates="ergebnisse")

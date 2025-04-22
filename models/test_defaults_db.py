@@ -25,3 +25,19 @@ test_standards = {
     "Funktionstest-Standard2": Funktionstest_Standard2,
 }
 
+Funktionstest_Stabsauger_Standard1 = [
+    {"name": "Gerät geht an", "modul_name": "Gerät"},
+    {"name": "Lädt", "modul_name": "Gerät"},
+    {"name": "Saugt", "modul_name": "Gerät"}
+]
+
+Funktionstest_Stabsauger_Standard2 = Funktionstest_Stabsauger_Standard1 + [
+    {"name": "Wischt", "modul_name": "Gerät"},
+    {"name": "Selbstreinigung", "modul_name": "Station"}
+]
+
+test_standards.update({
+    "Funktionstest-Stabsauger-Standard1": Funktionstest_Stabsauger_Standard1,
+    "Funktionstest-Stabsauger-Standard2": Funktionstest_Stabsauger_Standard2
+})
+

@@ -9,17 +9,18 @@ from models.hersteller_db import Hersteller
 
 # Modelldefinitionen
 from models.modelle.saugroboter_modelle import saugroboter_modelle
+from models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle  # NEU
 from models.modul_defaults_db import module_standards
 
+# Alle Modell-Quellen kombinieren
 ALLE_MODELLSAMMLUNGEN = [
-    saugroboter_modelle
-    # weitere Modellquellen hier eintragen
+    saugroboter_modelle,
+    stabstaubsauger_modelle  # NEU
 ]
 
 def zustand_by_kategorie(value, kategorie):
     with db.session.no_autoflush:
         return Zustand.query.filter_by(value=value, kategorie=kategorie).first()
-
 
 def import_modelle_wenn_notwendig():
     print("[SETUP] Prüfe, ob Modelle importiert werden müssen...")
@@ -36,25 +37,21 @@ def import_modelle_wenn_notwendig():
             kategoriename = eintrag["kategorie"]
             herstellername = eintrag.get("hersteller")
 
-            # Hersteller existiert?
             hersteller = Hersteller.query.filter_by(name=herstellername).first()
             if not hersteller:
                 print(f"[SKIP] Hersteller '{herstellername}' nicht gefunden – Modell '{modellname}' übersprungen.")
                 continue
 
-            # Kategorie holen oder erstellen
             kategorie = Kategorie.query.filter_by(name=kategoriename).first()
             if not kategorie:
                 kategorie = Kategorie(name=kategoriename)
                 db.session.add(kategorie)
                 db.session.flush()
 
-            # Modell anlegen
             modell = Modell(name=modellname, kategorie_id=kategorie.id, hersteller_id=hersteller.id)
             db.session.add(modell)
             print(f"[SETUP] Modell '{modellname}' ({herstellername}) zur Kategorie '{kategoriename}' hinzugefügt.")
 
-            # Module anlegen
             for modulname, modultyp in eintrag["module"].items():
                 modul = Modul(name=modulname, modell=modell)
 
@@ -81,5 +78,3 @@ def import_modelle_wenn_notwendig():
     db.session.commit()
     print("[SETUP] Modellimport abgeschlossen.")
 
-    db.session.commit()
-    print("[SETUP] Modellimport abgeschlossen.")

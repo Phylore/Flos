@@ -3,7 +3,14 @@ from models.teil_db import Teil
 from models.zustand_db import Zustand
 from database import db
 from models.modelle.saugroboter_modelle import saugroboter_modelle
+from models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
 from models.modul_defaults_db import module_standards
+
+# Kombination aller bekannten Modelle
+alle_modelldefinitionen = {
+    **saugroboter_modelle,
+    **stabstaubsauger_modelle
+}
 
 def get_default_zustand_id(kategorie, value):
     zustand = Zustand.query.filter_by(kategorie=kategorie, value=value).first()
@@ -11,11 +18,11 @@ def get_default_zustand_id(kategorie, value):
 
 def initialisiere_module_und_teile(geraet):
     modell_name = geraet.modell.name
-    if modell_name not in saugroboter_modelle:
+    if modell_name not in alle_modelldefinitionen:
         print(f"❌ Kein Modul-Setup für Modell: {modell_name}")
         return
 
-    modulstruktur = saugroboter_modelle[modell_name].get("module", {})
+    modulstruktur = alle_modelldefinitionen[modell_name].get("module", {})
 
     anwesenheit_default = get_default_zustand_id("Anwesenheit", "Nicht geprüft")
     sauberkeit_default = get_default_zustand_id("Sauberkeit", "Nicht bewertet")
