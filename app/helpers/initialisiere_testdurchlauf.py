@@ -32,7 +32,7 @@ def initialisiere_testdurchlauf(geraet, benutzer=None):
             ergebnis = GeraeteTestErgebnis(
                 durchlauf_id=durchlauf.id,
                 schritt_id=schritt.id,
-                bestanden=False,
+                bestanden=None,
                 kommentar=""
             )
             db.session.add(ergebnis)
