@@ -155,8 +155,17 @@ def api_kategorien():
 def api_modelle():
     hersteller_id = request.args.get("hersteller_id", type=int)
     kategorie_id = request.args.get("kategorie_id", type=int)
-    modelle = Modell.query.filter_by(hersteller_id=hersteller_id, kategorie_id=kategorie_id).all()
+    unterkategorie_id = request.args.get("unterkategorie_id", type=int)
+
+    filter_args = {
+        "hersteller_id": hersteller_id,
+        "kategorie_id": kategorie_id,
+        "unterkategorie_id": unterkategorie_id
+    }
+
+    modelle = Modell.query.filter_by(**filter_args).all()
     return jsonify([{"id": m.id, "name": m.name} for m in modelle])
+
 
 @geraete_bp.route("/api/unterkategorien")
 @login_required

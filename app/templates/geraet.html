@@ -11,7 +11,7 @@
     <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-primary">📦 Auspacken</a>
     <a href="{{ url_for('reinigen.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-success">🧽 Reinigen</a>
     <a href="{{ url_for('funktionstest.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-info">🧪 Funktionstest durchführen</a>
-    <a href="{{ url_for('geraete.bilder_hochladen', geraet_id=geraet.id) }}" class="btn btn-outline-secondary">📷 Bilder hinzufügen</a>
+    <a href="{{ url_for('bildermachen.bilder_hochladen', geraet_id=geraet.id) }}" class="btn btn-outline-secondary">📷 Bilder hinzufügen</a>
     <a href="{{ url_for('einpacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning">📦 Einpacken</a>
     <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark">📜 Historie</a>
     <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary">🔙 Zurück zum Dashboard</a>
