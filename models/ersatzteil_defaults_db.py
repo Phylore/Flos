@@ -13,6 +13,12 @@ ersatzteil_set_namen = {
         "Seitenbürste", "Seitenbürste",
         "Filter für Staubbeutel", "Filter für Staubbeutel",
         "Wischpad", "Wischpad", "Wischpad", "Wischpad"
+    ],
+    "Saugroboter-Ersatzteile-Klein": [  # ✅ NEU hinzugefügt
+        "Staubbeutel",
+        "Seitenbürste",
+        "Filter für Staubbeutel"
+        # Keine Wischpads enthalten
     ]
 }
 

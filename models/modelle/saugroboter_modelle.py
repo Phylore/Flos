@@ -1,8 +1,38 @@
-
-# ====================
-# Dreame
-# ====================
 saugroboter_modelle = {
+    # ====================
+    # Dreame
+    # ====================
+
+    "Dreame D9": {
+        "hersteller": "Dreame",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+    },
+    "Dreame D10 Prime": {
+        "hersteller": "Dreame",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+    },
+    "Dreame D10 Plus": {
+        "hersteller": "Dreame",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+    },
     "Dreame L10 Ultra": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
@@ -11,7 +41,7 @@ saugroboter_modelle = {
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
         "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1"]
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "Dreame L10s Ultra": {
         "hersteller": "Dreame",
@@ -21,7 +51,7 @@ saugroboter_modelle = {
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
         "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1"]
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "Dreame X40": {
         "hersteller": "Dreame",
@@ -30,12 +60,33 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard2",
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
-        "tests": ["Funktionstest-Standard2"]
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+    },
+    "Dreame L20": {
+        "hersteller": "Dreame",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+    },
+    "Dreame X20": {
+        "hersteller": "Dreame",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
 
-# ====================
-# iRobot
-# ====================
+    # ====================
+    # iRobot
+    # ====================
     "iRobot J7+": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
@@ -43,7 +94,8 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "iRobot J8+": {
         "hersteller": "iRobot",
@@ -52,25 +104,8 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
-    },
-    "iRobot J9+": {
-        "hersteller": "iRobot",
-        "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"]
-    },
-    "iRobot Combo10 Max": {
-        "hersteller": "iRobot",
-        "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "iRobot S9+": {
         "hersteller": "iRobot",
@@ -79,12 +114,33 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+    },
+    "iRobot J9+": {
+        "hersteller": "iRobot",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+    },
+    "iRobot Combo10 Max": {
+        "hersteller": "iRobot",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard2",
+            "Roboter": "Saugroboter-Roboter-Standard2"
+        },
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
 
-# ====================
-# Ecovacs
-# ====================
+    # ====================
+    # Ecovacs
+    # ====================
     "Ecovacs N30": {
         "hersteller": "Ecovacs",
         "kategorie": "Saugroboter",
@@ -92,7 +148,8 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
     },
     "Ecovacs Deebot X1 Omni": {
         "hersteller": "Ecovacs",
@@ -101,7 +158,8 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard2",
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
-        "tests": ["Funktionstest-Standard2"]
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "Ecovacs Omni Pro X30": {
         "hersteller": "Ecovacs",
@@ -110,20 +168,22 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard2",
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
-        "tests": ["Funktionstest-Standard2"]
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
 
-# ====================
-# Eureka
-# ====================
-    "Eureka J12": {
+    # ====================
+    # Eureka
+    # ====================
+    "Eureka NES 10": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
         "module": {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
     },
     "Eureka J15": {
         "hersteller": "Eureka",
@@ -132,7 +192,18 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard1",
             "Roboter": "Saugroboter-Roboter-Standard1"
         },
-        "tests": ["Funktionstest-Standard1"]
+        "tests": ["Funktionstest-Standard1"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+    },
+    "Eureka J12": {
+        "hersteller": "Eureka",
+        "kategorie": "Saugroboter",
+        "module": {
+            "Station": "Saugroboter-Station-Standard1",
+            "Roboter": "Saugroboter-Roboter-Standard1"
+        },
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     },
     "Eureka J20": {
         "hersteller": "Eureka",
@@ -141,6 +212,8 @@ saugroboter_modelle = {
             "Station": "Saugroboter-Station-Standard2",
             "Roboter": "Saugroboter-Roboter-Standard2"
         },
-        "tests": ["Funktionstest-Standard2"]
+        "tests": ["Funktionstest-Standard2"],
+        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
     }
 }
+

@@ -1,5 +1,3 @@
-# KEIN Import von GeraeteTestSchritt hier – nur Daten
-
 Funktionstest_Standard1 = [
     {"name": "Gerät geht an", "modul_name": "Roboter"},
     {"name": "Verbindet sich", "modul_name": "Roboter"},
@@ -20,10 +18,8 @@ Funktionstest_Standard2 = Funktionstest_Standard1 + [
     {"name": "Wasser abpumpen", "modul_name": "Station"},
 ]
 
-test_standards = {
-    "Funktionstest-Standard1": Funktionstest_Standard1,
-    "Funktionstest-Standard2": Funktionstest_Standard2,
-}
+# 🆕 Ersatzteilpaket-Klein = wie Standard1, aber betont ohne Wischkomponenten
+Funktionstest_Ersatzteilpaket_Klein = Funktionstest_Standard1.copy()
 
 Funktionstest_Stabsauger_Standard1 = [
     {"name": "Gerät geht an", "modul_name": "Gerät"},
@@ -36,8 +32,11 @@ Funktionstest_Stabsauger_Standard2 = Funktionstest_Stabsauger_Standard1 + [
     {"name": "Selbstreinigung", "modul_name": "Station"}
 ]
 
-test_standards.update({
+test_standards = {
+    "Funktionstest-Standard1": Funktionstest_Standard1,
+    "Funktionstest-Standard2": Funktionstest_Standard2,
+    "Funktionstest-Ersatzteilpaket-Klein": Funktionstest_Ersatzteilpaket_Klein,
     "Funktionstest-Stabsauger-Standard1": Funktionstest_Stabsauger_Standard1,
     "Funktionstest-Stabsauger-Standard2": Funktionstest_Stabsauger_Standard2
-})
+}
 

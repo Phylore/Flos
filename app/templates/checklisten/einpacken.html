@@ -2,12 +2,6 @@
 <html>
 <head>
     <title>📦 Einpacken – {{ geraet.qrcode }}</title>
-    <style>
-        #paketinhalt {
-            margin-top: 1em;
-            padding-left: 1em;
-        }
-    </style>
 </head>
 <body>
     <h1>📦 Einpacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
@@ -38,51 +32,12 @@
             {% endfor %}
         </select>
 
-        <div id="paketinhalt">
-            <!-- Dynamische Anzeige der Paketinhalte -->
-        </div>
-
-        <br>
+        <br><br>
         <button type="submit">📦 Einpacken abschließen</button>
     </form>
 
     <br>
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
-
-    <script>
-        const ersatzteilSetNamen = {
-            "Saugroboter-Ersatzteile-Standard1": [
-                "Staubbeutel",
-                "Seitenbürste",
-                "Filter für Staubbeutel",
-                "Wischpad", "Wischpad", "Wischpad", "Wischpad"
-            ],
-            "Ersatzbox-Premium": [
-                "Staubbeutel", "Staubbeutel",
-                "Seitenbürste", "Seitenbürste",
-                "Filter für Staubbeutel", "Filter für Staubbeutel",
-                "Wischpad", "Wischpad", "Wischpad", "Wischpad"
-            ]
-        };
-
-        document.getElementById('ersatzpaket').addEventListener('change', function () {
-            const inhaltDiv = document.getElementById('paketinhalt');
-            const selected = this.value;
-            const teile = ersatzteilSetNamen[selected] || [];
-            const grouped = {};
-
-            // Gruppieren nach Menge
-            teile.forEach(t => grouped[t] = (grouped[t] || 0) + 1);
-
-            let html = '<h3>📋 Inhalt des Pakets:</h3><ul>';
-            for (const [teil, anzahl] of Object.entries(grouped)) {
-                html += `<li>${anzahl}× ${teil}</li>`;
-            }
-            html += '</ul>';
-
-            inhaltDiv.innerHTML = html;
-        });
-    </script>
 </body>
 </html>
 
