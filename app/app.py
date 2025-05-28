@@ -10,6 +10,7 @@ from app.routes.checklisten.reinigen import reinigen_bp
 from app.routes.checklisten.funktion import funktion_bp
 from app.routes.checklisten.funktionstest import funktionstest_bp
 from app.routes.checklisten.einpacken import einpacken_bp
+from app.routes.checklisten.bilder_machen import bilder_bp
 
 from database import db
 import os
@@ -52,6 +53,7 @@ app.register_blueprint(reinigen_bp)
 app.register_blueprint(funktion_bp)
 app.register_blueprint(funktionstest_bp)
 app.register_blueprint(einpacken_bp)
+app.register_blueprint(bilder_bp)
 
 @app.route("/")
 def index():

@@ -6,5 +6,5 @@ from .zustand_db import Zustand
 from .benutzer_db import Benutzer
 from .geraet_db import Geraet
 from .historie_db import Historie
-
+from .bild_db import GeraetBild
 
