@@ -66,6 +66,7 @@
   const historieBtn = document.getElementById('btn-historie');
   const loeschenBtn = document.getElementById('btn-loeschen');
   const loeschenForm = document.getElementById('loeschenForm');
+  const bilderBtn = document.getElementById('btn-bilder'); // Neu hinzugefügt
 
   form?.addEventListener('change', function () {
     const checked = form.querySelector('input[name="geraet_id"]:checked');
@@ -80,6 +81,9 @@
       detailsBtn.href = "/geraete/geraet/" + qrcode;
       historieBtn.href = "/geraete/geraet/" + qrcode + "/historie";
       loeschenForm.action = "/geraete/geraet/" + qrcode + "/loeschen";
+
+      bilderBtn.href = "/checkliste/bilder/" + geraetId;  // Button-Link setzen
+      bilderBtn.classList.remove("disabled");            // Button aktivieren
 
       auspackenBtn.classList.remove("disabled");
       funktionBtn.classList.remove("disabled");

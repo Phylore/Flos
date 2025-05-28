@@ -31,6 +31,7 @@ def ist_funktion_abgeschlossen(geraet_id):
 
     alle_schritte = GeraeteTestSchritt.query.count()
     bestandene = GeraeteTestErgebnis.query.filter_by(durchlauf_id=letzter.id, bestanden=True).count()
+
     return bestandene >= alle_schritte
 
 @einpacken_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
@@ -38,10 +39,26 @@ def ist_funktion_abgeschlossen(geraet_id):
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
 
+    # Status prüfen
+    auspacken_status = ist_auspacken_abgeschlossen(geraet)
+    reinigung_status = ist_reinigung_abgeschlossen(geraet)
+    funktion_status = ist_funktion_abgeschlossen(geraet.id)
+
+    # Flags im Gerät setzen, wenn sich geändert hat
+    if geraet.ausgepackt != auspacken_status:
+        geraet.ausgepackt = auspacken_status
+    if geraet.gereinigt != reinigung_status:
+        geraet.gereinigt = reinigung_status
+    if getattr(geraet, "getestet", None) != funktion_status:
+        setattr(geraet, "getestet", funktion_status)
+
+    db.session.commit()
+
     status = {
-        "auspacken": ist_auspacken_abgeschlossen(geraet),
-        "reinigung": ist_reinigung_abgeschlossen(geraet),
-        "funktion": ist_funktion_abgeschlossen(geraet.id)
+        "auspacken": auspacken_status,
+        "reinigung": reinigung_status,
+        "funktion": funktion_status,
+        "bilder_einpackfertig": geraet.bilder_einpackfertig,
     }
 
     modell_info = saugroboter_modelle.get(geraet.modell.name, {})
@@ -60,7 +77,6 @@ def anzeigen(geraet_id):
         namen_liste = ersatzteil_set_namen.get(ausgewaehlt, [])
         teilvorlagen = lade_vorlagen(namen_liste)
 
-        # Neues Modul 'Ersatzteile' erstellen
         modul = Modul(name="Ersatzteile", geraet_id=geraet.id)
         db.session.add(modul)
         db.session.flush()

@@ -3,17 +3,35 @@
 <div class="container mt-5">
   <h2>📸 Bilder aufnehmen für Gerät {{ geraet.qrcode }}</h2>
 
-  <form method="POST" enctype="multipart/form-data">
-    {% for feld in ['Produktansicht', 'Unten', 'Frontal', 'Hinten', 'Verpackt mit Etikett'] %}
-      <div class="mb-3">
-        <label class="form-label">{{ feld }}</label>
-        <input type="file" name="{{ feld | lower | replace(' ', '_') }}" accept="image/*" class="form-control" required>
-      </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-success mt-3">💾 Bilder speichern</button>
-  </form>
+  {% set beschreibungen = ["Produktansicht", "Unten", "Frontal", "Hinten", "Verpackt mit Etikett"] %}
+  <div class="row">
+    {% for beschreibung in beschreibungen %}
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold">{{ beschreibung }}</div>
+        <div class="card-body">
+          {% set feldname = beschreibung.lower().replace(" ", "_") %}
+          {% set vorhandenes_bild = bilder | selectattr("beschreibung", "equalto", beschreibung) | list | first %}
 
-  <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary mt-3">🔙 Zurück</a>
+          {% if vorhandenes_bild %}
+            <img src="{{ url_for('static', filename=vorhandenes_bild.pfad.split('static/')[-1]) }}" class="img-fluid mb-2 border" alt="Bild: {{ beschreibung }}">
+            <div class="alert alert-success py-1">✅ Bild vorhanden</div>
+          {% else %}
+            <div class="alert alert-warning py-1">❌ Noch kein Bild vorhanden</div>
+          {% endif %}
+
+          <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="feldname" value="{{ feldname }}">
+            <input type="file" name="bild" accept="image/*" class="form-control mb-2" required>
+            <button class="btn btn-primary w-100" type="submit">📤 Bild hochladen</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary mt-3">🔙 Zurück zum Gerät</a>
 </div>
 {% endblock %}
 

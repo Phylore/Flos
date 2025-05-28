@@ -16,6 +16,12 @@ class Geraet(db.Model):
     modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
     zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
     benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=True)
+    ausgepackt = db.Column(db.Boolean, default=False)
+    gereinigt = db.Column(db.Boolean, default=False)
+    getestet = db.Column(db.Boolean, default=False)
+    bilder_einpackfertig = db.Column(db.Boolean, default=False)
+    bilder_fertig = db.Column(db.Boolean, default=False)
+    einpackbereit = db.Column(db.Boolean, default=False)
   
 
     modell = db.relationship("Modell", back_populates="geraete")
@@ -25,4 +31,3 @@ class Geraet(db.Model):
     module = db.relationship("Modul", back_populates="geraet", cascade="all, delete-orphan")
     teile = db.relationship("Teil", back_populates="geraet")
     testdurchlaeufe = db.relationship("GeraeteTestDurchlauf", back_populates="geraet", cascade="all, delete-orphan")
-
