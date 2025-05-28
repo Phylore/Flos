@@ -62,7 +62,7 @@ saugroboter_modelle = {
     "Ecovacs N30": {
         "hersteller": "Ecovacs",
         "kategorie": "Saugroboter",
-        "unterkategorie": "Mit Station"
+        "unterkategorie": "Ohne Station, Ohne Wischfunktion"
     },
     "Ecovacs Deebot X1 Omni": {
         "hersteller": "Ecovacs",
@@ -77,7 +77,7 @@ saugroboter_modelle = {
     "Eureka NES 10": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
-        "unterkategorie": "Mit Station"
+        "unterkategorie": "Ohne Station, Ohne Wischfunktion"
     },
     "Eureka J15": {
         "hersteller": "Eureka",
