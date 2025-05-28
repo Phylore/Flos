@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, abort
 from flask_login import current_user, login_required
 from models.kategorie_db import Kategorie
+from models.kategorie_db import Unterkategorie
 from models.modell_db import Modell
 from models.geraet_db import Geraet as GeraetDB
 from models.hersteller_db import Hersteller
