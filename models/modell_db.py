@@ -10,6 +10,10 @@ class Modell(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(100), unique=True, nullable=False, index=True)
     kategorie_id = db.Column(db.Integer, db.ForeignKey("kategorie.id"), nullable=False)
+
+    unterkategorie_id = db.Column(db.Integer, db.ForeignKey("unterkategorie.id"), nullable=True)
+    unterkategorie = db.relationship("Unterkategorie", backref="modelle")
+
     
     # NEU: Hersteller-Zuweisung
     hersteller_id = db.Column(db.Integer, db.ForeignKey("hersteller.id"), nullable=False)
