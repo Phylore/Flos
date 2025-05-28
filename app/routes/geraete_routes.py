@@ -133,8 +133,20 @@ def geraet_loeschen(qrcode):
 @login_required
 def api_kategorien():
     hersteller_id = request.args.get("hersteller_id", type=int)
-    kategorien = Kategorie.query.join(Modell).filter(Modell.hersteller_id == hersteller_id).distinct()
+    if not hersteller_id:
+        return jsonify([])
+
+    # Alle Kategorien, die mit mindestens einem Modell dieses Herstellers verknüpft sind
+    kategorien = (
+        db.session.query(Kategorie)
+        .join(Modell, Modell.kategorie_id == Kategorie.id)
+        .filter(Modell.hersteller_id == hersteller_id)
+        .distinct()
+        .all()
+    )
+
     return jsonify([{"id": k.id, "name": k.name} for k in kategorien])
+
 
 
 @geraete_bp.route("/api/modelle")

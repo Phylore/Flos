@@ -20,8 +20,7 @@ with app.app_context():
             print(f"⚠️ {modell_name}: Hersteller oder Kategorie nicht gefunden")
             continue
 
-        # nehme erste passende Unterkategorie (wenn mehrere durch Komma getrennt)
-        uk_name = daten["unterkategorie"].split(",")[0].strip()
+        uk_name = daten["unterkategorie"].strip()
         unterkategorie = Unterkategorie.query.filter_by(name=uk_name, kategorie_id=kategorie.id).first()
 
         if not unterkategorie:
