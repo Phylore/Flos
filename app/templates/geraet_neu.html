@@ -40,6 +40,14 @@
         </select>
       </div>
 
+      <!-- Unterkategorie -->
+      <div class="mb-3">
+        <label for="unterkategorie">Unterkategorie:</label>
+        <select id="unterkategorie" name="unterkategorie" class="form-select" required disabled>
+          <option value="">Unterkategorie wählen</option>
+        </select>
+      </div>
+
       <!-- Modell -->
       <div class="mb-3">
         <label for="modell">Modell:</label>
@@ -66,6 +74,8 @@ document.getElementById("hersteller").addEventListener("change", function () {
         kategorieSelect.innerHTML += `<option value="${k.id}">${k.name}</option>`;
       });
       kategorieSelect.disabled = false;
+      document.getElementById("unterkategorie").innerHTML = '<option value="">Unterkategorie wählen</option>';
+      document.getElementById("unterkategorie").disabled = true;
       document.getElementById("modell").innerHTML = '<option value="">Modell wählen</option>';
       document.getElementById("modell").disabled = true;
     });
@@ -73,8 +83,26 @@ document.getElementById("hersteller").addEventListener("change", function () {
 
 document.getElementById("kategorie").addEventListener("change", function () {
   const katId = this.value;
+  fetch(`/geraete/api/unterkategorien?kategorie_id=${katId}`)
+    .then(res => res.json())
+    .then(data => {
+      const ukSelect = document.getElementById("unterkategorie");
+      ukSelect.innerHTML = '<option value="">Unterkategorie wählen</option>';
+      data.forEach(u => {
+        ukSelect.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+      });
+      ukSelect.disabled = false;
+      document.getElementById("modell").innerHTML = '<option value="">Modell wählen</option>';
+      document.getElementById("modell").disabled = true;
+    });
+});
+
+document.getElementById("unterkategorie").addEventListener("change", function () {
   const herstellerId = document.getElementById("hersteller").value;
-  fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${katId}`)
+  const katId = document.getElementById("kategorie").value;
+  const ukatId = this.value;
+
+  fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${katId}&unterkategorie_id=${ukatId}`)
     .then(res => res.json())
     .then(data => {
       const modellSelect = document.getElementById("modell");

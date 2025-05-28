@@ -1,3 +1,4 @@
+from flask_migrate import Migrate
 from flask import Flask, render_template
 from app.routes.geraete_routes import geraete_bp
 from app.routes.login_routes import login_bp
@@ -25,6 +26,8 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "devkey")
 # Initialisiere db
 db.init_app(app)
 
+#Migriere DB
+migrate = Migrate(app,db)
 # Initialisiere LoginManager
 from flask_login import LoginManager
 from models.benutzer_db import Benutzer

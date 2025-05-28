@@ -1,219 +1,98 @@
 saugroboter_modelle = {
-    # ====================
-    # Dreame
-    # ====================
-
     "Dreame D9": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame D10 Prime": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame D10 Plus": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame L10 Ultra": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame L10s Ultra": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame X40": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Dreame L20": {
         "hersteller": "Dreame",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
-    "Dreame X20": {
-        "hersteller": "Dreame",
-        "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
-    },
-
-    # ====================
-    # iRobot
-    # ====================
     "iRobot J7+": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "iRobot J8+": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "iRobot S9+": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "iRobot J9+": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "iRobot Combo10 Max": {
         "hersteller": "iRobot",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
-
-    # ====================
-    # Ecovacs
-    # ====================
     "Ecovacs N30": {
         "hersteller": "Ecovacs",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+        "unterkategorie": "Mit Station"
     },
     "Ecovacs Deebot X1 Omni": {
         "hersteller": "Ecovacs",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Ecovacs Omni Pro X30": {
         "hersteller": "Ecovacs",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
-
-    # ====================
-    # Eureka
-    # ====================
     "Eureka NES 10": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Klein"]
+        "unterkategorie": "Mit Station"
     },
     "Eureka J15": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard1"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Eureka J12": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard1",
-            "Roboter": "Saugroboter-Roboter-Standard1"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     },
     "Eureka J20": {
         "hersteller": "Eureka",
         "kategorie": "Saugroboter",
-        "module": {
-            "Station": "Saugroboter-Station-Standard2",
-            "Roboter": "Saugroboter-Roboter-Standard2"
-        },
-        "tests": ["Funktionstest-Standard2"],
-        "ersatzpakete": ["Saugroboter-Ersatzteile-Standard1", "Ersatzbox-Premium"]
+        "unterkategorie": "Mit Station, Mit Wischfunktion"
     }
 }
 

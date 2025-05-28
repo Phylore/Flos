@@ -15,7 +15,7 @@ class Geraet(db.Model):
     qrcode = db.Column(db.String, unique=True, nullable=False)
     modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
     zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
-    benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=False)
+    benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=True)
   
 
     modell = db.relationship("Modell", back_populates="geraete")
