@@ -166,3 +166,11 @@ def api_unterkategorien():
 
     unterkats = Unterkategorie.query.filter_by(kategorie_id=kategorie_id).all()
     return jsonify([{"id": u.id, "name": u.name} for u in unterkats])
+
+@geraete_bp.route("/api/unterkategorie_fuer_modell/<modellname>")
+def get_unterkategorie_fuer_modell(modellname):
+    modell = Modell.query.filter_by(name=modellname).first()
+    if modell and modell.unterkategorie:
+        return jsonify({"unterkategorie": modell.unterkategorie.name})
+    return jsonify({"unterkategorie": None})
+
