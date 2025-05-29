@@ -98,6 +98,7 @@ def anzeigen(geraet_id):
                 )
                 db.session.add(teil)
 
+        # Kommentar zum Paket
         kommentar = f"Ersatzteilpaket '{ausgewaehlt}' verpackt"
         eintrag = Historie(
             geraet_id=geraet.id,
@@ -106,6 +107,19 @@ def anzeigen(geraet_id):
             kommentar=kommentar
         )
         db.session.add(eintrag)
+
+        # Nur wenn sich der Status ändert, auch Historie-Eintrag machen
+        if geraet.status != "Eingepackt":
+            geraet.status = "Eingepackt"
+            status_eintrag = Historie(
+            geraet_id=geraet.id,
+            benutzer_id=current_user.id,
+            aktion="Status geändert",
+            kommentar="✅ Einpacken abgeschlossen – Status auf 'Eingepackt' gesetzt"
+        )
+        db.session.add(status_eintrag)
+
+
         db.session.commit()
 
         flash("Gerät wurde erfolgreich eingepackt.", "success")

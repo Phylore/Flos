@@ -16,6 +16,7 @@ class Geraet(db.Model):
     modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
     zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
     benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=True)
+    status = db.Column(db.String, nullable=False, server_default="Unbekannt")
     ausgepackt = db.Column(db.Boolean, default=False)
     gereinigt = db.Column(db.Boolean, default=False)
     getestet = db.Column(db.Boolean, default=False)

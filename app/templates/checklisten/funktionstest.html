@@ -3,9 +3,28 @@
 <html>
 <head>
     <title>⚙️ Funktionstest – {{ geraet.qrcode }}</title>
+    <script>
+        function setzeAlleTests(wert) {
+            const radios = document.querySelectorAll('input[type=radio]');
+            radios.forEach(radio => {
+                if (radio.value === wert) {
+                    radio.checked = true;
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>⚙️ Funktionstest: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
+
+    <!-- Globale Statussteuerung -->
+    <label for="globalStatus">⏱ Alle Testschritte setzen auf:</label>
+    <select id="globalStatus" onchange="setzeAlleTests(this.value)">
+        <option value="">-- Auswahl --</option>
+        <option value="ja">✅ Bestanden</option>
+        <option value="nein">❌ Nicht bestanden</option>
+        <option value="offen">❓ Nicht bewertet</option>
+    </select>
 
     <form method="post">
         {% for modulname, schritte in gruppiert.items() %}
@@ -49,3 +68,4 @@
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
 </body>
 </html>
+
