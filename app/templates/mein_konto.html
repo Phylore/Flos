@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>👤 Mein Benutzerkonto</h2>
+  <a href="{{ url_for('benutzer.passwort_aendern') }}" class="btn btn-outline-primary">
+    Passwort ändern
+  </a>
+</div>
+{% endblock %}
+

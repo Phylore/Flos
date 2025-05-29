@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <h2>🔑 Passwort ändern</h2>
+  <form method="POST" autocomplete="off">
+    <div class="mb-3">
+      <label for="neues_passwort">Neues Passwort:</label>
+      <div class="input-group">
+        <input type="password" class="form-control" id="neues_passwort" name="neues_passwort" required>
+        <button type="button" class="btn btn-outline-secondary" onclick="togglePass('neues_passwort', this)">👁️</button>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="passwort_bestaetigen">Passwort bestätigen:</label>
+      <div class="input-group">
+        <input type="password" class="form-control" id="passwort_bestaetigen" name="passwort_bestaetigen" required>
+        <button type="button" class="btn btn-outline-secondary" onclick="togglePass('passwort_bestaetigen', this)">👁️</button>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+    <a href="{{ url_for('benutzer.mein_konto') }}" class="btn btn-outline-secondary ms-2">Zurück zum Benutzer</a>
+    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-outline-dark ms-2">Zurück zum Dashboard</a>
+  </form>
+</div>
+<script>
+function togglePass(id, btn) {
+  var inp = document.getElementById(id);
+  if (inp.type === "password") {
+    inp.type = "text";
+    btn.innerText = "🙈";
+  } else {
+    inp.type = "password";
+    btn.innerText = "👁️";
+  }
+}
+</script>
+{% endblock %}
+
