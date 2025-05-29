@@ -1,14 +1,14 @@
 from flask_migrate import Migrate
 from flask import Flask, render_template
-from app.routes.geraete_routes import geraete_bp
-from app.routes.login_routes import login_bp
-from app.routes.benutzer_routes import benutzer_bp
-from app.routes.debug_test import debug_bp
-from app.routes.checklisten.auspacken import auspacken_bp
-from app.routes.checklisten.reinigen import reinigen_bp
-from app.routes.checklisten.funktionstest import funktionstest_bp
-from app.routes.checklisten.einpacken import einpacken_bp
-from app.routes.checklisten.bilder_machen import bilder_bp
+from .routes.geraete_routes import geraete_bp
+from .routes.login_routes import login_bp
+from .routes.benutzer_routes import benutzer_bp
+from .routes.debug_test import debug_bp
+from .routes.checklisten.auspacken import auspacken_bp
+from .routes.checklisten.reinigen import reinigen_bp
+from .routes.checklisten.funktionstest import funktionstest_bp
+from .routes.checklisten.einpacken import einpacken_bp
+from .routes.checklisten.bilder_machen import bilder_bp
 
 from database import db
 import os
