@@ -35,12 +35,39 @@
             {% endfor %}
         </select>
 
+        <h3>📋 Enthaltene Teile:</h3>
+        <ul id="teilListe">
+            <li><em>Bitte ein Paket auswählen</em></li>
+        </ul>
+
         <br><br>
         <button type="submit">📦 Einpacken abschließen</button>
     </form>
 
     <br>
     <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
+
+    <script>
+        const ersatzteile = {{ ersatzpaket_inhalt_json | safe }};
+
+        document.getElementById("ersatzpaket").addEventListener("change", function () {
+            const selected = this.value;
+            const teile = ersatzteile[selected] || [];
+
+            const liste = document.getElementById("teilListe");
+            liste.innerHTML = "";
+
+            if (teile.length === 0) {
+                liste.innerHTML = "<li><em>Keine Teile definiert</em></li>";
+            } else {
+                teile.forEach(name => {
+                    const li = document.createElement("li");
+                    li.textContent = name;
+                    liste.appendChild(li);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 

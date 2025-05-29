@@ -8,6 +8,7 @@ from models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, Gera
 from database import db
 from models.ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
 from models.modelle.saugroboter_modelle import saugroboter_modelle
+import json
 
 einpacken_bp = Blueprint("einpacken", __name__, url_prefix="/checkliste/einpacken")
 
@@ -62,8 +63,13 @@ def anzeigen(geraet_id):
     }
 
     modell_info = saugroboter_modelle.get(geraet.modell.name, {})
-    ersatz_options = modell_info.get("ersatzteilpakete", []) 
+    ersatz_options = modell_info.get("ersatzteilpakete", [])
 
+    # Paket-Teile für dynamische Anzeige im Frontend
+    ersatz_inhalt_dict = {
+        name: ersatzteil_set_namen.get(name, [])
+        for name in ersatz_options
+    }
 
     if request.method == "POST":
         if not all(status.values()):
@@ -108,5 +114,6 @@ def anzeigen(geraet_id):
     return render_template("checklisten/einpacken.html",
                            geraet=geraet,
                            status=status,
-                           ersatzpakete=ersatz_options)
+                           ersatzpakete=ersatz_options,
+                           ersatzpaket_inhalt_json=json.dumps(ersatz_inhalt_dict))
 
