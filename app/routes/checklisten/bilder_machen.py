@@ -42,15 +42,18 @@ def bilder_hochladen(geraet_id):
             return redirect(request.url)
 
         beschreibung = feldname.replace("_", " ").capitalize()  # z. B. "Frontal"
-
         vorhandenes = GeraetBild.query.filter_by(geraet_id=geraet.id, beschreibung=beschreibung).first()
 
-        filename = secure_filename(f"{geraet.qrcode}_{feldname}.jpg")
-        pfad_fs = os.path.join(UPLOAD_FOLDER, filename)
+        # -- HIER: Ordner nach QR-Code erzeugen --
+        zielverzeichnis = os.path.join(UPLOAD_FOLDER, geraet.qrcode)
+        os.makedirs(zielverzeichnis, exist_ok=True)
+
+        filename = secure_filename(f"{feldname}.jpg")  # z. B. "frontal.jpg"
+        pfad_fs = os.path.join(zielverzeichnis, filename)
         datei.save(pfad_fs)
 
-        # Pfad nur relativ zu 'static/' speichern für URL
-        pfad_db = f"uploads/{filename}"
+        # Pfad relativ zu 'static/' speichern für URL-Aufbau
+        pfad_db = f"uploads/{geraet.qrcode}/{filename}"
 
         if vorhandenes:
             vorhandenes.pfad = pfad_db

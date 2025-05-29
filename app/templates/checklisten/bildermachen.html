@@ -14,10 +14,11 @@
           {% set vorhandenes_bild = bilder | selectattr("beschreibung", "equalto", beschreibung) | list | first %}
 
           {% if vorhandenes_bild %}
-            <img src="{{ url_for('static', filename=vorhandenes_bild.pfad.split('static/')[-1]) }}" class="img-fluid mb-2 border" alt="Bild: {{ beschreibung }}">
-            <div class="alert alert-success py-1">✅ Bild vorhanden</div>
+            <img src="{{ url_for('static', filename=vorhandenes_bild.pfad) }}" class="img-fluid mb-2 border" alt="Bild: {{ beschreibung }}">
           {% else %}
-            <div class="alert alert-warning py-1">❌ Noch kein Bild vorhanden</div>
+            <div style="width: 100%; height: 180px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #bbb; margin-bottom: 8px;">
+              <span>Kein Bild</span>
+            </div>
           {% endif %}
 
           <form method="POST" enctype="multipart/form-data">

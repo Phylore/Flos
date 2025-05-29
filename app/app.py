@@ -15,7 +15,8 @@ from app.routes.checklisten.bilder_machen import bilder_bp
 from database import db
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../static")
+
 
 # Absoluter Pfad zur Datenbankdatei
 basedir = os.path.abspath(os.path.dirname(__file__))
