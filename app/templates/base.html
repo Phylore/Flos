@@ -11,7 +11,14 @@
     <!-- Optional: eigene Styles -->
     <style>
       body {
-        padding-top: 4rem;
+        padding-top: 3.5rem; /* etwas weniger Platz oben für Tablets */
+      }
+      /* Größere Buttons und Eingabefelder auf Touch-Geräten */
+      @media (pointer: coarse) {
+        button, .btn, input, select, textarea {
+          font-size: 1.15rem !important;
+          min-height: 48px;
+        }
       }
     </style>
   </head>
@@ -20,7 +27,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">QRC</a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('login.logout') }}">Logout</a>
@@ -30,7 +40,7 @@
       </div>
     </nav>
 
-    <main class="container mt-5">
+    <main class="container mt-4">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           <div class="alert alert-info">

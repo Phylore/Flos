@@ -1,73 +1,80 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>🧹 Reinigung – {{ geraet.qrcode }}</title>
-    <script>
-        function setzeAlleSauberkeit() {
-            const wert = document.getElementById("alle_sauberkeit").value;
-            document.querySelectorAll("select").forEach(sel => {
-                for (let option of sel.options) {
-                    if (option.text === wert) {
-                        sel.value = option.value;
-                        break;
-                    }
-                }
-            });
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+  <h2 class="mb-4 text-center">🧹 Reinigung: {{ geraet.modell.name }} <br><small class="text-muted">({{ geraet.qrcode }})</small></h2>
+
+  <form method="post">
+    <!-- Massenaktion -->
+    <div class="row align-items-center mb-4">
+      <div class="col-12 col-md-auto mb-2 mb-md-0">
+        <label for="alle_sauberkeit" class="fw-bold me-2">Alle Einträge setzen auf:</label>
+      </div>
+      <div class="col-7 col-md-4">
+        <select id="alle_sauberkeit" class="form-select">
+          {% for z in zustaende %}
+            <option value="{{ z.value }}">{{ z.value }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-5 col-md-auto">
+        <button type="button" class="btn btn-secondary w-100" onclick="setzeAlleSauberkeit()">Setzen</button>
+      </div>
+    </div>
+
+    {% for modul in geraet.module %}
+      <h3 class="mt-4">{{ modul.name }}</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Teil</th>
+              <th>Sauberkeit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for teil in modul.teile %}
+              <tr>
+                <td>{{ teil.name }}</td>
+                <td>
+                  <select name="sauberkeit_{{ teil.id }}" class="form-select">
+                    {% for z in zustaende %}
+                      {% set ist_selected = (teil.sauberkeit_id == z.id)
+                                             or (teil.sauberkeit_id is none and z.value == "Nicht bewertet") %}
+                      <option value="{{ z.id }}" {% if ist_selected %}selected{% endif %}>
+                        {{ z.value }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+
+    <div class="d-grid gap-2 mt-4">
+      <button type="submit" class="btn btn-success btn-lg">📋 Sauberkeit speichern</button>
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-center mt-4">
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary btn-lg">🔙 Zurück zum Gerät</a>
+  </div>
+</div>
+
+<script>
+function setzeAlleSauberkeit() {
+    const wert = document.getElementById("alle_sauberkeit").value;
+    document.querySelectorAll("select").forEach(sel => {
+        for (let option of sel.options) {
+            if (option.text === wert) {
+                sel.value = option.value;
+                break;
+            }
         }
-    </script>
-</head>
-<body>
-    <h1>🧹 Reinigung: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
-
-    <form method="post">
-        <!-- Massenaktion -->
-        <div style="margin: 1em 0;">
-            <label for="alle_sauberkeit"><strong>Alle Einträge setzen auf:</strong></label>
-            <select id="alle_sauberkeit">
-                {% for z in zustaende %}
-                    <option value="{{ z.value }}">{{ z.value }}</option>
-                {% endfor %}
-            </select>
-            <button type="button" onclick="setzeAlleSauberkeit()">Setzen</button>
-        </div>
-
-        {% for modul in geraet.module %}
-            <h2>{{ modul.name }}</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Teil</th>
-                        <th>Sauberkeit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for teil in modul.teile %}
-                    <tr>
-                        <td>{{ teil.name }}</td>
-                        <td>
-                            <select name="sauberkeit_{{ teil.id }}">
-                                {% for z in zustaende %}
-                                    {% set ist_selected = (teil.sauberkeit_id == z.id)
-                                                           or (teil.sauberkeit_id is none and z.value == "Nicht bewertet") %}
-                                    <option value="{{ z.id }}" {% if ist_selected %}selected{% endif %}>
-                                        {{ z.value }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
-
-        <br>
-        <button type="submit">📋 Sauberkeit speichern</button>
-    </form>
-
-    <br>
-    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
-</body>
-</html>
+    });
+}
+</script>
+{% endblock %}
 

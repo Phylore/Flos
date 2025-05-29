@@ -32,7 +32,6 @@ def ist_funktion_abgeschlossen(geraet_id):
 
     alle_schritte = GeraeteTestSchritt.query.count()
     bestandene = GeraeteTestErgebnis.query.filter_by(durchlauf_id=letzter.id, bestanden=True).count()
-
     return bestandene >= alle_schritte
 
 @einpacken_bp.route("/<int:geraet_id>", methods=["GET", "POST"])
@@ -40,28 +39,28 @@ def ist_funktion_abgeschlossen(geraet_id):
 def anzeigen(geraet_id):
     geraet = Geraet.query.get_or_404(geraet_id)
 
-    # Status prüfen
+    # Status-Checks als boolsche Flags:
     auspacken_status = ist_auspacken_abgeschlossen(geraet)
     reinigung_status = ist_reinigung_abgeschlossen(geraet)
     funktion_status = ist_funktion_abgeschlossen(geraet.id)
+    bilder_status = getattr(geraet, "bilder_einpackfertig", False)
 
-    # Flags im Gerät setzen, wenn sich geändert hat
+    # Flags im Gerät setzen, falls abweichend
+    changed = False
     if geraet.ausgepackt != auspacken_status:
         geraet.ausgepackt = auspacken_status
+        changed = True
     if geraet.gereinigt != reinigung_status:
         geraet.gereinigt = reinigung_status
+        changed = True
     if getattr(geraet, "getestet", None) != funktion_status:
         setattr(geraet, "getestet", funktion_status)
+        changed = True
 
-    db.session.commit()
+    if changed:
+        db.session.commit()
 
-    status = {
-        "auspacken": auspacken_status,
-        "reinigung": reinigung_status,
-        "funktion": funktion_status,
-        "bilder_einpackfertig": geraet.bilder_einpackfertig,
-    }
-
+    # Ersatzteilpakete holen wie gehabt
     modell_info = saugroboter_modelle.get(geraet.modell.name, {})
     ersatz_options = modell_info.get("ersatzteilpakete", [])
 
@@ -72,7 +71,8 @@ def anzeigen(geraet_id):
     }
 
     if request.method == "POST":
-        if not all(status.values()):
+        # Check: Alles erledigt?
+        if not (geraet.ausgepackt and geraet.gereinigt and geraet.getestet and bilder_status):
             flash("Nicht alle Prüfungen abgeschlossen – Einpacken nicht möglich.", "danger")
             return redirect(request.url)
 
@@ -108,26 +108,18 @@ def anzeigen(geraet_id):
         )
         db.session.add(eintrag)
 
-        # Nur wenn sich der Status ändert, auch Historie-Eintrag machen
-        if geraet.status != "Eingepackt":
-            geraet.status = "Eingepackt"
-            status_eintrag = Historie(
-            geraet_id=geraet.id,
-            benutzer_id=current_user.id,
-            aktion="Status geändert",
-            kommentar="✅ Einpacken abgeschlossen – Status auf 'Eingepackt' gesetzt"
-        )
-        db.session.add(status_eintrag)
-
+        # Optional: Du kannst jetzt ein neues Geräteflag „eingepackt“ setzen, falls du möchtest:
+        # geraet.eingepackt = True
 
         db.session.commit()
 
         flash("Gerät wurde erfolgreich eingepackt.", "success")
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
 
-    return render_template("checklisten/einpacken.html",
-                           geraet=geraet,
-                           status=status,
-                           ersatzpakete=ersatz_options,
-                           ersatzpaket_inhalt_json=json.dumps(ersatz_inhalt_dict))
+    return render_template(
+        "checklisten/einpacken.html",
+        geraet=geraet,
+        ersatzpakete=ersatz_options,
+        ersatzpaket_inhalt_json=json.dumps(ersatz_inhalt_dict)
+    )
 

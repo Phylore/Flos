@@ -5,9 +5,7 @@ from app.routes.login_routes import login_bp
 from app.routes.benutzer_routes import benutzer_bp
 from app.routes.debug_test import debug_bp
 from app.routes.checklisten.auspacken import auspacken_bp
-from app.routes.checklisten.zustand_aendern import zustand_aendern_bp
 from app.routes.checklisten.reinigen import reinigen_bp
-from app.routes.checklisten.funktion import funktion_bp
 from app.routes.checklisten.funktionstest import funktionstest_bp
 from app.routes.checklisten.einpacken import einpacken_bp
 from app.routes.checklisten.bilder_machen import bilder_bp
@@ -49,9 +47,7 @@ app.register_blueprint(login_bp)
 app.register_blueprint(benutzer_bp)
 app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
 app.register_blueprint(auspacken_bp)
-app.register_blueprint(zustand_aendern_bp)
 app.register_blueprint(reinigen_bp)
-app.register_blueprint(funktion_bp)
 app.register_blueprint(funktionstest_bp)
 app.register_blueprint(einpacken_bp)
 app.register_blueprint(bilder_bp)

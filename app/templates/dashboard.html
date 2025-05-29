@@ -1,58 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
-  <h1 class="mb-4">Geräte-Dashboard</h1>
+<div class="container py-3" style="max-width: 950px;">
+  <h1 class="mb-4 text-center">Geräte-Dashboard</h1>
 
   {% if geraete %}
   <div id="geraeteForm">
-    <table class="table table-striped align-middle">
-      <thead>
-        <tr>
-          <th></th>
-          <th>QR-Code</th>
-          <th>Modell</th>
-          <th>Kategorie</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for geraet in geraete %}
-        <tr>
-          <td>
-            <input type="radio" name="geraet_id" value="{{ geraet.id }}" data-qrcode="{{ geraet.qrcode }}">
-          </td>
-          <td>{{ geraet.qrcode }}</td>
-          <td>{{ geraet.modell.name }}</td>
-          <td>{{ geraet.modell.kategorie.name }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th></th>
+            <th>QR-Code</th>
+            <th>Modell</th>
+            <th>Kategorie</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for geraet in geraete %}
+          <tr>
+            <td>
+              <input type="radio" name="geraet_id" value="{{ geraet.id }}" data-qrcode="{{ geraet.qrcode }}">
+            </td>
+            <td>{{ geraet.qrcode }}</td>
+            <td>{{ geraet.modell.name }}</td>
+            <td>{{ geraet.modell.kategorie.name }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-    <div class="d-flex gap-2 mt-4 flex-wrap justify-content-between">
-      <div class="d-flex gap-2 flex-wrap">
-        <a id="btn-auspacken" href="#" class="btn btn-outline-primary disabled">📦 Auspacken</a>
-        <a id="btn-reinigen" href="#" class="btn btn-outline-success disabled">🧽 Reinigen</a>
-        <a id="btn-funktionstest" href="#" class="btn btn-outline-info disabled">🧪 Funktionstest</a>
-        <a id="btn-bilder" href="#" class="btn btn-outline-secondary disabled">📷 Bilder</a>
-        <a id="btn-einpacken" href="#" class="btn btn-outline-warning disabled">📦 Einpacken</a>
-        <a id="btn-details" href="#" class="btn btn-outline-secondary disabled">🔍 Details</a>
-        <a id="btn-historie" href="#" class="btn btn-outline-dark disabled">📜 Historie</a>
-      </div>
-
+    <div class="d-flex gap-2 mt-4 flex-wrap justify-content-center">
+      <a id="btn-auspacken" href="#" class="btn btn-outline-primary btn-lg disabled">📦 Auspacken</a>
+      <a id="btn-reinigen" href="#" class="btn btn-outline-success btn-lg disabled">🧽 Reinigen</a>
+      <a id="btn-funktionstest" href="#" class="btn btn-outline-info btn-lg disabled">🧪 Funktionstest</a>
+      <a id="btn-bilder" href="#" class="btn btn-outline-secondary btn-lg disabled">📷 Bilder</a>
+      <a id="btn-einpacken" href="#" class="btn btn-outline-warning btn-lg disabled">📦 Einpacken</a>
+      <a id="btn-details" href="#" class="btn btn-outline-secondary btn-lg disabled">🔍 Details</a>
+      <a id="btn-historie" href="#" class="btn btn-outline-dark btn-lg disabled">📜 Historie</a>
       <form id="loeschenForm" method="POST" action="#" class="d-inline">
-        <button id="btn-loeschen" type="submit" class="btn btn-danger disabled" onclick="return confirm('Gerät wirklich löschen?');">❌ Gerät löschen</button>
+        <button id="btn-loeschen" type="submit" class="btn btn-danger btn-lg disabled" onclick="return confirm('Gerät wirklich löschen?');">❌ Gerät löschen</button>
       </form>
     </div>
   </div>
   {% else %}
-    <div class="alert alert-info">
+    <div class="alert alert-info mt-4 text-center">
       Noch keine Geräte vorhanden.
     </div>
   {% endif %}
 
-  <div class="mt-4">
-    <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success">➕ Neues Gerät hinzufügen</a>
-    <a href="{{ url_for('login.logout') }}" class="btn btn-danger float-end">🚪 Logout</a>
+  <div class="mt-4 d-flex justify-content-between flex-wrap gap-2">
+    <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success btn-lg flex-grow-1">➕ Neues Gerät hinzufügen</a>
+    <a href="{{ url_for('login.logout') }}" class="btn btn-danger btn-lg flex-grow-1">🚪 Logout</a>
   </div>
 </div>
 
@@ -66,7 +65,7 @@
   const historieBtn = document.getElementById('btn-historie');
   const loeschenBtn = document.getElementById('btn-loeschen');
   const loeschenForm = document.getElementById('loeschenForm');
-  const bilderBtn = document.getElementById('btn-bilder'); // Neu hinzugefügt
+  const bilderBtn = document.getElementById('btn-bilder');
 
   form?.addEventListener('change', function () {
     const checked = form.querySelector('input[name="geraet_id"]:checked');
@@ -82,8 +81,8 @@
       historieBtn.href = "/geraete/geraet/" + qrcode + "/historie";
       loeschenForm.action = "/geraete/geraet/" + qrcode + "/loeschen";
 
-      bilderBtn.href = "/checkliste/bilder/" + geraetId;  // Button-Link setzen
-      bilderBtn.classList.remove("disabled");            // Button aktivieren
+      bilderBtn.href = "/checkliste/bilder/" + geraetId;
+      bilderBtn.classList.remove("disabled");
 
       auspackenBtn.classList.remove("disabled");
       funktionBtn.classList.remove("disabled");

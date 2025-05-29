@@ -1,34 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
-  <h2>📜 Historie für Gerät {{ geraet.qrcode }}</h2>
+<div class="container py-3" style="max-width: 900px;">
+  <h2 class="mb-4 text-center">📜 Historie für Gerät {{ geraet.qrcode }}</h2>
 
   {% if historie %}
-  <table class="table table-striped mt-3">
-    <thead>
-      <tr>
-        <th>Zeitpunkt</th>
-        <th>Aktion</th>
-        <th>Benutzer</th>
-        <th>Kommentar</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for eintrag in historie %}
-      <tr>
-        <td>{{ eintrag.zeitpunkt.strftime('%d.%m.%Y %H:%M') }}</td>
-        <td>{{ eintrag.aktion }}</td>
-        <td>{{ eintrag.benutzer.name }}</td>
-        <td>{{ eintrag.kommentar or '–' }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped mt-3 align-middle">
+      <thead>
+        <tr>
+          <th>Zeitpunkt</th>
+          <th>Aktion</th>
+          <th>Benutzer</th>
+          <th>Kommentar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for eintrag in historie %}
+        <tr>
+          <td>{{ eintrag.zeitpunkt.strftime('%d.%m.%Y %H:%M') }}</td>
+          <td>{{ eintrag.aktion }}</td>
+          <td>{{ eintrag.benutzer.name }}</td>
+          <td>{{ eintrag.kommentar or '–' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% else %}
-    <p>Keine Historie vorhanden.</p>
+    <p class="mt-4 text-center">Keine Historie vorhanden.</p>
   {% endif %}
 
-  <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary mt-3">🔙 Zurück</a>
+  <div class="d-flex justify-content-center mt-4">
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary btn-lg">🔙 Zurück</a>
+  </div>
 </div>
 {% endblock %}
 

@@ -1,71 +1,78 @@
-<!-- Datei: templates/checklisten/funktionstest.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>⚙️ Funktionstest – {{ geraet.qrcode }}</title>
-    <script>
-        function setzeAlleTests(wert) {
-            const radios = document.querySelectorAll('input[type=radio]');
-            radios.forEach(radio => {
-                if (radio.value === wert) {
-                    radio.checked = true;
-                }
-            });
-        }
-    </script>
-</head>
-<body>
-    <h1>⚙️ Funktionstest: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 950px;">
+  <h2 class="mb-4 text-center">⚙️ Funktionstest: {{ geraet.modell.name }} <br><small class="text-muted">({{ geraet.qrcode }})</small></h2>
 
-    <!-- Globale Statussteuerung -->
-    <label for="globalStatus">⏱ Alle Testschritte setzen auf:</label>
-    <select id="globalStatus" onchange="setzeAlleTests(this.value)">
+  <!-- Globale Statussteuerung -->
+  <div class="row align-items-center mb-4">
+    <div class="col-12 col-md-auto mb-2 mb-md-0">
+      <label for="globalStatus" class="fw-bold me-2">⏱ Alle Testschritte setzen auf:</label>
+    </div>
+    <div class="col-12 col-md-4">
+      <select id="globalStatus" class="form-select" onchange="setzeAlleTests(this.value)">
         <option value="">-- Auswahl --</option>
         <option value="ja">✅ Bestanden</option>
         <option value="nein">❌ Nicht bestanden</option>
         <option value="offen">❓ Nicht bewertet</option>
-    </select>
+      </select>
+    </div>
+  </div>
 
-    <form method="post">
-        {% for modulname, schritte in gruppiert.items() %}
-            <h2>{{ modulname }}</h2>
-            <table border="1" cellpadding="6">
-                <thead>
-                    <tr>
-                        <th>Testschritt</th>
-                        <th>✅ Bestanden</th>
-                        <th>❌ Nicht bestanden</th>
-                        <th>❓ Nicht bewertet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for schritt in schritte %}
-                    <tr>
-                        <td>{{ schritt.name }}</td>
-                        <td>
-                            <input type="radio" name="schritt_{{ schritt.id }}" value="ja"
-                                   {% if schritt.id in bestandene_ids %}checked{% endif %}>
-                        </td>
-                        <td>
-                            <input type="radio" name="schritt_{{ schritt.id }}" value="nein"
-                                   {% if schritt.id in nichtbestandene_ids %}checked{% endif %}>
-                        </td>
-                        <td>
-                            <input type="radio" name="schritt_{{ schritt.id }}" value="offen"
-                                   {% if schritt.id not in bestandene_ids and schritt.id not in nichtbestandene_ids %}checked{% endif %}>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
+  <form method="post">
+    {% for modulname, schritte in gruppiert.items() %}
+      <h3 class="mt-4">{{ modulname }}</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Testschritt</th>
+              <th class="text-center">✅</th>
+              <th class="text-center">❌</th>
+              <th class="text-center">❓</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for schritt in schritte %}
+            <tr>
+              <td>{{ schritt.name }}</td>
+              <td class="text-center">
+                <input type="radio" name="schritt_{{ schritt.id }}" value="ja"
+                       {% if schritt.id in bestandene_ids %}checked{% endif %} style="width:2em; height:2em;">
+              </td>
+              <td class="text-center">
+                <input type="radio" name="schritt_{{ schritt.id }}" value="nein"
+                       {% if schritt.id in nichtbestandene_ids %}checked{% endif %} style="width:2em; height:2em;">
+              </td>
+              <td class="text-center">
+                <input type="radio" name="schritt_{{ schritt.id }}" value="offen"
+                       {% if schritt.id not in bestandene_ids and schritt.id not in nichtbestandene_ids %}checked{% endif %} style="width:2em; height:2em;">
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
 
-        <br>
-        <button type="submit">📅 Test speichern</button>
-    </form>
+    <div class="d-grid gap-2 mt-4">
+      <button type="submit" class="btn btn-success btn-lg">📅 Test speichern</button>
+    </div>
+  </form>
 
-    <br>
-    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
-</body>
-</html>
+  <div class="d-flex justify-content-center mt-4">
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary btn-lg">🔙 Zurück zum Gerät</a>
+  </div>
+</div>
+
+<script>
+function setzeAlleTests(wert) {
+    const radios = document.querySelectorAll('input[type=radio]');
+    radios.forEach(radio => {
+        if (radio.value === wert) {
+            radio.checked = true;
+        }
+    });
+}
+</script>
+{% endblock %}
 

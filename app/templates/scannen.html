@@ -1,19 +1,16 @@
-<!-- /app/templates/scannen.html -->
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>QR-Code scannen</title>
-</head>
-<body>
-    <h1>Gerät scannen</h1>
-
-    <form method="POST">
-        <label for="code">QR-Code:</label>
-        <input type="text" id="code" name="code" placeholder="QR-Code eingeben oder scannen" required>
-
-        <button type="submit">Scannen</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="max-width: 500px;">
+  <h2 class="mb-4 text-center">🔍 Gerät scannen</h2>
+  <form method="POST" autocomplete="off">
+    <div class="mb-3">
+      <label for="code" class="form-label">QR-Code:</label>
+      <input type="text" id="code" name="code" class="form-control form-control-lg" placeholder="QR-Code eingeben oder scannen" required autofocus>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary btn-lg">📷 Scannen</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
 

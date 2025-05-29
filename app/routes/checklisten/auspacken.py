@@ -54,6 +54,9 @@ def anzeigen(geraet_id):
                     kommentar=kommentar
                 )
                 db.session.add(eintrag)
+
+                # **NEU**: Geraet-Flag direkt setzen!
+                geraet.ausgepackt = True  # <- Attributname ggf. anpassen!
                 db.session.commit()
                 print("🟢 Auspacken abgeschlossen gespeichert")
             else:
@@ -66,5 +69,7 @@ def anzeigen(geraet_id):
     print("📄 GET: Lade Geräteseite")
     for teil in geraet.teile:
         print(f"📦 {teil.name} – anwesenheit_id={teil.anwesenheit_id}")
+
+    # **Nur noch das Geraet-Objekt, KEIN Status-Dict!**
     return render_template("checklisten/auspacken.html", geraet=geraet, zustaende=anwesenheits_zustaende)
 

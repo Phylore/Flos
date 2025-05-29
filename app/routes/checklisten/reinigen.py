@@ -48,6 +48,9 @@ def anzeigen(geraet_id):
                     kommentar=kommentar
                 )
                 db.session.add(eintrag)
+
+                # Flag direkt am Gerät setzen
+                geraet.gereinigt = True  # <- Attribut ggf. anpassen!
                 db.session.commit()
 
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))

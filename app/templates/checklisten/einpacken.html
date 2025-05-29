@@ -1,73 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>📦 Einpacken – {{ geraet.qrcode }}</title>
-</head>
-<body>
-    <h1>📦 Einpacken: {{ geraet.modell.name }} ({{ geraet.qrcode }})</h1>
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 650px;">
+  <h2 class="mb-4 text-center">📦 Einpacken: {{ geraet.modell.name }} <br><small class="text-muted">({{ geraet.qrcode }})</small></h2>
 
-    <h2>✅ Vorbereitungs-Check</h2>
-    <ul>
-        <li>📦 Auspacken: 
-            {% if geraet.ausgepackt %}✅{% else %}❌{% endif %}
-        </li>
-        <li>🧽 Reinigung: 
-            {% if geraet.gereinigt %}✅{% else %}❌{% endif %}
-        </li>
-        <li>🧪 Funktionstest: 
-            {% if geraet.getestet %}✅{% else %}❌{% endif %}
-        </li>
-        <li>📸 Bilder: 
-            {% if geraet.bilder_einpackfertig %}✅{% else %}❌{% endif %}
-        </li>
+  <h4 class="mb-3">✅ Vorbereitungs-Check</h4>
+  <ul class="list-group mb-4">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      📦 Auspacken:
+      <span>{% if geraet.ausgepackt %}✅{% else %}❌{% endif %}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      🧽 Reinigung:
+      <span>{% if geraet.gereinigt %}✅{% else %}❌{% endif %}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      🧪 Funktionstest:
+      <span>{% if geraet.getestet %}✅{% else %}❌{% endif %}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      📸 Bilder:
+      <span>{% if geraet.bilder_einpackfertig %}✅{% else %}❌{% endif %}</span>
+    </li>
+  </ul>
+
+  <h4 class="mb-3">📦 Ersatzteilpaket auswählen</h4>
+  <form method="post">
+    <div class="mb-3">
+      <label for="ersatzpaket" class="form-label fw-bold">Paket:</label>
+      <select name="ersatzpaket" id="ersatzpaket" class="form-select form-select-lg" required>
+        <option value="" disabled selected>-- Wähle ein Paket --</option>
+        {% for paket in ersatzpakete %}
+          <option value="{{ paket }}">{{ paket }}</option>
+        {% else %}
+          <option disabled>❌ Keine Pakete verfügbar</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <h5 class="mt-4">📋 Enthaltene Teile:</h5>
+    <ul id="teilListe" class="list-group mb-4">
+      <li class="list-group-item"><em>Bitte ein Paket auswählen</em></li>
     </ul>
 
-    <h2>📦 Ersatzteilpaket auswählen</h2>
+    <div class="d-grid gap-2 mt-2">
+      <button type="submit" class="btn btn-success btn-lg">📦 Einpacken abschließen</button>
+    </div>
+  </form>
 
-    <form method="post">
-        <label for="ersatzpaket">Paket:</label>
-        <select name="ersatzpaket" id="ersatzpaket" required>
-            <option value="" disabled selected>-- Wähle ein Paket --</option>
-            {% for paket in ersatzpakete %}
-                <option value="{{ paket }}">{{ paket }}</option>
-            {% else %}
-                <option disabled>❌ Keine Pakete verfügbar</option>
-            {% endfor %}
-        </select>
+  <div class="d-flex justify-content-center mt-4">
+    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-secondary btn-lg">🔙 Zurück zum Gerät</a>
+  </div>
+</div>
 
-        <h3>📋 Enthaltene Teile:</h3>
-        <ul id="teilListe">
-            <li><em>Bitte ein Paket auswählen</em></li>
-        </ul>
+<script>
+  const ersatzteile = {{ ersatzpaket_inhalt_json | safe }};
 
-        <br><br>
-        <button type="submit">📦 Einpacken abschließen</button>
-    </form>
+  document.getElementById("ersatzpaket").addEventListener("change", function () {
+      const selected = this.value;
+      const teile = ersatzteile[selected] || [];
 
-    <br>
-    <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}">🔙 Zurück zum Gerät</a>
+      const liste = document.getElementById("teilListe");
+      liste.innerHTML = "";
 
-    <script>
-        const ersatzteile = {{ ersatzpaket_inhalt_json | safe }};
-
-        document.getElementById("ersatzpaket").addEventListener("change", function () {
-            const selected = this.value;
-            const teile = ersatzteile[selected] || [];
-
-            const liste = document.getElementById("teilListe");
-            liste.innerHTML = "";
-
-            if (teile.length === 0) {
-                liste.innerHTML = "<li><em>Keine Teile definiert</em></li>";
-            } else {
-                teile.forEach(name => {
-                    const li = document.createElement("li");
-                    li.textContent = name;
-                    liste.appendChild(li);
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+      if (teile.length === 0) {
+          liste.innerHTML = "<li class='list-group-item'><em>Keine Teile definiert</em></li>";
+      } else {
+          teile.forEach(name => {
+              const li = document.createElement("li");
+              li.className = "list-group-item";
+              li.textContent = name;
+              liste.appendChild(li);
+          });
+      }
+  });
+</script>
+{% endblock %}
 

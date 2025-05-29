@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
-  <h2>Gerät: {{ geraet.qrcode }}</h2>
+<div class="container py-3" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">Gerät: {{ geraet.qrcode }}</h2>
 
-  <p><strong>Modell:</strong> {{ geraet.modell.name }}</p>
-  <p><strong>Kategorie:</strong> {{ geraet.modell.kategorie.name }}</p>
-  <p><strong>Zustand:</strong> {{ geraet.zustand.value }}</p>
+  <div class="mb-3"><strong>Modell:</strong> {{ geraet.modell.name }}</div>
+  <div class="mb-3"><strong>Kategorie:</strong> {{ geraet.modell.kategorie.name }}</div>
+  <div class="mb-4"><strong>Zustand:</strong> {{ geraet.zustand.value }}</div>
 
-  <div class="mt-4 d-flex flex-wrap gap-2">
-    <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-primary">📦 Auspacken</a>
-    <a href="{{ url_for('reinigen.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-success">🧽 Reinigen</a>
-    <a href="{{ url_for('funktionstest.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-info">🧪 Funktionstest durchführen</a>
-    <a href="{{ url_for('bildermachen.bilder_hochladen', geraet_id=geraet.id) }}" class="btn btn-outline-secondary">📷 Bilder hinzufügen</a>
-    <a href="{{ url_for('einpacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning">📦 Einpacken</a>
-    <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark">📜 Historie</a>
-    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary">🔙 Zurück zum Dashboard</a>
+  <div class="d-flex flex-wrap gap-3 justify-content-center">
+    <a href="{{ url_for('auspacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-primary btn-lg flex-grow-1">📦 Auspacken</a>
+    <a href="{{ url_for('reinigen.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-success btn-lg flex-grow-1">🧽 Reinigen</a>
+    <a href="{{ url_for('funktionstest.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-info btn-lg flex-grow-1">🧪 Funktionstest durchführen</a>
+    <a href="{{ url_for('bildermachen.bilder_hochladen', geraet_id=geraet.id) }}" class="btn btn-outline-secondary btn-lg flex-grow-1">📷 Bilder hinzufügen</a>
+    <a href="{{ url_for('einpacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning btn-lg flex-grow-1">📦 Einpacken</a>
+    <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark btn-lg flex-grow-1">📜 Historie</a>
+    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary btn-lg flex-grow-1">🔙 Zurück zum Dashboard</a>
   </div>
 </div>
 {% endblock %}

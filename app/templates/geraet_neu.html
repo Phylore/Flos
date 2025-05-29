@@ -1,30 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
-  <h2>🔍 Gerät erfassen</h2>
+<div class="container py-3" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">🔍 Gerät erfassen</h2>
 
   <!-- QR-Code-Scanformular -->
-  <form method="GET" action="{{ url_for('geraete.geraet_neu') }}" id="scanform">
+  <form method="GET" action="{{ url_for('geraete.geraet_neu') }}" id="scanform" autocomplete="off">
     <div class="mb-3">
-      <label for="qrcode">QR-Code:</label>
-      <input type="text" class="form-control" id="qrcode" name="qr_code" placeholder="QR-Code eingeben oder scannen" required autofocus>
+      <label for="qrcode" class="form-label">QR-Code:</label>
+      <input type="text" class="form-control form-control-lg" id="qrcode" name="qr_code" placeholder="QR-Code eingeben oder scannen" required autofocus>
     </div>
-    <button type="submit" class="btn btn-primary">📷 Scannen</button>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary btn-lg">📷 Scannen</button>
+    </div>
   </form>
 
   {% if qr_code %}
     <hr>
-    <h3>Gerät nicht gefunden – bitte anlegen:</h3>
-
-    <form action="{{ url_for('geraete.geraet_anlegen') }}" method="POST">
+    <h3 class="mb-3">Gerät nicht gefunden – bitte anlegen:</h3>
+    <form action="{{ url_for('geraete.geraet_anlegen') }}" method="POST" autocomplete="off">
       <!-- QR-Code anzeigen & übertragen -->
       <input type="hidden" name="qrcode" value="{{ qr_code }}">
-      <p><strong>QR-Code:</strong> {{ qr_code }}</p>
+      <div class="mb-2"><strong>QR-Code:</strong> {{ qr_code }}</div>
 
       <!-- Hersteller -->
       <div class="mb-3">
-        <label for="hersteller">Hersteller:</label>
-        <select id="hersteller" name="hersteller" class="form-select" required>
+        <label for="hersteller" class="form-label">Hersteller:</label>
+        <select id="hersteller" name="hersteller" class="form-select form-select-lg" required>
           <option value="">Hersteller wählen</option>
           {% for h in hersteller %}
             <option value="{{ h.id }}">{{ h.name }}</option>
@@ -34,29 +35,31 @@
 
       <!-- Kategorie -->
       <div class="mb-3">
-        <label for="kategorie">Kategorie:</label>
-        <select id="kategorie" name="kategorie" class="form-select" required disabled>
+        <label for="kategorie" class="form-label">Kategorie:</label>
+        <select id="kategorie" name="kategorie" class="form-select form-select-lg" required disabled>
           <option value="">Kategorie wählen</option>
         </select>
       </div>
 
       <!-- Unterkategorie -->
       <div class="mb-3">
-        <label for="unterkategorie">Unterkategorie:</label>
-        <select id="unterkategorie" name="unterkategorie" class="form-select" required disabled>
+        <label for="unterkategorie" class="form-label">Unterkategorie:</label>
+        <select id="unterkategorie" name="unterkategorie" class="form-select form-select-lg" required disabled>
           <option value="">Unterkategorie wählen</option>
         </select>
       </div>
 
       <!-- Modell -->
       <div class="mb-3">
-        <label for="modell">Modell:</label>
-        <select id="modell" name="modell" class="form-select" required disabled>
+        <label for="modell" class="form-label">Modell:</label>
+        <select id="modell" name="modell" class="form-select form-select-lg" required disabled>
           <option value="">Modell wählen</option>
         </select>
       </div>
 
-      <button type="submit" class="btn btn-success">💾 Gerät speichern</button>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success btn-lg">💾 Gerät speichern</button>
+      </div>
     </form>
   {% endif %}
 </div>

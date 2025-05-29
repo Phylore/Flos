@@ -74,7 +74,8 @@ def anzeigen(geraet_id):
                     aktion="Funktionstest durchgeführt",
                     kommentar=kommentar
                 ))
-
+                # Gerät-Flag setzen!
+                geraet.getestet = True  # <- Attribut ggf. anpassen!
             db.session.commit()
 
         return redirect(url_for("geraete.geraet_seite", qrcode=geraet.qrcode))
@@ -84,3 +85,4 @@ def anzeigen(geraet_id):
                            gruppiert=gruppiert,
                            bestandene_ids=bestandene_ids,
                            nichtbestandene_ids=nichtbestandene_ids)
+
