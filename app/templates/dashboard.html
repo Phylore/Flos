@@ -19,7 +19,8 @@
           {% for geraet in geraete %}
           <tr>
             <td>
-              <input type="radio" name="geraet_id" value="{{ geraet.id }}" data-qrcode="{{ geraet.qrcode }}">
+              <input type="radio" name="geraet_id" value="{{ geraet.id }}" data-qrcode="{{ geraet.qrcode }}"
+                {% if session['aktives_geraet_id'] is defined and session['aktives_geraet_id']|int == geraet.id %}checked{% endif %}>
             </td>
             <td>{{ geraet.qrcode }}</td>
             <td>{{ geraet.modell.name }}</td>
@@ -54,7 +55,6 @@
     <a href="{{ url_for('benutzer.mein_konto') }}" class="btn btn-outline-info btn-lg flex-grow-1">👤 Mein Konto</a>
     <a href="{{ url_for('login.logout') }}" class="btn btn-danger btn-lg flex-grow-1">🚪 Logout</a>
   </div>
-
 </div>
 
 <script>
@@ -93,6 +93,13 @@
       detailsBtn.classList.remove("disabled");
       historieBtn.classList.remove("disabled");
       loeschenBtn.classList.remove("disabled");
+
+      // NEU: Sende die Auswahl ans Backend
+      fetch('/geraete/aktives_geraet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ geraet_id: checked.value })
+      });
     }
   });
 </script>

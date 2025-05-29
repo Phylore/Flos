@@ -17,6 +17,14 @@ from database import db
 
 geraete_bp = Blueprint("geraete", __name__, url_prefix="/geraete")
 
+from flask import request, session
+
+@geraete_bp.route("/aktives_geraet", methods=["POST"])
+def set_aktives_geraet():
+    data = request.get_json()
+    session["aktives_geraet_id"] = data["geraet_id"]
+    return "", 204
+
 
 @geraete_bp.route("/scannen", methods=["GET", "POST"])
 @login_required
@@ -183,4 +191,7 @@ def get_unterkategorie_fuer_modell(modellname):
     if modell and modell.unterkategorie:
         return jsonify({"unterkategorie": modell.unterkategorie.name})
     return jsonify({"unterkategorie": None})
+
+from flask import request, session
+
 

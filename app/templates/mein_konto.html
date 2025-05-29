@@ -5,6 +5,16 @@
   <a href="{{ url_for('benutzer.passwort_aendern') }}" class="btn btn-outline-primary">
     Passwort ändern
   </a>
+  <div class="mt-4 d-flex flex-wrap gap-2">
+    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-outline-secondary">
+      Zurück zum Dashboard
+    </a>
+    {% if session['aktives_geraet'] is defined %}
+      <a href="{{ url_for('geraete.geraet_seite', qrcode=session['aktives_geraet']) }}" class="btn btn-outline-info">
+        Zurück zu Gerät
+      </a>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
 
