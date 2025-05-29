@@ -9,13 +9,16 @@
     <h2>✅ Vorbereitungs-Check</h2>
     <ul>
         <li>📦 Auspacken: 
-            {% if status.auspacken %}✅{% else %}❌{% endif %}
+            {% if geraet.ausgepackt %}✅{% else %}❌{% endif %}
         </li>
         <li>🧽 Reinigung: 
-            {% if status.reinigung %}✅{% else %}❌{% endif %}
+            {% if geraet.gereinigt %}✅{% else %}❌{% endif %}
         </li>
         <li>🧪 Funktionstest: 
-            {% if status.funktion %}✅{% else %}❌{% endif %}
+            {% if geraet.getestet %}✅{% else %}❌{% endif %}
+        </li>
+        <li>📸 Bilder: 
+            {% if geraet.bilder_einpackfertig %}✅{% else %}❌{% endif %}
         </li>
     </ul>
 

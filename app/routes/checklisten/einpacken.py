@@ -62,7 +62,8 @@ def anzeigen(geraet_id):
     }
 
     modell_info = saugroboter_modelle.get(geraet.modell.name, {})
-    ersatz_options = modell_info.get("ersatzpakete", [])
+    ersatz_options = modell_info.get("ersatzteilpakete", []) 
+
 
     if request.method == "POST":
         if not all(status.values()):
