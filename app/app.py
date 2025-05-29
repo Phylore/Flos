@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from .routes.geraete_routes import geraete_bp
 from .routes.login_routes import login_bp
 from .routes.benutzer_routes import benutzer_bp
+from .routes.admin_routes import admin_bp
 from .routes.debug_test import debug_bp
 from .routes.checklisten.auspacken import auspacken_bp
 from .routes.checklisten.reinigen import reinigen_bp
@@ -45,6 +46,7 @@ def load_user(user_id):
 app.register_blueprint(geraete_bp, url_prefix='/geraete')
 app.register_blueprint(login_bp)
 app.register_blueprint(benutzer_bp)
+app.register_blueprint(admin_bp)
 app.register_blueprint(debug_bp)  # ✅ Jetzt an richtiger Stelle
 app.register_blueprint(auspacken_bp)
 app.register_blueprint(reinigen_bp)

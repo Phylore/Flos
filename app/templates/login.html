@@ -4,21 +4,20 @@
   <div class="card p-4 shadow" style="max-width: 400px; width: 100%;">
     <h2 class="text-center mb-4">🔐 Login</h2>
     <form method="POST" action="{{ url_for('login.login') }}">
-      {{ form.hidden_tag() }}
       <div class="mb-3">
-        {{ form.email.label(class="form-label") }}
-        {{ form.email(class="form-control", placeholder="E-Mail-Adresse", autofocus=True) }}
+        <label for="name" class="form-label">Nutzername</label>
+        <input class="form-control" name="name" id="name" placeholder="Nutzername" autofocus>
       </div>
       <div class="mb-3">
-        {{ form.password.label(class="form-label") }}
-        {{ form.password(class="form-control", placeholder="Passwort") }}
+        <label for="passwort" class="form-label">Passwort</label>
+        <input class="form-control" name="passwort" id="passwort" placeholder="Passwort" type="password">
       </div>
       <div class="d-grid mb-2">
         <button type="submit" class="btn btn-primary btn-lg">Anmelden</button>
       </div>
     </form>
     <div class="mt-3 text-center">
-      <a href="{{ url_for('login.reset_password') }}" style="font-size:1.1em;">Passwort vergessen?</a>
+      <!-- Optional: Passwort vergessen Link -->
     </div>
   </div>
 </div>

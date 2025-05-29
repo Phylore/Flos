@@ -6,6 +6,7 @@ from database import db
 
 login_bp = Blueprint("login", __name__)
 
+
 @login_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -17,11 +18,14 @@ def login():
         if benutzer and benutzer.check_passwort(passwort):
             login_user(benutzer)  # ✅ Login via Flask-Login
             flash("Login erfolgreich.")
-            return redirect(url_for("benutzer.dashboard"))
+            # NEU: Admin-Weiterleitung!
+            if benutzer.ist_admin:
+                return redirect(url_for("admin.dashboard"))
+            else:
+                return redirect(url_for("benutzer.dashboard"))
         else:
             flash("Login fehlgeschlagen.")
     return render_template("login.html")
-
 
 @login_bp.route("/logout")
 @login_required
