@@ -17,8 +17,9 @@
   {% if qr_code %}
     <hr>
     <h3 class="mb-3">Gerät nicht gefunden – bitte anlegen:</h3>
+
+    <!-- Formular A: Bestehendes Modell auswählen -->
     <form action="{{ url_for('geraete.geraet_anlegen') }}" method="POST" autocomplete="off">
-      <!-- QR-Code anzeigen & übertragen -->
       <input type="hidden" name="qrcode" value="{{ qr_code }}">
       <div class="mb-2"><strong>QR-Code:</strong> {{ qr_code }}</div>
 
@@ -49,75 +50,100 @@
         </select>
       </div>
 
-      <!-- Modell -->
+      <!-- Modell Dropdown -->
       <div class="mb-3">
         <label for="modell" class="form-label">Modell:</label>
-        <select id="modell" name="modell" class="form-select form-select-lg" required disabled>
+        <select id="modell" name="modell" class="form-select form-select-lg" required>
           <option value="">Modell wählen</option>
+          {% for m in modelle %}
+            <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
         </select>
       </div>
 
       <div class="d-grid">
-        <button type="submit" class="btn btn-success btn-lg">💾 Gerät speichern</button>
+        <button type="submit" name="aktion" value="bestehend" class="btn btn-success btn-lg">💾 Gerät mit bestehendem Modell anlegen</button>
       </div>
     </form>
+
+    <hr class="my-4">
+
+    <!-- Formular B: Neues Modell anlegen -->
+    <form method="POST" action="{{ url_for('geraete.geraet_anlegen') }}" autocomplete="off">
+      <input type="hidden" name="qrcode" value="{{ qr_code }}">
+      <div class="mb-3">
+        <label for="neues_modell" class="form-label">Neues Modell eingeben:</label>
+        <input type="text" id="neues_modell" name="neues_modell" class="form-control form-control-lg" placeholder="Modellbezeichnung eingeben" required>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button type="submit" name="aktion" value="vorschlaege" class="btn btn-outline-primary btn-lg">🔍 Ähnliche Modelle anzeigen</button>
+        <button type="submit" name="aktion" value="neuanlage" class="btn btn-outline-success btn-lg">➕ Neues Modell anlegen</button>
+      </div>
+    </form>
+
   {% endif %}
 </div>
 
 <!-- Dynamisches Dropdown-Skript -->
 <script>
-document.getElementById("hersteller").addEventListener("change", function () {
-  const herstellerId = this.value;
-  fetch(`/geraete/api/kategorien?hersteller_id=${herstellerId}`)
-    .then(res => res.json())
-    .then(data => {
-      const kategorieSelect = document.getElementById("kategorie");
-      kategorieSelect.innerHTML = '<option value="">Kategorie wählen</option>';
-      data.forEach(k => {
-        kategorieSelect.innerHTML += `<option value="${k.id}">${k.name}</option>`;
+const formA = document.querySelector('form[action$="/geraet"]');
+if (formA) {
+  const hersteller = formA.querySelector("#hersteller");
+  const kategorie = formA.querySelector("#kategorie");
+  const unterkategorie = formA.querySelector("#unterkategorie");
+  const modell = formA.querySelector("#modell");
+
+  hersteller.addEventListener("change", function () {
+    const herstellerId = this.value;
+    fetch(`/geraete/api/kategorien?hersteller_id=${herstellerId}`)
+      .then(res => res.json())
+      .then(data => {
+        kategorie.innerHTML = '<option value="">Kategorie wählen</option>';
+        data.forEach(k => {
+          kategorie.innerHTML += `<option value="${k.id}">${k.name}</option>`;
+        });
+        kategorie.disabled = false;
+
+        unterkategorie.innerHTML = '<option value="">Unterkategorie wählen</option>';
+        unterkategorie.disabled = true;
+        modell.innerHTML = '<option value="">Modell wählen</option>';
+        modell.disabled = true;
       });
-      kategorieSelect.disabled = false;
+  });
 
-      document.getElementById("unterkategorie").innerHTML = '<option value="">Unterkategorie wählen</option>';
-      document.getElementById("unterkategorie").disabled = true;
-      document.getElementById("modell").innerHTML = '<option value="">Modell wählen</option>';
-      document.getElementById("modell").disabled = true;
-    });
-});
-
-document.getElementById("kategorie").addEventListener("change", function () {
-  const kategorieId = this.value;
-  fetch(`/geraete/api/unterkategorien?kategorie_id=${kategorieId}`)
-    .then(res => res.json())
-    .then(data => {
-      const unterkategorieSelect = document.getElementById("unterkategorie");
-      unterkategorieSelect.innerHTML = '<option value="">Unterkategorie wählen</option>';
-      data.forEach(u => {
-        unterkategorieSelect.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+  kategorie.addEventListener("change", function () {
+    const kategorieId = this.value;
+    fetch(`/geraete/api/unterkategorien?kategorie_id=${kategorieId}`)
+      .then(res => res.json())
+      .then(data => {
+        unterkategorie.innerHTML = '<option value="">Unterkategorie wählen</option>';
+        data.forEach(u => {
+          unterkategorie.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+        });
+        unterkategorie.disabled = false;
+        modell.innerHTML = '<option value="">Modell wählen</option>';
+        modell.disabled = true;
       });
-      unterkategorieSelect.disabled = false;
+  });
 
-      document.getElementById("modell").innerHTML = '<option value="">Modell wählen</option>';
-      document.getElementById("modell").disabled = true;
-    });
-});
+  unterkategorie.addEventListener("change", function () {
+    const herstellerId = hersteller.value;
+    const kategorieId = kategorie.value;
+    const unterkategorieId = this.value;
 
-document.getElementById("unterkategorie").addEventListener("change", function () {
-  const herstellerId = document.getElementById("hersteller").value;
-  const kategorieId = document.getElementById("kategorie").value;
-  const unterkategorieId = this.value;
-
-  fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${kategorieId}&unterkategorie_id=${unterkategorieId}`)
-    .then(res => res.json())
-    .then(data => {
-      const modellSelect = document.getElementById("modell");
-      modellSelect.innerHTML = '<option value="">Modell wählen</option>';
-      data.forEach(m => {
-        modellSelect.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+    fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${kategorieId}&unterkategorie_id=${unterkategorieId}`)
+      .then(res => res.json())
+      .then(data => {
+        modell.innerHTML = '<option value="">Modell wählen</option>';
+        data.forEach(m => {
+          modell.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+        });
+        modell.disabled = false;
       });
-      modellSelect.disabled = false;
-    });
-});
+  });
+}
 </script>
 {% endblock %}
+
 

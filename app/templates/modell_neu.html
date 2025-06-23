@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">➕ Neues Modell anlegen</h2>
+  <form method="POST" action="{{ url_for('geraete.modell_speichern') }}">
+    <input type="hidden" name="qrcode" value="{{ qrcode }}">
+    <input type="hidden" name="vorbelegung" value="{{ modellname }}">
+
+    <!-- Modellname -->
+    <div class="mb-3">
+      <label for="modellname" class="form-label">Modellname:</label>
+      <input type="text" id="modellname" name="modellname" value="{{ modellname }}" class="form-control form-control-lg" required>
+    </div>
+
+    <!-- Hersteller -->
+    <div class="mb-3">
+      <label for="hersteller_id" class="form-label">Hersteller:</label>
+      <select name="hersteller_id" id="hersteller_id" class="form-select form-select-lg" required>
+        <option value="">Hersteller wählen</option>
+        {% for h in hersteller %}
+          <option value="{{ h.id }}">{{ h.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Kategorie -->
+    <div class="mb-3">
+      <label for="kategorie_id" class="form-label">Kategorie:</label>
+      <select name="kategorie_id" id="kategorie_id" class="form-select form-select-lg" required>
+        <option value="">Kategorie wählen</option>
+        {% for k in kategorien %}
+          <option value="{{ k.id }}">{{ k.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Unterkategorie -->
+    <div class="mb-3">
+      <label for="unterkategorie_id" class="form-label">Unterkategorie:</label>
+      <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg">
+        <option value="">Unterkategorie wählen</option>
+      </select>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn btn-success btn-lg">💾 Modell speichern & weiter</button>
+    </div>
+  </form>
+</div>
+
+<script>
+document.getElementById("kategorie_id").addEventListener("change", function () {
+  const kategorieId = this.value;
+  fetch(`/geraete/api/unterkategorien?kategorie_id=${kategorieId}`)
+    .then(res => res.json())
+    .then(data => {
+      const ukSelect = document.getElementById("unterkategorie_id");
+      ukSelect.innerHTML = '<option value="">Unterkategorie wählen</option>';
+      data.forEach(u => {
+        ukSelect.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+      });
+    });
+});
+</script>
+{% endblock %}
+
