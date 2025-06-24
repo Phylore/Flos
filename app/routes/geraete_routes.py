@@ -104,11 +104,42 @@ def modell_neu_wizard():
 @login_required
 def modell_speichern():
     name = request.form["modellname"].strip()
-    hersteller_id = request.form["hersteller_id"]
-    kategorie_id = request.form["kategorie_id"]
-    unterkategorie_id = request.form.get("unterkategorie_id") or None
     qrcode = request.form.get("qrcode")
+    
+    # Hersteller: Auswahl oder Neuanlage
+    hersteller_id = request.form.get("hersteller_id")
+    neuer_hersteller = request.form.get("neuer_hersteller", "").strip()
+    if hersteller_id == "__neu__" and neuer_hersteller:
+        h = Hersteller.query.filter_by(name=neuer_hersteller).first()
+        if not h:
+            h = Hersteller(name=neuer_hersteller)
+            db.session.add(h)
+            db.session.commit()
+        hersteller_id = h.id
 
+    # Kategorie: Auswahl oder Neuanlage
+    kategorie_id = request.form.get("kategorie_id")
+    neue_kategorie = request.form.get("neue_kategorie", "").strip()
+    if kategorie_id == "__neu__" and neue_kategorie:
+        k = Kategorie.query.filter_by(name=neue_kategorie).first()
+        if not k:
+            k = Kategorie(name=neue_kategorie)
+            db.session.add(k)
+            db.session.commit()
+        kategorie_id = k.id
+
+    # Unterkategorie: Auswahl oder Neuanlage (unique per Kategorie)
+    unterkategorie_id = request.form.get("unterkategorie_id")
+    neue_unterkategorie = request.form.get("neue_unterkategorie", "").strip()
+    if unterkategorie_id == "__neu__" and neue_unterkategorie and kategorie_id:
+        uk = Unterkategorie.query.filter_by(name=neue_unterkategorie, kategorie_id=kategorie_id).first()
+        if not uk:
+            uk = Unterkategorie(name=neue_unterkategorie, kategorie_id=kategorie_id)
+            db.session.add(uk)
+            db.session.commit()
+        unterkategorie_id = uk.id
+
+    # Doppelte Modellnamen verhindern
     exists = Modell.query.filter_by(name=name).first()
     if exists:
         flash("Modellname existiert bereits. Bitte anderen Namen wählen.", "danger")
@@ -118,13 +149,16 @@ def modell_speichern():
         name=name,
         hersteller_id=hersteller_id,
         kategorie_id=kategorie_id,
-        unterkategorie_id=unterkategorie_id
+        unterkategorie_id=unterkategorie_id or None
     )
     db.session.add(neues_modell)
     db.session.commit()
 
     flash("Neues Modell wurde gespeichert.", "success")
     return redirect(url_for("geraete.geraet_neu", qr_code=qrcode))
+
+   
+
 
 # --- 3. Historie und Löschen ---
 
@@ -235,4 +269,18 @@ def set_aktives_geraet():
     session["aktives_geraet_id"] = data["geraet_id"]
     return "", 204
 
+
+@geraete_bp.route("/api/aehnliche_modelle")
+@login_required
+def api_aehnliche_modelle():
+    query = request.args.get("name", "").strip()
+    if not query:
+        return jsonify([])
+
+    alle_modelle = Modell.query.all()
+    alle_namen = [m.name for m in alle_modelle]
+    matches = process.extract(query, alle_namen, limit=10)
+    # Optional: Nur Treffer ab Score X anzeigen
+    result = [{"name": name, "score": int(score)} for name, score, idx in matches if score > 60]
+    return jsonify(result)
 

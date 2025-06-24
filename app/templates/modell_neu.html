@@ -13,33 +13,57 @@
     </div>
 
     <!-- Hersteller -->
-    <div class="mb-3">
-      <label for="hersteller_id" class="form-label">Hersteller:</label>
-      <select name="hersteller_id" id="hersteller_id" class="form-select form-select-lg" required>
-        <option value="">Hersteller wählen</option>
-        {% for h in hersteller %}
-          <option value="{{ h.id }}">{{ h.name }}</option>
-        {% endfor %}
-      </select>
+    <div class="mb-3 row">
+      <div class="col">
+        <label for="hersteller_id" class="form-label">Hersteller wählen:</label>
+        <select name="hersteller_id" id="hersteller_id" class="form-select form-select-lg">
+          <option value="">Hersteller wählen</option>
+          {% for h in hersteller %}
+            <option value="{{ h.id }}">{{ h.name }}</option>
+          {% endfor %}
+          <option value="__neu__">Neuer Hersteller...</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="neuer_hersteller" class="form-label">Neuer Hersteller:</label>
+        <input type="text" id="neuer_hersteller" name="neuer_hersteller" class="form-control form-control-lg" placeholder="Herstellername">
+      </div>
     </div>
 
     <!-- Kategorie -->
-    <div class="mb-3">
-      <label for="kategorie_id" class="form-label">Kategorie:</label>
-      <select name="kategorie_id" id="kategorie_id" class="form-select form-select-lg" required>
-        <option value="">Kategorie wählen</option>
-        {% for k in kategorien %}
-          <option value="{{ k.id }}">{{ k.name }}</option>
-        {% endfor %}
-      </select>
+    <div class="mb-3 row">
+      <div class="col">
+        <label for="kategorie_id" class="form-label">Kategorie wählen:</label>
+        <select name="kategorie_id" id="kategorie_id" class="form-select form-select-lg">
+          <option value="">Kategorie wählen</option>
+          {% for k in kategorien %}
+            <option value="{{ k.id }}">{{ k.name }}</option>
+          {% endfor %}
+          <option value="__neu__">Neue Kategorie...</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="neue_kategorie" class="form-label">Neue Kategorie:</label>
+        <input type="text" id="neue_kategorie" name="neue_kategorie" class="form-control form-control-lg" placeholder="Kategoriename">
+      </div>
     </div>
 
     <!-- Unterkategorie -->
-    <div class="mb-3">
-      <label for="unterkategorie_id" class="form-label">Unterkategorie:</label>
-      <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg">
-        <option value="">Unterkategorie wählen</option>
-      </select>
+    <div class="mb-3 row">
+      <div class="col">
+        <label for="unterkategorie_id" class="form-label">Unterkategorie wählen:</label>
+        <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg">
+          <option value="">Unterkategorie wählen</option>
+          {% for uk in unterkategorien %}
+            <option value="{{ uk.id }}">{{ uk.name }}</option>
+          {% endfor %}
+          <option value="__neu__">Neue Unterkategorie...</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="neue_unterkategorie" class="form-label">Neue Unterkategorie:</label>
+        <input type="text" id="neue_unterkategorie" name="neue_unterkategorie" class="form-control form-control-lg" placeholder="Unterkategoriename">
+      </div>
     </div>
 
     <div class="d-grid">
@@ -49,18 +73,20 @@
 </div>
 
 <script>
-document.getElementById("kategorie_id").addEventListener("change", function () {
-  const kategorieId = this.value;
-  fetch(`/geraete/api/unterkategorien?kategorie_id=${kategorieId}`)
-    .then(res => res.json())
-    .then(data => {
-      const ukSelect = document.getElementById("unterkategorie_id");
-      ukSelect.innerHTML = '<option value="">Unterkategorie wählen</option>';
-      data.forEach(u => {
-        ukSelect.innerHTML += `<option value="${u.id}">${u.name}</option>`;
-      });
-    });
-});
+  // Optional: Blende die Eingabefelder nur ein, wenn "neu..." gewählt wird
+  document.getElementById("hersteller_id").addEventListener("change", function() {
+    document.getElementById("neuer_hersteller").disabled = (this.value !== "__neu__");
+  });
+  document.getElementById("kategorie_id").addEventListener("change", function() {
+    document.getElementById("neue_kategorie").disabled = (this.value !== "__neu__");
+  });
+  document.getElementById("unterkategorie_id").addEventListener("change", function() {
+    document.getElementById("neue_unterkategorie").disabled = (this.value !== "__neu__");
+  });
+  // Optional: Standardmäßig deaktivieren
+  document.getElementById("neuer_hersteller").disabled = true;
+  document.getElementById("neue_kategorie").disabled = true;
+  document.getElementById("neue_unterkategorie").disabled = true;
 </script>
 {% endblock %}
 

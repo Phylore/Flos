@@ -68,7 +68,7 @@
 
     <hr class="my-4">
 
-    <!-- Formular B: Neues Modell anlegen -->
+    <!-- Formular B: Neues Modell anlegen / Ähnliche anzeigen -->
     <form method="POST" action="{{ url_for('geraete.geraet_anlegen') }}" autocomplete="off">
       <input type="hidden" name="qrcode" value="{{ qr_code }}">
       <div class="mb-3">
@@ -76,8 +76,13 @@
         <input type="text" id="neues_modell" name="neues_modell" class="form-control form-control-lg" placeholder="Modellbezeichnung eingeben" required>
       </div>
 
+      <!-- AJAX-Button & Dropdown NUR HIER! -->
+      <div class="mb-3">
+        <button type="button" class="btn btn-secondary" onclick="fetchAehnlicheModelle()">Ähnliche Modelle anzeigen</button>
+        <select id="aehnliche_modelle_dropdown" class="form-select mt-2" style="display:none;"></select>
+      </div>
+
       <div class="d-grid gap-2">
-        <button type="submit" name="aktion" value="vorschlaege" class="btn btn-outline-primary btn-lg">🔍 Ähnliche Modelle anzeigen</button>
         <button type="submit" name="aktion" value="neuanlage" class="btn btn-outline-success btn-lg">➕ Neues Modell anlegen</button>
       </div>
     </form>
@@ -85,7 +90,7 @@
   {% endif %}
 </div>
 
-<!-- Dynamisches Dropdown-Skript -->
+<!-- Dynamisches Dropdown-Skript für Hersteller, Kategorie, Unterkategorie, Modell -->
 <script>
 const formA = document.querySelector('form[action$="/geraet"]');
 if (formA) {
@@ -143,7 +148,39 @@ if (formA) {
       });
   });
 }
+
+// Ähnliche Modelle: AJAX + Dropdown-Funktion
+function fetchAehnlicheModelle() {
+    const name = document.getElementById('neues_modell').value;
+    fetch(`/geraete/api/aehnliche_modelle?name=${encodeURIComponent(name)}`)
+        .then(response => response.json())
+        .then(data => {
+            const dropdown = document.getElementById('aehnliche_modelle_dropdown');
+            dropdown.innerHTML = '';
+            if (data.length === 0) {
+                dropdown.style.display = 'none';
+                dropdown.innerHTML = '';
+                return;
+            }
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.name;
+                option.textContent = `${item.name} (${item.score}%)`;
+                dropdown.appendChild(option);
+            });
+            dropdown.style.display = 'block';
+        });
+}
+
+// Wenn User Vorschlag aus Dropdown auswählt → ins Input übernehmen
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdown = document.getElementById('aehnliche_modelle_dropdown');
+    if (dropdown) {
+        dropdown.addEventListener('change', function () {
+            document.getElementById('neues_modell').value = this.value;
+        });
+    }
+});
 </script>
 {% endblock %}
-
 
