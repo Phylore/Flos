@@ -3,88 +3,107 @@
 <div class="container mt-5">
   <h2>🛡️ Admin-Dashboard</h2>
   <p>Nur für Admins sichtbar.</p>
-  <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-    <table class="table table-striped align-middle">
-      <thead>
-        <tr>
-          <th>QR-Code</th>
-          <th>Modell</th>
-          <th>Kategorie</th>
-          <th>Status</th>
-          <th>Besitzer</th>
-          <th>Aktion</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for geraet in geraete.items %}
-        <tr>
-          <td>{{ geraet.qrcode }}</td>
-          <td>
-            {% if geraet.modell %}
-              {{ geraet.modell.name }}
-            {% else %}
-              <span class="text-muted">Unbekannt</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if geraet.modell and geraet.modell.kategorie %}
-              {{ geraet.modell.kategorie.name }}
-            {% else %}
-              <span class="text-muted">Unbekannt</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if geraet.zustand %}
-              {{ geraet.zustand.name }}
-            {% else %}
-              <span class="text-muted">Unbekannt</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if geraet.benutzer %}
-              {{ geraet.benutzer.name }}
-            {% else %}
-              <span class="text-muted">?</span>
-            {% endif %}
-          </td>
-          <td>
-            <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-sm btn-outline-info">
-              Details
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <div class="row">
+    <!-- Tabelle mit Geräten -->
+    <div class="col-lg-9 col-md-8 col-12">
+      <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>QR-Code</th>
+              <th>Modell</th>
+              <th>Kategorie</th>
+              <th>Status</th>
+              <th>Besitzer</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for geraet in geraete.items %}
+            <tr>
+              <td>{{ geraet.qrcode }}</td>
+              <td>
+                {% if geraet.modell %}
+                  {{ geraet.modell.name }}
+                {% else %}
+                  <span class="text-muted">Unbekannt</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if geraet.modell and geraet.modell.kategorie %}
+                  {{ geraet.modell.kategorie.name }}
+                {% else %}
+                  <span class="text-muted">Unbekannt</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if geraet.zustand %}
+                  {{ geraet.zustand.name }}
+                {% else %}
+                  <span class="text-muted">Unbekannt</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if geraet.benutzer %}
+                  {{ geraet.benutzer.name }}
+                {% else %}
+                  <span class="text-muted">?</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('geraete.geraet_seite', qrcode=geraet.qrcode) }}" class="btn btn-sm btn-outline-info">
+                  Details
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-  <!-- Pagination Controls -->
-  <div class="d-flex justify-content-center my-3">
-    <nav>
-      <ul class="pagination">
-        {% if geraete.has_prev %}
-          <li class="page-item">
-            <a class="page-link" href="{{ url_for('admin.dashboard', page=geraete.prev_num) }}">Zurück</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <span class="page-link">Zurück</span>
-          </li>
-        {% endif %}
-        <li class="page-item disabled">
-          <span class="page-link">Seite {{ geraete.page }} von {{ geraete.pages }}</span>
-        </li>
-        {% if geraete.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="{{ url_for('admin.dashboard', page=geraete.next_num) }}">Weiter</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <span class="page-link">Weiter</span>
-          </li>
-        {% endif %}
-      </ul>
-    </nav>
+      <!-- Pagination Controls -->
+      <div class="d-flex justify-content-center my-3">
+        <nav>
+          <ul class="pagination">
+            {% if geraete.has_prev %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.dashboard', page=geraete.prev_num) }}">Zurück</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Zurück</span>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">Seite {{ geraete.page }} von {{ geraete.pages }}</span>
+            </li>
+            {% if geraete.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.dashboard', page=geraete.next_num) }}">Weiter</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Weiter</span>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <!-- Sidebar mit Buttons -->
+    <div class="col-lg-3 col-md-4 col-12 mb-4">
+      <div class="d-flex flex-column align-items-stretch gap-3">
+        <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success btn-lg w-100">
+          ➕ Neues Gerät hinzufügen
+        </a>
+        <a href="{{ url_for('benutzer.mein_konto') }}" class="btn btn-outline-info btn-lg w-100">
+          👤 Mein Konto
+        </a>
+        <a href="{{ url_for('login.logout') }}" class="btn btn-danger btn-lg w-100">
+          🚪 Logout
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

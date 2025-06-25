@@ -14,7 +14,11 @@
     <a href="{{ url_for('bildermachen.bilder_hochladen', geraet_id=geraet.id) }}" class="btn btn-outline-secondary btn-lg flex-grow-1">📷 Bilder hinzufügen</a>
     <a href="{{ url_for('einpacken.anzeigen', geraet_id=geraet.id) }}" class="btn btn-outline-warning btn-lg flex-grow-1">📦 Einpacken</a>
     <a href="{{ url_for('geraete.geraet_historie', qrcode=geraet.qrcode) }}" class="btn btn-outline-dark btn-lg flex-grow-1">📜 Historie</a>
-    <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary btn-lg flex-grow-1">🔙 Zurück zum Dashboard</a>
+    {% if current_user.is_authenticated and current_user.ist_admin %}
+      <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-lg flex-grow-1">🔙 Zurück zum Admin-Dashboard</a>
+    {% else %}
+      <a href="{{ url_for('benutzer.dashboard') }}" class="btn btn-secondary btn-lg flex-grow-1">🔙 Zurück zum Benutzer-Dashboard</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
