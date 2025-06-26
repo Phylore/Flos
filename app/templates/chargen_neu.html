@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Neue Charge anlegen</h2>
+  <form method="POST" action="{{ url_for('admin.charge_anlegen') }}">
+    <div class="mb-3">
+      <label for="name" class="form-label">Bezeichnung der Charge</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Geräte auswählen</label>
+      <select multiple class="form-control" name="geraete_ids">
+        {% for geraet in geraete %}
+          <option value="{{ geraet.id }}">
+            {{ geraet.qrcode }} – {{ geraet.modell.name if geraet.modell else "?" }}
+          </option>
+        {% endfor %}
+      </select>
+      <div class="form-text">Mit STRG oder CMD mehrere Geräte auswählen.</div>
+    </div>
+    <button type="submit" class="btn btn-success">Charge anlegen</button>
+    <a href="{{ url_for('admin.chargen') }}" class="btn btn-secondary ms-2">Abbrechen</a>
+  </form>
+</div>
+{% endblock %}
+

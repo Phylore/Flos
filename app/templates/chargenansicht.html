@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>📦 Chargenansicht</h2>
+  <a href="{{ url_for('admin.charge_anlegen') }}" class="btn btn-success mb-4">
+    ➕ Charge anlegen
+  </a>
+  <p>Hier siehst du alle erfassten Chargen (Testmodus/Dummy-Ansicht).</p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Bezeichnung</th>
+        <th>Anzahl Geräte</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if chargen|length == 0 %}
+        <tr>
+          <td colspan="4" class="text-center text-muted">Noch keine Chargen eingetragen.</td>
+        </tr>
+      {% else %}
+        {% for charge in chargen %}
+        <tr>
+          <td>{{ charge.id if charge.id else loop.index }}</td>
+          <td>{{ charge.name if charge.name else "Dummy-Charge" }}</td>
+          <td>{{ charge.geraete|length if charge.geraete is defined else 0 }}</td>
+          <td>
+            <a href="#" class="btn btn-sm btn-outline-info disabled">Details</a>
+          </td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-3">Zurück zum Dashboard</a>
+</div>
+{% endblock %}
+

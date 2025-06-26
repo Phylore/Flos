@@ -1,9 +1,9 @@
 from app.app import app, db
 
-from models.benutzer_db import Benutzer
-from models.zustand_db import Zustand, STANDARD_ZUSTAENDE
-from models.modell_db import Modell
-from models.kategorie_db import Kategorie
+from app.models.benutzer_db import Benutzer
+from app.models.zustand_db import Zustand, STANDARD_ZUSTAENDE
+from app.models.modell_db import Modell
+from app.models.kategorie_db import Kategorie
 from app.setup.setup_modelle_import import import_modelle_wenn_notwendig
 from app.setup.init_hersteller import init_hersteller
 
