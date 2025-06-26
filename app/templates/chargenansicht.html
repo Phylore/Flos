@@ -3,7 +3,7 @@
 <div class="container mt-5">
   <h2>📦 Chargenansicht</h2>
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <p class="mb-0">Hier siehst du alle erfassten Chargen (Testmodus/Dummy-Ansicht).</p>
+    <p class="mb-0">Hier siehst du alle erfassten Chargen.</p>
     <a href="{{ url_for('admin.charge_anlegen') }}" class="btn btn-success">
       ➕ Charge anlegen
     </a>
@@ -13,6 +13,8 @@
       <tr>
         <th>#</th>
         <th>Bezeichnung</th>
+        <th>Lieferant</th>
+        <th>Angelegt am</th>
         <th>Anzahl Geräte</th>
         <th>Aktionen</th>
       </tr>
@@ -20,14 +22,28 @@
     <tbody>
       {% if chargen|length == 0 %}
         <tr>
-          <td colspan="4" class="text-center text-muted">Noch keine Chargen eingetragen.</td>
+          <td colspan="6" class="text-center text-muted">Noch keine Chargen eingetragen.</td>
         </tr>
       {% else %}
         {% for charge in chargen %}
         <tr>
-          <td>{{ charge.id if charge.id else loop.index }}</td>
-          <td>{{ charge.name if charge.name else "Dummy-Charge" }}</td>
-          <td>{{ charge.geraete|length if charge.geraete is defined else 0 }}</td>
+          <td>{{ charge.id or loop.index }}</td>
+          <td>{{ charge.name or "–" }}</td>
+          <td>{{ charge.lieferant.name if charge.lieferant else "–" }}</td>
+          <td>
+            {% if charge.angelegt_am %}
+              {{ charge.angelegt_am.strftime('%d.%m.%Y %H:%M') }}
+            {% else %}
+              –
+            {% endif %}
+          </td>
+          <td>
+            {% if charge.geraete is defined %}
+              {{ charge.geraete|length }}
+            {% else %}
+              0
+            {% endif %}
+          </td>
           <td>
             <a href="#" class="btn btn-sm btn-outline-info disabled">Details</a>
           </td>
@@ -36,7 +52,7 @@
       {% endif %}
     </tbody>
   </table>
-  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-3">Zurück zum Dashboard</a>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-3 float-end">Zurück zum Dashboard</a>
 </div>
 {% endblock %}
 
