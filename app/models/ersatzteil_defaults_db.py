@@ -23,6 +23,6 @@ ersatzteil_set_namen = {
 }
 
 def lade_vorlagen(namen_liste):
-    from models.teilvorlage_db import TeilVorlage
+    from app.models.teilvorlage_db import TeilVorlage
     return [TeilVorlage.query.filter_by(name=name).first() for name in namen_liste]
 

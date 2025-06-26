@@ -8,9 +8,9 @@ from database import db
 from app.models.hersteller_db import Hersteller
 
 # Modelldefinitionen
-from models.modelle.saugroboter_modelle import saugroboter_modelle
-from models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle  # NEU
-from models.modul_defaults_db import module_standards
+from app.models.modelle.saugroboter_modelle import saugroboter_modelle
+from app.models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle  # NEU
+from app.models.modul_defaults_db import module_standards
 
 # Alle Modell-Quellen kombinieren
 ALLE_MODELLSAMMLUNGEN = [

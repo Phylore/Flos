@@ -3,7 +3,7 @@
 from flask import Blueprint, request, redirect, url_for, render_template, flash
 import os
 from werkzeug.utils import secure_filename
-from models.bild_db import GeraetBild
+from app.models.bild_db import GeraetBild
 from app.models.geraet_db import Geraet
 from database import db
 from app.models.historie_db import Historie
