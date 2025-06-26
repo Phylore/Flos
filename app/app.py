@@ -14,8 +14,9 @@ from .routes.checklisten.einpacken import einpacken_bp
 from .routes.checklisten.bilder_machen import bilder_bp
 
 from database import db
-from app.models.geraet import Geraet
+from app.models.geraet_db import Geraet
 from app.models.charge import Charge
+from app.models.lieferant import Lieferant
 import os
 
 app = Flask(__name__, static_folder="../static")
@@ -35,7 +36,7 @@ db.init_app(app)
 migrate = Migrate(app,db)
 # Initialisiere LoginManager
 from flask_login import LoginManager
-from models.benutzer_db import Benutzer
+from app.models.benutzer_db import Benutzer
 
 login_manager = LoginManager()
 login_manager.init_app(app)
