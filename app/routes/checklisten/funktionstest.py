@@ -2,9 +2,9 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from models.geraet_db import Geraet
-from models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
-from models.historie_db import Historie
+from app.models.geraet_db import Geraet
+from app.models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
+from app.models.historie_db import Historie
 from database import db
 
 funktionstest_bp = Blueprint("funktionstest", __name__, url_prefix="/checkliste/funktionstest")

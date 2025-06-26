@@ -1,8 +1,8 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.geraet_db import Geraet
-from models.teilvorlage_db import TeilVorlage
+from app.models.geraet_db import Geraet
+from app.models.teilvorlage_db import TeilVorlage
 
 class Teil(Base):
     __tablename__ = "teil"

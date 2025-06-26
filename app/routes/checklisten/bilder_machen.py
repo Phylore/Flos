@@ -4,9 +4,9 @@ from flask import Blueprint, request, redirect, url_for, render_template, flash
 import os
 from werkzeug.utils import secure_filename
 from models.bild_db import GeraetBild
-from models.geraet_db import Geraet
+from app.models.geraet_db import Geraet
 from database import db
-from models.historie_db import Historie
+from app.models.historie_db import Historie
 from flask_login import current_user
 
 def bilder_einpackfertig_pruefen(geraet_id):

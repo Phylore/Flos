@@ -1,4 +1,4 @@
-from models.zustand_db import Zustand
+from app.models.zustand_db import Zustand
 from database import db
 
 def initialisiere_teile_fuer_geraet(geraet):

@@ -1,10 +1,10 @@
-from models.modul_db import Modul
-from models.teil_db import Teil
-from models.zustand_db import Zustand
+from app.models.modul_db import Modul
+from app.models.teil_db import Teil
+from app.models.zustand_db import Zustand
 from database import db
-from models.modelle.saugroboter_modelle import saugroboter_modelle
-from models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
-from models.modul_defaults_db import module_standards
+from app.models.modelle.saugroboter_modelle import saugroboter_modelle
+from app.models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
+from app.models.modul_defaults_db import module_standards
 
 # Kombination aller bekannten Modelle
 alle_modelldefinitionen = {

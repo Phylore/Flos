@@ -1,6 +1,6 @@
 # /app/models/modell_db.py
-from models.modul_db import Modul
-from models.hersteller_db import Hersteller  # NEU: Hersteller importieren
+from app.models.modul_db import Modul
+from app.models.hersteller_db import Hersteller  # NEU: Hersteller importieren
 from sqlalchemy.orm import relationship
 from database import db
 

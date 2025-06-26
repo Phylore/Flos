@@ -1,11 +1,11 @@
 
 # Datei: initialisiere_teststruktur.py
 
-from models.geraetetest_db import GeraeteTestSchritt
+from app.models.geraetetest_db import GeraeteTestSchritt
 from database import db
-from models.modelle.saugroboter_modelle import saugroboter_modelle
-from models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
-from models.test_defaults_db import test_standards
+from app.models.modelle.saugroboter_modelle import saugroboter_modelle
+from app.models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
+from app.models.test_defaults_db import test_standards
 
 ALLE_MODELLE = {
     **saugroboter_modelle,

@@ -1,4 +1,4 @@
-from models.teil_db import *
+from app.models.teil_db import *
 
 # === Modul-Standards für Kategorie: Saugroboter ===
 

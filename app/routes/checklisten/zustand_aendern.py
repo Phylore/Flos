@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required
-from models.geraet_db import Geraet
-from models.zustand_db import Zustand
-from models.teil_db import Teil
+from app.models.geraet_db import Geraet
+from app.models.zustand_db import Zustand
+from app.models.teil_db import Teil
 from database import db
 
 zustand_aendern_bp = Blueprint("zustand_aendern", __name__, url_prefix="/checkliste/zustand_aendern")

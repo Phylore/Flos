@@ -1,7 +1,7 @@
 # /app/routes/login_routes.py
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
-from models.benutzer_db import Benutzer
+from app.models.benutzer_db import Benutzer
 from database import db
 
 login_bp = Blueprint("login", __name__)

@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from models.geraet_db import Geraet
-from models.zustand_db import Zustand
-from models.teil_db import Teil
-from models.historie_db import Historie
+from app.models.geraet_db import Geraet
+from app.models.zustand_db import Zustand
+from app.models.teil_db import Teil
+from app.models.historie_db import Historie
 from database import db
 
 reinigen_bp = Blueprint("reinigen", __name__, url_prefix="/checkliste/reinigen")

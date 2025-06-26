@@ -1,3 +1,5 @@
+
+
 from flask_migrate import Migrate
 from flask import Flask, render_template
 from .routes.geraete_routes import geraete_bp
@@ -12,6 +14,8 @@ from .routes.checklisten.einpacken import einpacken_bp
 from .routes.checklisten.bilder_machen import bilder_bp
 
 from database import db
+from app.models.geraet import Geraet
+from app.models.charge import Charge
 import os
 
 app = Flask(__name__, static_folder="../static")

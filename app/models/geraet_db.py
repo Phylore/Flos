@@ -3,9 +3,9 @@
 from database import db
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.zustand_db import Zustand
-from models.historie_db import Historie
-from models.geraetetest_db import GeraeteTestDurchlauf  # ganz oben ergänzen
+from app.models.zustand_db import Zustand
+from app.models.historie_db import Historie
+from app.models.geraetetest_db import GeraeteTestDurchlauf  # ganz oben ergänzen
 
 
 class Geraet(db.Model):
@@ -14,6 +14,7 @@ class Geraet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     qrcode = db.Column(db.String, unique=True, nullable=False)
     modell_id = db.Column(db.Integer, db.ForeignKey("modell.id"), nullable=False)
+    charge_id = db.Column(db.Integer, db.ForeignKey('charge.id'), nullable=True)
     zustand_id = db.Column(db.Integer, db.ForeignKey("zustaende.id"), nullable=False)
     benutzer_id = db.Column(db.Integer, db.ForeignKey("benutzer.id"), nullable=True)
     status = db.Column(db.String, nullable=False, server_default="Unbekannt")

@@ -1,11 +1,11 @@
 import os
-from models.modell_db import Modell
-from models.kategorie_db import Kategorie
-from models.modul_db import Modul
-from models.teil_db import Teil
-from models.zustand_db import Zustand
+from app.models.modell_db import Modell
+from app.models.kategorie_db import Kategorie
+from app.models.modul_db import Modul
+from app.models.teil_db import Teil
+from app.models.zustand_db import Zustand
 from database import db
-from models.hersteller_db import Hersteller
+from app.models.hersteller_db import Hersteller
 
 # Modelldefinitionen
 from models.modelle.saugroboter_modelle import saugroboter_modelle

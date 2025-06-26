@@ -1,4 +1,4 @@
-from models.teil_db import Teil
+from app.models.teil_db import Teil
 from database import db
 from sqlalchemy.orm import relationship
 

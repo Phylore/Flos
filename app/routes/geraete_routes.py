@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, abort, session
 from flask_login import current_user, login_required
-from models.kategorie_db import Kategorie, Unterkategorie
-from models.modell_db import Modell
-from models.geraet_db import Geraet as GeraetDB
-from models.hersteller_db import Hersteller
-from models.zustand_db import Zustand
-from models.historie_db import Historie
-from models.teil_db import Teil, TeilVorlage
+from app.models.kategorie_db import Kategorie, Unterkategorie
+from app.models.modell_db import Modell
+from app.models.geraet_db import Geraet as GeraetDB
+from app.models.hersteller_db import Hersteller
+from app.models.zustand_db import Zustand
+from app.models.historie_db import Historie
+from app.models.teil_db import Teil, TeilVorlage
 from app.helpers.initialisiere_modulstruktur import initialisiere_module_und_teile
 from app.helpers.initialisiere_teststruktur import initialisiere_tests_fuer_geraet
 from app.helpers.initialisiere_testdurchlauf import initialisiere_testdurchlauf

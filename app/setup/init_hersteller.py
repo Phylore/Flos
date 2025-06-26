@@ -1,4 +1,4 @@
-from models.hersteller_db import Hersteller
+from app.models.hersteller_db import Hersteller
 from database import db
 
 def init_hersteller():

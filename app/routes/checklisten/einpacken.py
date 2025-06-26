@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models.geraet_db import Geraet
-from models.historie_db import Historie
-from models.teil_db import Teil
-from models.modul_db import Modul
-from models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
+from app.models.geraet_db import Geraet
+from app.models.historie_db import Historie
+from app.models.teil_db import Teil
+from app.models.modul_db import Modul
+from app.models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
 from database import db
-from models.ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
-from models.modelle.saugroboter_modelle import saugroboter_modelle
+from app.models.ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
+from app.models.modelle.saugroboter_modelle import saugroboter_modelle
 import json
 
 einpacken_bp = Blueprint("einpacken", __name__, url_prefix="/checkliste/einpacken")

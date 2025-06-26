@@ -1,9 +1,9 @@
 # /app/routes/debug_test.py
 
 from flask import Blueprint, jsonify
-from models.geraet_db import Geraet
-from models.teil_db import Teil
-from models.zustand_db import Zustand
+from app.models.geraet_db import Geraet
+from app.models.teil_db import Teil
+from app.models.zustand_db import Zustand
 from database import db
 
 debug_bp = Blueprint("debug", __name__)

@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, abort, request
 from flask_login import login_required, current_user
-from models.geraet_db import Geraet as GeraetDB
+from app.models.geraet_db import Geraet as GeraetDB
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 

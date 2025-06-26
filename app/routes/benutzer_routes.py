@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
-from models.geraet_db import Geraet as GeraetDB
-from models.benutzer_db import Benutzer
+from app.models.geraet_db import Geraet as GeraetDB
+from app.models.benutzer_db import Benutzer
 
 benutzer_bp = Blueprint("benutzer", __name__)  # Das MUSS am Anfang stehen!
 
