@@ -2,10 +2,12 @@
 {% block content %}
 <div class="container mt-5">
   <h2>📦 Chargenansicht</h2>
-  <a href="{{ url_for('admin.charge_anlegen') }}" class="btn btn-success mb-4">
-    ➕ Charge anlegen
-  </a>
-  <p>Hier siehst du alle erfassten Chargen (Testmodus/Dummy-Ansicht).</p>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="mb-0">Hier siehst du alle erfassten Chargen (Testmodus/Dummy-Ansicht).</p>
+    <a href="{{ url_for('admin.charge_anlegen') }}" class="btn btn-success">
+      ➕ Charge anlegen
+    </a>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>

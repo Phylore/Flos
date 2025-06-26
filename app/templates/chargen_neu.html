@@ -7,6 +7,20 @@
       <label for="name" class="form-label">Bezeichnung der Charge</label>
       <input type="text" class="form-control" id="name" name="name" required>
     </div>
+    <div class="mb-3 d-flex justify-content-between align-items-end">
+      <div style="flex:1;">
+        <label for="lieferant_id" class="form-label">Lieferant auswählen</label>
+        <select class="form-control" id="lieferant_id" name="lieferant_id" required>
+          <option value="" disabled selected>Bitte wählen…</option>
+          {% for lieferant in lieferanten %}
+            <option value="{{ lieferant.id }}">{{ lieferant.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <a href="{{ url_for('admin.lieferant_anlegen') }}" class="btn btn-outline-primary ms-3" style="white-space:nowrap;">
+        ➕ Neuer Lieferant
+      </a>
+    </div>
     <div class="mb-3">
       <label class="form-label">Geräte auswählen</label>
       <select multiple class="form-control" name="geraete_ids">

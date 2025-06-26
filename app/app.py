@@ -15,8 +15,8 @@ from .routes.checklisten.bilder_machen import bilder_bp
 
 from database import db
 from app.models.geraet_db import Geraet
-from app.models.charge import Charge
-from app.models.lieferant import Lieferant
+from app.models.charge_db import Charge
+from app.models.lieferant_db import Lieferant
 import os
 
 app = Flask(__name__, static_folder="../static")

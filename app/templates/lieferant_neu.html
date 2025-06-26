@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Neuen Lieferanten anlegen</h2>
+  <form method="POST" action="{{ url_for('admin.lieferant_anlegen') }}">
+    <div class="mb-3">
+      <label for="name" class="form-label">Lieferantenname</label>
+      <input type="text" class="form-control" id="name" name="name" required maxlength="100" autofocus>
+    </div>
+    <button type="submit" class="btn btn-success">Lieferant anlegen</button>
+    <a href="{{ url_for('admin.charge_anlegen') }}" class="btn btn-secondary ms-2">Abbrechen</a>
+  </form>
+</div>
+{% endblock %}
+
