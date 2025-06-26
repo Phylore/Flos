@@ -2,14 +2,12 @@ from app.models.modul_db import Modul
 from app.models.teil_db import Teil
 from app.models.zustand_db import Zustand
 from database import db
-from app.models.modelle.saugroboter_modelle import saugroboter_modelle
-from app.models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
-from app.models.modul_defaults_db import module_standards
+from app.models.modelle.saugroboter.saugroboter_modelle import saugroboter_modelle
+from app.models.modelle.saugroboter.saugroboter_modul_defaults_db import module_standards
 
 # Kombination aller bekannten Modelle
 alle_modelldefinitionen = {
-    **saugroboter_modelle,
-    **stabstaubsauger_modelle
+    **saugroboter_modelle
 }
 
 def get_default_zustand_id(kategorie, value):

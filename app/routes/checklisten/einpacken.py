@@ -6,8 +6,8 @@ from app.models.teil_db import Teil
 from app.models.modul_db import Modul
 from app.models.geraetetest_db import GeraeteTestSchritt, GeraeteTestDurchlauf, GeraeteTestErgebnis
 from database import db
-from app.models.ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
-from app.models.modelle.saugroboter_modelle import saugroboter_modelle
+from app.models.modelle.saugroboter.saugroboter_ersatzteil_defaults_db import ersatzteil_set_namen, lade_vorlagen
+from app.models.modelle.saugroboter.saugroboter_modelle import saugroboter_modelle
 import json
 
 einpacken_bp = Blueprint("einpacken", __name__, url_prefix="/checkliste/einpacken")

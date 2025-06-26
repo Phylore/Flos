@@ -45,7 +45,10 @@
             {% endif %}
           </td>
           <td>
-            <a href="#" class="btn btn-sm btn-outline-info disabled">Details</a>
+            <a href="{{ url_for('admin.charge_bearbeiten', charge_id=charge.id) }}"
+               class="btn btn-outline-primary btn-sm">
+              Diese Charge bearbeiten
+            </a>
           </td>
         </tr>
         {% endfor %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Charge "{{ charge.name }}" bearbeiten</h2>
+  <div class="mb-4">
+    <strong>Lieferant:</strong> {{ charge.lieferant.name if charge.lieferant else "-" }}<br>
+    <strong>Angelegt am:</strong> {{ charge.angelegt_am.strftime('%d.%m.%Y %H:%M') if charge.angelegt_am else "-" }}
+  </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Geräte in dieser Charge ({{ geraete|length }})</h4>
+    <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success">
+      ➕ Gerät anlegen
+    </a>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>QR-Code</th>
+        <th>Modell</th>
+        <th>Hersteller</th>
+        <th>Angelegt</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for geraet in geraete %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ geraet.qrcode }}</td>
+        <td>{{ geraet.modell.name if geraet.modell else "-" }}</td>
+        <td>{{ geraet.modell.hersteller.name if geraet.modell and geraet.modell.hersteller else "-" }}</td>
+        <td>{{ geraet.angelegt_am.strftime('%d.%m.%Y %H:%M') if geraet.angelegt_am else "-" }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center text-muted">Noch keine Geräte in dieser Charge.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('admin.chargen') }}" class="btn btn-secondary mt-3">Zurück zur Chargenübersicht</a>
+</div>
+{% endblock %}
+

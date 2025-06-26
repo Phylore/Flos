@@ -284,3 +284,30 @@ def api_aehnliche_modelle():
     result = [{"name": name, "score": int(score)} for name, score, idx in matches if score > 60]
     return jsonify(result)
 
+@geraete_bp.route("/modell/module", methods=["POST"])
+@login_required
+def modell_module():
+    # Alle Formulardaten aus Schritt 1 übernehmen
+    modellname = request.form.get("modellname", "")
+    qrcode = request.form.get("qrcode", "")
+    hersteller_id = request.form.get("hersteller_id", "")
+    neuer_hersteller = request.form.get("neuer_hersteller", "")
+    kategorie_id = request.form.get("kategorie_id", "")
+    neue_kategorie = request.form.get("neue_kategorie", "")
+    unterkategorie_id = request.form.get("unterkategorie_id", "")
+    neue_unterkategorie = request.form.get("neue_unterkategorie", "")
+
+    # Optional: Du kannst auch alles an ein dict packen und ans Template übergeben
+    return render_template(
+        "modell_module.html",
+        modellname=modellname,
+        qrcode=qrcode,
+        hersteller_id=hersteller_id,
+        neuer_hersteller=neuer_hersteller,
+        kategorie_id=kategorie_id,
+        neue_kategorie=neue_kategorie,
+        unterkategorie_id=unterkategorie_id,
+        neue_unterkategorie=neue_unterkategorie,
+        bekannte_module=[],  # später ersetzen!
+    )
+

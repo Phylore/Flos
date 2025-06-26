@@ -96,5 +96,13 @@ def lieferant_anlegen():
 
     return render_template("lieferant_neu.html")
 
+@admin_bp.route('/charge/<int:charge_id>/bearbeiten')
+@login_required
+def charge_bearbeiten(charge_id):
+    from app.models.charge_db import Charge
+    from app.models.geraet_db import Geraet as GeraetDB
+    charge = Charge.query.get_or_404(charge_id)
+    geraete = GeraetDB.query.filter_by(charge_id=charge.id).all()  # Alle Geräte dieser Charge
+    return render_template('charge_bearbeiten.html', charge=charge, geraete=geraete)
 
 

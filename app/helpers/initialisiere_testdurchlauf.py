@@ -2,13 +2,10 @@
 from app.models.geraetetest_db import GeraeteTestDurchlauf, GeraeteTestErgebnis, GeraeteTestSchritt
 from database import db
 from flask_login import current_user
-from app.models.test_defaults_db import test_standards
-from app.models.modelle.saugroboter_modelle import saugroboter_modelle
-from app.models.modelle.stabstaubsauger_modelle import stabstaubsauger_modelle
-
+from app.models.modelle.saugroboter.saugroboter_test_defaults_db import test_standards
+from app.models.modelle.saugroboter.saugroboter_modelle import saugroboter_modelle
 ALLE_MODELLE = {
-    **saugroboter_modelle,
-    **stabstaubsauger_modelle
+    **saugroboter_modelle
 }
 
 def initialisiere_testdurchlauf(geraet, benutzer=None):

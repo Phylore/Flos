@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 700px;">
+  <h2 class="mb-4 text-center">Modul- und Teileauswahl für Modell "{{ modellname }}"</h2>
+
+  <form method="POST" action="{{ url_for('geraete.modell_speichern') }}">
+    <!-- Hidden Fields für die Modell-Stammdaten, falls benötigt -->
+    <input type="hidden" name="modellname" value="{{ modellname }}">
+    {% if hersteller_id %}<input type="hidden" name="hersteller_id" value="{{ hersteller_id }}">{% endif %}
+    {% if kategorie_id %}<input type="hidden" name="kategorie_id" value="{{ kategorie_id }}">{% endif %}
+    {% if unterkategorie_id %}<input type="hidden" name="unterkategorie_id" value="{{ unterkategorie_id }}">{% endif %}
+    {% if qrcode %}<input type="hidden" name="qrcode" value="{{ qrcode }}">{% endif %}
+
+    <!-- Schritt 1: Vorhandene Module auswählen -->
+    <div class="mb-4">
+      <label class="form-label"><strong>Module auswählen:</strong></label>
+      <div class="row">
+        {% for modul in bekannte_module %}
+          <div class="col-6 col-md-4 mb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="module" value="{{ modul.name }}" id="modul_{{ loop.index }}">
+              <label class="form-check-label" for="modul_{{ loop.index }}">
+                {{ modul.name }}
+              </label>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Schritt 2: Neue Module anlegen -->
+    <div class="mb-4">
+      <label class="form-label"><strong>Neues Modul anlegen:</strong></label>
+      <div class="input-group mb-2">
+        <input type="text" class="form-control" name="neues_modul" placeholder="Neues Modul (z. B. Saugmotor)">
+        <button type="button" class="btn btn-outline-secondary" onclick="hinzufuegenModul()">Hinzufügen</button>
+      </div>
+      <!-- Dynamisch hinzugefügte Module erscheinen hier -->
+      <ul id="neue_module_liste" class="list-group mb-0"></ul>
+    </div>
+
+    <!-- Schritt 3: Für jedes Modul (bestehend oder neu) Teile auswählen/anlegen -->
+    <div class="mb-4">
+      <label class="form-label"><strong>Teile für jedes Modul auswählen oder anlegen:</strong></label>
+      <div id="modul_teile_container">
+        <!-- Hier per JS für jedes gewählte/neue Modul dynamisch ein Feld für Teile einblenden -->
+        <!-- Beispiel-HTML:
+        <div class="mb-3">
+          <label>Teile für Modul <strong>Bürste</strong>:</label>
+          <input type="text" class="form-control mb-1" name="teile_Buerste[]" placeholder="Teilname (z. B. Borsten)">
+          <input type="text" class="form-control mb-1" name="teile_Buerste[]" placeholder="Teilname">
+        </div>
+        -->
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg">Modell samt Modulen/Teilen speichern</button>
+    <a href="{{ url_for('geraete.modell_neu_wizard', modellname=modellname) }}" class="btn btn-secondary ms-2">Zurück</a>
+  </form>
+</div>
+
+<script>
+// Modulliste dynamisch erweitern (im Frontend), damit User beliebig viele Module anlegen kann
+function hinzufuegenModul() {
+  const input = document.querySelector('input[name="neues_modul"]');
+  const modulName = input.value.trim();
+  if (!modulName) return;
+  const ul = document.getElementById("neue_module_liste");
+  const li = document.createElement("li");
+  li.className = "list-group-item";
+  li.textContent = modulName;
+  ul.appendChild(li);
+
+  // Optional: Auch ein verstecktes Feld erzeugen, das beim Absenden mitgeschickt wird
+  const hidden = document.createElement("input");
+  hidden.type = "hidden";
+  hidden.name = "neue_module";
+  hidden.value = modulName;
+  ul.appendChild(hidden);
+
+  input.value = "";
+}
+
+// TODO: JS-Logik zum Nachziehen von Teile-Feldern pro Modul, wenn gewünscht
+// (z.B. beim Ankreuzen oder Hinzufügen eines Moduls ein Feld zur Teile-Anlage einblenden)
+</script>
+{% endblock %}
+

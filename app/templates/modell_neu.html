@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container py-4" style="max-width: 600px;">
   <h2 class="mb-4 text-center">➕ Neues Modell anlegen</h2>
-  <form method="POST" action="{{ url_for('geraete.modell_speichern') }}">
+  <form method="POST" action="{{ url_for('geraete.modell_module') }}">
     <input type="hidden" name="qrcode" value="{{ qrcode }}">
     <input type="hidden" name="vorbelegung" value="{{ modellname }}">
 
@@ -67,7 +67,7 @@
     </div>
 
     <div class="d-grid">
-      <button type="submit" class="btn btn-success btn-lg">💾 Modell speichern & weiter</button>
+      <button type="submit" class="btn btn-primary btn-lg">Weiter zu Modulen & Teilen</button>
     </div>
   </form>
 </div>
