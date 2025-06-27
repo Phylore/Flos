@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="mb-3">
+  <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">⬅️ Zurück</button>
+</div>
 <div class="container py-3" style="max-width: 600px;">
   <h2 class="mb-4 text-center">🔍 Gerät erfassen</h2>
 
+  <!-- DEBUG-INFO -->
+  <pre style="background: #ffd; padding: 8px; font-size: 0.95em;">
+    qr_code: {{ qr_code }}
+    charge_id (aus View): {{ charge_id }}
+    request.args.charge_id: {{ request.args.get('charge_id') }}
+    request.form.charge_id: {{ request.form.get('charge_id') }}
+  </pre>
+
   <!-- QR-Code-Scanformular -->
   <form method="GET" action="{{ url_for('geraete.geraet_neu') }}" id="scanform" autocomplete="off">
+    <input type="hidden" name="charge_id" value="{% if charge_id %}{{ charge_id }}{% elif request.args.get('charge_id') %}{{ request.args.get('charge_id') }}{% endif %}">
     <div class="mb-3">
       <label for="qrcode" class="form-label">QR-Code:</label>
       <input type="text" class="form-control form-control-lg" id="qrcode" name="qr_code" placeholder="QR-Code eingeben oder scannen" required autofocus>
@@ -16,7 +28,7 @@
 
   <!-- Direkt unter dem QR-Scanner: Neues Modell anlegen -->
   <div class="d-grid mb-4">
-    <a href="{{ url_for('geraete.modell_neu_wizard', qrcode=qr_code) }}" class="btn btn-outline-success btn-lg">
+    <a href="{{ url_for('geraete.modell_neu_wizard', qrcode=qr_code, charge_id=charge_id) }}" class="btn btn-outline-success btn-lg">
       ➕ Neues Modell anlegen
     </a>
   </div>
@@ -28,6 +40,9 @@
     <!-- Formular A: Bestehendes Modell auswählen -->
     <form action="{{ url_for('geraete.geraet_anlegen') }}" method="POST" autocomplete="off">
       <input type="hidden" name="qrcode" value="{{ qr_code }}">
+      <!-- Charge-ID IMMER durchreichen, egal wie -->
+      <input type="hidden" name="charge_id"
+        value="{% if charge_id %}{{ charge_id }}{% elif request.args.get('charge_id') %}{{ request.args.get('charge_id') }}{% elif request.form.get('charge_id') %}{{ request.form.get('charge_id') }}{% else %}{% endif %}">
       <div class="mb-2"><strong>QR-Code:</strong> {{ qr_code }}</div>
 
       <!-- Hersteller -->
@@ -63,13 +78,17 @@
         </select>
       </div>
 
-      <!-- Modell Dropdown -->
+      <!-- Modell Dropdown (JETZT mit Filter-Daten) -->
       <div class="mb-3">
         <label for="modell" class="form-label">Modell:</label>
         <select id="modell" name="modell" class="form-select form-select-lg" required>
           <option value="">Modell wählen</option>
           {% for m in modelle %}
-            <option value="{{ m.id }}">{{ m.name }}</option>
+            <option value="{{ m.id }}"
+              data-hersteller="{{ m.hersteller_id }}"
+              data-kategorie="{{ m.kategorie_id }}"
+              data-unterkategorie="{{ m.unterkategorie_id }}"
+            >{{ m.name }}</option>
           {% endfor %}
         </select>
       </div>
@@ -81,11 +100,14 @@
   {% endif %}
 </div>
 
-<!-- Kaskadierendes Dropdown für Unterkategorien -->
+<!-- Kaskadierendes Dropdown für Unterkategorien und Modelle -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+  var herstellerSelect = document.getElementById("hersteller");
   var katSelect = document.getElementById("kategorie");
   var ukSelect = document.getElementById("unterkategorie");
+  var modellSelect = document.getElementById("modell");
+
   function updateUnterkategorien() {
     var katId = katSelect.value;
     for (var i = 0; i < ukSelect.options.length; i++) {
@@ -96,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       option.style.display = (option.getAttribute("data-kategorie") == katId) ? "" : "none";
     }
-    // Erste passende Unterkategorie selektieren
     for (var i = 0; i < ukSelect.options.length; i++) {
       var option = ukSelect.options[i];
       if(option.style.display === "" && option.value !== "") {
@@ -104,9 +125,37 @@ document.addEventListener("DOMContentLoaded", function() {
         break;
       }
     }
+    filterModelle();
   }
+
+  function filterModelle() {
+    var hid = herstellerSelect.value;
+    var kid = katSelect.value;
+    var ukid = ukSelect.value;
+    for (var i = 0; i < modellSelect.options.length; i++) {
+      var opt = modellSelect.options[i];
+      if (!opt.value) { opt.style.display = ""; continue; }
+      var match =
+        (!hid || opt.getAttribute("data-hersteller") == hid) &&
+        (!kid || opt.getAttribute("data-kategorie") == kid) &&
+        (!ukid || opt.getAttribute("data-unterkategorie") == ukid);
+      opt.style.display = match ? "" : "none";
+    }
+    for (var i = 0; i < modellSelect.options.length; i++) {
+      var opt = modellSelect.options[i];
+      if (opt.style.display === "" && opt.value) {
+        modellSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  herstellerSelect.addEventListener("change", filterModelle);
   katSelect.addEventListener("change", updateUnterkategorien);
+  ukSelect.addEventListener("change", filterModelle);
+
   updateUnterkategorien();
+  filterModelle();
 });
 </script>
 {% endblock %}

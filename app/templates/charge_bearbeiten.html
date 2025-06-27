@@ -8,7 +8,7 @@
   </div>
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Geräte in dieser Charge ({{ geraete|length }})</h4>
-    <a href="{{ url_for('geraete.geraet_neu') }}" class="btn btn-success">
+    <a href="{{ url_for('geraete.geraet_neu', charge_id=charge.id) }}" class="btn btn-success">
       ➕ Gerät anlegen
     </a>
   </div>
@@ -20,6 +20,7 @@
         <th>Modell</th>
         <th>Hersteller</th>
         <th>Angelegt</th>
+        <th>Aktionen</th>
       </tr>
     </thead>
     <tbody>
@@ -30,10 +31,18 @@
         <td>{{ geraet.modell.name if geraet.modell else "-" }}</td>
         <td>{{ geraet.modell.hersteller.name if geraet.modell and geraet.modell.hersteller else "-" }}</td>
         <td>{{ geraet.angelegt_am.strftime('%d.%m.%Y %H:%M') if geraet.angelegt_am else "-" }}</td>
+        <td>
+          <form method="POST"
+                action="{{ url_for('admin.geraet_entfernen', geraet_id=geraet.id, charge_id=charge.id) }}"
+                style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Wirklich dieses Gerät löschen?');">Gerät löschen</button>
+          </form>
+        </td>
       </tr>
       {% else %}
       <tr>
-        <td colspan="5" class="text-center text-muted">Noch keine Geräte in dieser Charge.</td>
+        <td colspan="6" class="text-center text-muted">Noch keine Geräte in dieser Charge.</td>
       </tr>
       {% endfor %}
     </tbody>

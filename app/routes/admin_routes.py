@@ -105,4 +105,20 @@ def charge_bearbeiten(charge_id):
     geraete = GeraetDB.query.filter_by(charge_id=charge.id).all()  # Alle Geräte dieser Charge
     return render_template('charge_bearbeiten.html', charge=charge, geraete=geraete)
 
+@admin_bp.route('/geraet/<int:geraet_id>/entfernen', methods=["POST"])
+@login_required
+def geraet_entfernen(geraet_id):
+    from app.models.geraet_db import Geraet as GeraetDB
+    from app.models.historie_db import Historie
+    geraet = GeraetDB.query.get_or_404(geraet_id)
+    charge_id = request.args.get("charge_id") or request.form.get("charge_id") or geraet.charge_id
+
+    # Erst alle Historie-Einträge löschen!
+    Historie.query.filter_by(geraet_id=geraet.id).delete()
+
+    db.session.delete(geraet)
+    db.session.commit()
+    flash("Gerät wurde gelöscht.", "success")
+    return redirect(url_for('admin.charge_bearbeiten', charge_id=charge_id))
+
 

@@ -21,30 +21,44 @@ geraete_bp = Blueprint("geraete", __name__, url_prefix="/geraete")
 @login_required
 def geraet_neu():
     qr_code = request.args.get("qr_code")
+    charge_id = request.args.get("charge_id")
+    print("ANGEBOTENE CHARGE_ID (GET):", charge_id)
     kategorien = Kategorie.query.all()
     unterkategorien = Unterkategorie.query.all()
     modelle = Modell.query.all()
     hersteller = Hersteller.query.all()
     return render_template(
         "geraet_neu.html",
+        qr_code=qr_code,
+        charge_id=charge_id,
         kategorien=kategorien,
         unterkategorien=unterkategorien,
         modelle=modelle,
         hersteller=hersteller,
-        qr_code=qr_code
     )
-
 
 @geraete_bp.route("/geraet", methods=["POST"])
 @login_required
 def geraet_anlegen():
-    qrcode = request.form["qrcode"]
-    modell_id = request.form.get("modell")
+    print("FORM DATA:", request.form)
+
+    qrcode = request.form.get("qrcode")
+    modell_id_raw = request.form.get("modell")
+    charge_id_raw = request.form.get("charge_id")
     neues_modell_name = request.form.get("neues_modell", "").strip()
     aktion = request.form.get("aktion")
 
-    if modell_id:
-        modell = Modell.query.get(int(modell_id))
+    print(f"Empfangen - qrcode: {qrcode}, modell_id: {modell_id_raw}, charge_id: {charge_id_raw}, aktion: {aktion}")
+
+    # charge_id sicher casten (leere Strings etc abfangen)
+    charge_id = None
+    if charge_id_raw and str(charge_id_raw).isdigit():
+        charge_id = int(charge_id_raw)
+    print(f"Verarbeitete charge_id: {charge_id!r}")
+
+    modell = None
+    if modell_id_raw:
+        modell = Modell.query.get(int(modell_id_raw))
     elif neues_modell_name:
         alle_modellnamen = [m.name for m in Modell.query.all()]
         match = process.extractOne(neues_modell_name, alle_modellnamen)
@@ -55,14 +69,15 @@ def geraet_anlegen():
 
         if score > 85:
             flash(f"Meintest du: {vorschlag}? Falls ja, wähle es bitte im Dropdown.", "warning")
-            return redirect(url_for("geraete.geraet_neu", qr_code=qrcode))
+            return redirect(url_for("geraete.geraet_neu", qr_code=qrcode, charge_id=charge_id))
         else:
             flash(f"Modell '{neues_modell_name}' wird neu angelegt.", "info")
-            return redirect(url_for("geraete.modell_neu_wizard", modellname=neues_modell_name, qrcode=qrcode))
+            return redirect(url_for("geraete.modell_neu_wizard", modellname=neues_modell_name, qrcode=qrcode, charge_id=charge_id))
     else:
         flash("Bitte Modell wählen oder neues Modell eingeben.", "danger")
-        return redirect(url_for("geraete.geraet_neu", qr_code=qrcode))
+        return redirect(url_for("geraete.geraet_neu", qr_code=qrcode, charge_id=charge_id))
 
+    # Prüfe, ob Gerät mit QR-Code schon existiert
     if GeraetDB.query.filter_by(qrcode=qrcode).first():
         return redirect(url_for("geraete.geraet_seite", qrcode=qrcode))
 
@@ -72,10 +87,13 @@ def geraet_anlegen():
         qrcode=qrcode,
         modell_id=modell.id,
         zustand_id=zustand.id,
-        benutzer_id=current_user.id
+        benutzer_id=current_user.id,
+        charge_id=charge_id
     )
     db.session.add(neues_geraet)
     db.session.commit()
+
+    print(f"Neues Gerät angelegt mit ID {neues_geraet.id} und charge_id {neues_geraet.charge_id}")
 
     initialisiere_module_und_teile(neues_geraet)
     initialisiere_tests_fuer_geraet(neues_geraet)
@@ -89,7 +107,11 @@ def geraet_anlegen():
     db.session.add(eintrag)
     db.session.commit()
 
-    return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
+    # Nach Anlage zurück zur Charge, wenn Charge-ID gesetzt!
+    if charge_id:
+        return redirect(url_for("admin.charge_bearbeiten", charge_id=charge_id))
+    else:
+        return redirect(url_for("geraete.geraet_seite", qrcode=neues_geraet.qrcode))
 
 
 @geraete_bp.route("/geraet/<qrcode>")
@@ -174,9 +196,6 @@ def modell_speichern():
 
     flash("Neues Modell wurde gespeichert.", "success")
     return redirect(url_for("geraete.geraet_neu", qr_code=qrcode))
-
-   
-
 
 # --- 3. Historie und Löschen ---
 
@@ -287,7 +306,6 @@ def set_aktives_geraet():
     session["aktives_geraet_id"] = data["geraet_id"]
     return "", 204
 
-
 @geraete_bp.route("/api/aehnliche_modelle")
 @login_required
 def api_aehnliche_modelle():
@@ -298,14 +316,12 @@ def api_aehnliche_modelle():
     alle_modelle = Modell.query.all()
     alle_namen = [m.name for m in alle_modelle]
     matches = process.extract(query, alle_namen, limit=10)
-    # Optional: Nur Treffer ab Score X anzeigen
     result = [{"name": name, "score": int(score)} for name, score, idx in matches if score > 60]
     return jsonify(result)
 
 @geraete_bp.route("/modell/module", methods=["POST"])
 @login_required
 def modell_module():
-    # Alle Formulardaten aus Schritt 1 übernehmen
     modellname = request.form.get("modellname", "")
     qrcode = request.form.get("qrcode", "")
     hersteller_id = request.form.get("hersteller_id", "")
@@ -315,7 +331,6 @@ def modell_module():
     unterkategorie_id = request.form.get("unterkategorie_id", "")
     neue_unterkategorie = request.form.get("neue_unterkategorie", "")
 
-    # Optional: Du kannst auch alles an ein dict packen und ans Template übergeben
     return render_template(
         "modell_module.html",
         modellname=modellname,

@@ -1,19 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<pre style="background:#eee; padding:8px;">
-Kategorien im Template:
-{% for k in kategorien %}
-  {{ k.id }}: {{ k.name }}
-{% endfor %}
-Unterkategorien im Template:
-{% for uk in unterkategorien %}
-  {{ uk.id }}: {{ uk.name }} (kategorie_id={{ uk.kategorie_id }})
-{% endfor %}
-</pre>
-
 <div class="container py-4" style="max-width: 600px;">
   <h2 class="mb-4 text-center">➕ Neues Modell anlegen</h2>
-  <form method="POST" action="{{ url_for('geraete.modell_module') }}">
+  <form method="POST" action="{{ url_for('geraete.modell_speichern') }}">
     <input type="hidden" name="qrcode" value="{{ qrcode }}">
     <input type="hidden" name="vorbelegung" value="{{ modellname }}">
 
@@ -28,7 +17,7 @@ Unterkategorien im Template:
       <div class="col">
         <label for="hersteller_id" class="form-label">Hersteller wählen:</label>
         <select name="hersteller_id" id="hersteller_id" class="form-select form-select-lg">
-          <option value="">Hersteller wählen</option>
+          <option value="">Hersteller wählen (optional)</option>
           {% for h in hersteller %}
             <option value="{{ h.id }}">{{ h.name }}</option>
           {% endfor %}
@@ -66,7 +55,7 @@ Unterkategorien im Template:
         <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg" required>
           <option value="">Unterkategorie wählen</option>
           {% for uk in unterkategorien %}
-            <option value="{{ uk.id }}" data-kategorie="{{ uk.kategorie_id }}">{{ uk.name }} (data-kategorie={{ uk.kategorie_id }})</option>
+            <option value="{{ uk.id }}" data-kategorie="{{ uk.kategorie_id }}">{{ uk.name }}</option>
           {% endfor %}
           <option value="__neu__">Neue Unterkategorie...</option>
         </select>
@@ -77,14 +66,14 @@ Unterkategorien im Template:
       </div>
     </div>
 
-    <div class="d-grid">
-      <button type="submit" class="btn btn-primary btn-lg">Weiter zu Modulen & Teilen</button>
+    <div class="d-grid gap-2">
+      <button type="submit" name="aktion" value="speichern" class="btn btn-success btn-lg">Modell speichern</button>
+      <button type="button" class="btn btn-secondary btn-lg" disabled>Weiter zu Modulen & Teilen (inaktiv)</button>
     </div>
   </form>
 </div>
 
 <script>
-  // Optional: Blende die Eingabefelder nur ein, wenn "neu..." gewählt wird
   document.getElementById("hersteller_id").addEventListener("change", function() {
     document.getElementById("neuer_hersteller").disabled = (this.value !== "__neu__");
   });
@@ -98,25 +87,19 @@ Unterkategorien im Template:
   document.getElementById("neue_kategorie").disabled = true;
   document.getElementById("neue_unterkategorie").disabled = true;
 
-  // Kaskadierendes Dropdown für Unterkategorien (mit Debug)
   document.addEventListener("DOMContentLoaded", function() {
     var katSelect = document.getElementById("kategorie_id");
     var ukSelect = document.getElementById("unterkategorie_id");
     function updateUnterkategorien() {
       var katId = katSelect.value;
-      console.log("Aktuelle Kategorie-ID: ", katId);
       for (var i = 0; i < ukSelect.options.length; i++) {
         var option = ukSelect.options[i];
         if(option.value === "__neu__" || option.value === "") {
           option.style.display = "";
           continue;
         }
-        // Zeige Debug im Browser-Log
-        console.log("Unterkategorie-Option:", option.value, "data-kategorie:", option.getAttribute("data-kategorie"),
-                    "wird", (option.getAttribute("data-kategorie") == katId) ? "angezeigt" : "versteckt");
         option.style.display = (option.getAttribute("data-kategorie") == katId) ? "" : "none";
       }
-      // Erste passende Unterkategorie selektieren
       for (var i = 0; i < ukSelect.options.length; i++) {
         var option = ukSelect.options[i];
         if(option.style.display === "" && option.value !== "__neu__" && option.value !== "") {
