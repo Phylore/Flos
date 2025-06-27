@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-4" style="max-width: 600px;">
+
+  <!-- Gerät zurück Button -->
+  <div class="mb-3">
+    <a href="{{ url_for('geraete.geraete_liste') }}" class="btn btn-outline-secondary btn-lg">
+      ⬅️ Zurück zu den Geräten
+    </a>
+  </div>
+
   <h2 class="mb-4 text-center">➕ Neues Modell anlegen</h2>
   <form method="POST" action="{{ url_for('geraete.modell_speichern') }}">
     <input type="hidden" name="qrcode" value="{{ qrcode }}">
