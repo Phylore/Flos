@@ -2,6 +2,7 @@ from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.models.geraet_db import Geraet
+from app.models.teilvorlage_db import TeilVorlage
 
 class Teil(Base):
     __tablename__ = "teil"
@@ -21,40 +22,3 @@ class Teil(Base):
     beschaedigung = relationship("Zustand", foreign_keys=[beschaedigung_id])
     geraet = relationship("Geraet", back_populates="teile")
     teilvorlage = relationship("TeilVorlage", back_populates="vorlage_teile", overlaps="vorlage_teile")
-
-
-# ========================
-# Vorlagen für Modulimport
-# ========================
-
-class TeilVorlage:
-    def __init__(self, name, kategorien=None):
-        self.name = name
-        self.kategorien = kategorien or []
-
-# Stationsteile
-STROMKABEL = TeilVorlage("Stromkabel", ["Saugroboter"])
-WASSERTANK = TeilVorlage("Wassertank", ["Saugroboter"])
-ABWASSERTANK = TeilVorlage("Abwassertank", ["Saugroboter"])
-STAUBBEUTEL = TeilVorlage("Staubbeutel", ["Saugroboter"])
-BASIS = TeilVorlage("Basis", ["Saugroboter"])
-RAMPE = TeilVorlage("Rampe", ["Saugroboter"])
-WASCHMODUL = TeilVorlage("Waschmodul", ["Saugroboter"])
-
-# Robotermodulteile
-HAUPTBÜRSTE = TeilVorlage("Hauptbürste", ["Saugroboter"])
-SEITENBÜRSTE = TeilVorlage("Seitenbürste", ["Saugroboter"])
-NEBENBÜRSTE = TeilVorlage("Nebenbürste", ["Saugroboter"])
-STAUBBEHÄLTER = TeilVorlage("Staubbehälter", ["Saugroboter"])
-STAUBFILTER = TeilVorlage("Staubfilter", ["Saugroboter"])
-WISCHPADHALTER = TeilVorlage("Wischpadhalter", ["Saugroboter"])
-STOFF = TeilVorlage("Wischstoff", ["Saugroboter"])
-WASSERTANK_ROBOTER = TeilVorlage("Wassertank (Roboter)", ["Saugroboter"])
-
-alle_teilvorlagen = [
-    STROMKABEL, WASSERTANK, ABWASSERTANK, STAUBBEUTEL,
-    BASIS, RAMPE, WASCHMODUL,
-    HAUPTBÜRSTE, SEITENBÜRSTE, NEBENBÜRSTE, STAUBBEHÄLTER,
-    STAUBFILTER, WISCHPADHALTER, STOFF, WASSERTANK_ROBOTER
-]
-
