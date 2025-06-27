@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+<pre style="background:#eee; padding:8px;">
+Kategorien im Template:
+{% for k in kategorien %}
+  {{ k.id }}: {{ k.name }}
+{% endfor %}
+Unterkategorien im Template:
+{% for uk in unterkategorien %}
+  {{ uk.id }}: {{ uk.name }} (kategorie_id={{ uk.kategorie_id }})
+{% endfor %}
+</pre>
+
 <div class="container py-4" style="max-width: 600px;">
   <h2 class="mb-4 text-center">➕ Neues Modell anlegen</h2>
   <form method="POST" action="{{ url_for('geraete.modell_module') }}">
@@ -34,7 +45,7 @@
     <div class="mb-3 row">
       <div class="col">
         <label for="kategorie_id" class="form-label">Kategorie wählen:</label>
-        <select name="kategorie_id" id="kategorie_id" class="form-select form-select-lg">
+        <select name="kategorie_id" id="kategorie_id" class="form-select form-select-lg" required>
           <option value="">Kategorie wählen</option>
           {% for k in kategorien %}
             <option value="{{ k.id }}">{{ k.name }}</option>
@@ -52,10 +63,10 @@
     <div class="mb-3 row">
       <div class="col">
         <label for="unterkategorie_id" class="form-label">Unterkategorie wählen:</label>
-        <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg">
+        <select name="unterkategorie_id" id="unterkategorie_id" class="form-select form-select-lg" required>
           <option value="">Unterkategorie wählen</option>
           {% for uk in unterkategorien %}
-            <option value="{{ uk.id }}">{{ uk.name }}</option>
+            <option value="{{ uk.id }}" data-kategorie="{{ uk.kategorie_id }}">{{ uk.name }} (data-kategorie={{ uk.kategorie_id }})</option>
           {% endfor %}
           <option value="__neu__">Neue Unterkategorie...</option>
         </select>
@@ -83,10 +94,40 @@
   document.getElementById("unterkategorie_id").addEventListener("change", function() {
     document.getElementById("neue_unterkategorie").disabled = (this.value !== "__neu__");
   });
-  // Optional: Standardmäßig deaktivieren
   document.getElementById("neuer_hersteller").disabled = true;
   document.getElementById("neue_kategorie").disabled = true;
   document.getElementById("neue_unterkategorie").disabled = true;
+
+  // Kaskadierendes Dropdown für Unterkategorien (mit Debug)
+  document.addEventListener("DOMContentLoaded", function() {
+    var katSelect = document.getElementById("kategorie_id");
+    var ukSelect = document.getElementById("unterkategorie_id");
+    function updateUnterkategorien() {
+      var katId = katSelect.value;
+      console.log("Aktuelle Kategorie-ID: ", katId);
+      for (var i = 0; i < ukSelect.options.length; i++) {
+        var option = ukSelect.options[i];
+        if(option.value === "__neu__" || option.value === "") {
+          option.style.display = "";
+          continue;
+        }
+        // Zeige Debug im Browser-Log
+        console.log("Unterkategorie-Option:", option.value, "data-kategorie:", option.getAttribute("data-kategorie"),
+                    "wird", (option.getAttribute("data-kategorie") == katId) ? "angezeigt" : "versteckt");
+        option.style.display = (option.getAttribute("data-kategorie") == katId) ? "" : "none";
+      }
+      // Erste passende Unterkategorie selektieren
+      for (var i = 0; i < ukSelect.options.length; i++) {
+        var option = ukSelect.options[i];
+        if(option.style.display === "" && option.value !== "__neu__" && option.value !== "") {
+          ukSelect.selectedIndex = i;
+          break;
+        }
+      }
+    }
+    katSelect.addEventListener("change", updateUnterkategorien);
+    updateUnterkategorien();
+  });
 </script>
 {% endblock %}
 

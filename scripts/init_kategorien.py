@@ -1,5 +1,5 @@
 from database import db
-from models.kategorie_db import Kategorie, Unterkategorie
+from app.models.kategorie_db import Kategorie, Unterkategorie
 from app import app
 
 KATEGORIEN = {

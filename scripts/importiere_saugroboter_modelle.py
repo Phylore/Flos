@@ -1,7 +1,7 @@
 import importlib.util
 import os
 
-pfad = os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/modelle/saugroboter_modelle.py'))
+pfad = os.path.abspath(os.path.join(os.path.dirname(__file__), '../app/models/modelle/saugroboter/saugroboter_modelle.py'))
 spec = importlib.util.spec_from_file_location("saugroboter_modelle", pfad)
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
@@ -9,9 +9,9 @@ saugroboter_modelle = mod.saugroboter_modelle  # Jetzt ist das Dict verfügbar!
 
 from app import app
 from database import db
-from models.kategorie_db import Kategorie, Unterkategorie
-from models.hersteller_db import Hersteller
-from models.modell_db import Modell
+from app.models.kategorie_db import Kategorie, Unterkategorie
+from app.models.hersteller_db import Hersteller
+from app.models.modell_db import Modell
 
 
 def get_or_create(model, **kwargs):

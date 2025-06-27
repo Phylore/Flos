@@ -30,3 +30,10 @@ Saugroboter_Station_Standard2 = Saugroboter_Station_Standard1 + [
     "Rampe",
     "Waschmodul"
 ]
+
+module_standards = {
+    "Saugroboter-Roboter-Standard1": Saugroboter_Roboter_Standard1,
+    "Saugroboter-Roboter-Standard2": Saugroboter_Roboter_Standard2,
+    "Saugroboter-Station-Standard1": Saugroboter_Station_Standard1,
+    "Saugroboter-Station-Standard2": Saugroboter_Station_Standard2
+}

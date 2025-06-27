@@ -22,9 +22,18 @@ geraete_bp = Blueprint("geraete", __name__, url_prefix="/geraete")
 def geraet_neu():
     qr_code = request.args.get("qr_code")
     kategorien = Kategorie.query.all()
+    unterkategorien = Unterkategorie.query.all()
     modelle = Modell.query.all()
     hersteller = Hersteller.query.all()
-    return render_template("geraet_neu.html", kategorien=kategorien, modelle=modelle, hersteller=hersteller, qr_code=qr_code)
+    return render_template(
+        "geraet_neu.html",
+        kategorien=kategorien,
+        unterkategorien=unterkategorien,
+        modelle=modelle,
+        hersteller=hersteller,
+        qr_code=qr_code
+    )
+
 
 @geraete_bp.route("/geraet", methods=["POST"])
 @login_required
@@ -98,7 +107,16 @@ def modell_neu_wizard():
     qrcode = request.args.get("qrcode")
     hersteller = Hersteller.query.all()
     kategorien = Kategorie.query.all()
-    return render_template("modell_neu.html", modellname=modellname, qrcode=qrcode, hersteller=hersteller, kategorien=kategorien)
+    unterkategorien = Unterkategorie.query.all()  # <--- NEU!
+    return render_template(
+        "modell_neu.html",
+        modellname=modellname,
+        qrcode=qrcode,
+        hersteller=hersteller,
+        kategorien=kategorien,
+        unterkategorien=unterkategorien  # <--- NEU!
+    )
+
 
 @geraete_bp.route("/modell/speichern", methods=["POST"])
 @login_required

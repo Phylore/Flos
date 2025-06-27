@@ -44,16 +44,22 @@
       <!-- Kategorie -->
       <div class="mb-3">
         <label for="kategorie" class="form-label">Kategorie:</label>
-        <select id="kategorie" name="kategorie" class="form-select form-select-lg" required disabled>
+        <select id="kategorie" name="kategorie" class="form-select form-select-lg" required>
           <option value="">Kategorie wählen</option>
+          {% for k in kategorien %}
+            <option value="{{ k.id }}">{{ k.name }}</option>
+          {% endfor %}
         </select>
       </div>
 
       <!-- Unterkategorie -->
       <div class="mb-3">
         <label for="unterkategorie" class="form-label">Unterkategorie:</label>
-        <select id="unterkategorie" name="unterkategorie" class="form-select form-select-lg" required disabled>
+        <select id="unterkategorie" name="unterkategorie" class="form-select form-select-lg" required>
           <option value="">Unterkategorie wählen</option>
+          {% for uk in unterkategorien %}
+            <option value="{{ uk.id }}" data-kategorie="{{ uk.kategorie_id }}">{{ uk.name }}</option>
+          {% endfor %}
         </select>
       </div>
 
@@ -75,63 +81,33 @@
   {% endif %}
 </div>
 
+<!-- Kaskadierendes Dropdown für Unterkategorien -->
 <script>
-const formA = document.querySelector('form[action$="/geraet"]');
-if (formA) {
-  const hersteller = formA.querySelector("#hersteller");
-  const kategorie = formA.querySelector("#kategorie");
-  const unterkategorie = formA.querySelector("#unterkategorie");
-  const modell = formA.querySelector("#modell");
-
-  hersteller.addEventListener("change", function () {
-    const herstellerId = this.value;
-    fetch(`/geraete/api/kategorien?hersteller_id=${herstellerId}`)
-      .then(res => res.json())
-      .then(data => {
-        kategorie.innerHTML = '<option value="">Kategorie wählen</option>';
-        data.forEach(k => {
-          kategorie.innerHTML += `<option value="${k.id}">${k.name}</option>`;
-        });
-        kategorie.disabled = false;
-
-        unterkategorie.innerHTML = '<option value="">Unterkategorie wählen</option>';
-        unterkategorie.disabled = true;
-        modell.innerHTML = '<option value="">Modell wählen</option>';
-        modell.disabled = true;
-      });
-  });
-
-  kategorie.addEventListener("change", function () {
-    const kategorieId = this.value;
-    fetch(`/geraete/api/unterkategorien?kategorie_id=${kategorieId}`)
-      .then(res => res.json())
-      .then(data => {
-        unterkategorie.innerHTML = '<option value="">Unterkategorie wählen</option>';
-        data.forEach(u => {
-          unterkategorie.innerHTML += `<option value="${u.id}">${u.name}</option>`;
-        });
-        unterkategorie.disabled = false;
-        modell.innerHTML = '<option value="">Modell wählen</option>';
-        modell.disabled = true;
-      });
-  });
-
-  unterkategorie.addEventListener("change", function () {
-    const herstellerId = hersteller.value;
-    const kategorieId = kategorie.value;
-    const unterkategorieId = this.value;
-
-    fetch(`/geraete/api/modelle?hersteller_id=${herstellerId}&kategorie_id=${kategorieId}&unterkategorie_id=${unterkategorieId}`)
-      .then(res => res.json())
-      .then(data => {
-        modell.innerHTML = '<option value="">Modell wählen</option>';
-        data.forEach(m => {
-          modell.innerHTML += `<option value="${m.id}">${m.name}</option>`;
-        });
-        modell.disabled = false;
-      });
-  });
-}
+document.addEventListener("DOMContentLoaded", function() {
+  var katSelect = document.getElementById("kategorie");
+  var ukSelect = document.getElementById("unterkategorie");
+  function updateUnterkategorien() {
+    var katId = katSelect.value;
+    for (var i = 0; i < ukSelect.options.length; i++) {
+      var option = ukSelect.options[i];
+      if(option.value === "") {
+        option.style.display = "";
+        continue;
+      }
+      option.style.display = (option.getAttribute("data-kategorie") == katId) ? "" : "none";
+    }
+    // Erste passende Unterkategorie selektieren
+    for (var i = 0; i < ukSelect.options.length; i++) {
+      var option = ukSelect.options[i];
+      if(option.style.display === "" && option.value !== "") {
+        ukSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+  katSelect.addEventListener("change", updateUnterkategorien);
+  updateUnterkategorien();
+});
 </script>
 {% endblock %}
 
